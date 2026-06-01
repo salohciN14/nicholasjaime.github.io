@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nature — Nicholas Jaime</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .page-wrap { position: relative; z-index: 2; min-height: 100vh; }
+  .page-header {
+    padding: 5rem 3rem 3rem;
+    border-bottom: 1px solid rgba(196,168,130,0.1);
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .back-link {
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; margin-bottom: 2rem;
+    transition: color 0.3s; display: block;
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link::before { content: '← '; }
+  .page-title {
+    font-family: 'Cinzel', serif; font-size: clamp(1.8rem, 5vw, 4rem);
+    font-weight: 300; letter-spacing: 0.1em; color: var(--ink);
+  }
+  .page-tag { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  .header-right { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; text-align: right; }
+  @media (max-width: 768px) {
+    .page-header { padding: 4rem 1.5rem 2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor" class="cursor"></div>
+<div id="cursorRing" class="cursor-ring"></div>
+<div id="pageTransition" class="page-transition"></div>
+
+<nav class="side-nav">
+  <a href="/index.html" data-nav><span class="label">Home</span><span class="dot"></span></a>
+  <a href="/gallery/index.html" data-nav class="active"><span class="label">Gallery</span><span class="dot"></span></a>
+  <a href="/about/index.html" data-nav><span class="label">About</span><span class="dot"></span></a>
+  <a href="/contact/index.html" data-nav><span class="label">Contact</span><span class="dot"></span></a>
+</nav>
+
+<div class="page-wrap page-content">
+  <header class="page-header">
+    <div>
+      <a href="/gallery/index.html" class="back-link" data-nav>Back to Gallery</a>
+      <p class="page-tag">Collection III</p>
+      <h1 class="page-title">Nature</h1>
+    </div>
+    <div class="header-right">Flora &amp; wilderness<br>Close &amp; far</div>
+  </header>
+  <div class="masonry" id="gallery"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">Close</button>
+  <img id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+const photos = [
+  { src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=85", caption: "Forest Path" },
+  { src: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=900&q=85", caption: "Wild Bloom" },
+  { src: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&q=85", caption: "Pine Forest" },
+  { src: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=900&q=85", caption: "Creek" },
+  { src: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1200&q=85", caption: "Canopy" },
+  { src: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=900&q=85", caption: "Meadow" },
+  { src: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=85", caption: "Shoreline" },
+];
+
+const gallery = document.getElementById('gallery');
+photos.forEach((p, i) => {
+  const item = document.createElement('div');
+  item.className = 'masonry-item';
+  item.style.transitionDelay = `${(i % 3) * 0.08}s`;
+  item.innerHTML = `
+    <img src="${p.src}" alt="${p.caption}" loading="lazy">
+    <div class="masonry-overlay"><span class="masonry-title">${p.caption}</span></div>
+  `;
+  item.addEventListener('click', () => openLightbox(p.src, p.caption));
+  gallery.appendChild(item);
+});
+</script>
+</body>
+</html>

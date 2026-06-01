@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Nicholas Jaime</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+
+  .contact-section {
+    flex: 1;
+    padding: 7rem 1.5rem 4rem;
+  }
+  .contact-inner { max-width: 48rem; margin: 0 auto; }
+
+  .contact-text {
+    max-width: 32rem;
+    margin-bottom: 4rem;
+  }
+  .contact-text p {
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .contact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .btn-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: var(--navy-dark);
+    border: 1px solid var(--navy);
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .btn-email:hover {
+    background: var(--navy);
+    border-color: var(--navy-light);
+    color: #fff;
+  }
+
+  .btn-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .btn-linkedin:hover {
+    border-color: var(--navy);
+    color: var(--text-primary);
+  }
+
+  .btn-email svg, .btn-linkedin svg {
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .btn-email:hover svg, .btn-linkedin:hover svg { transform: scale(1.1); }
+
+  /* Page footer */
+  .page-footer {
+    padding: 2.5rem 1.5rem;
+  }
+  .page-footer-inner {
+    max-width: 48rem;
+    margin: 0 auto;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 1.5rem;
+  }
+  .page-footer-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .page-footer-nav a {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+  }
+  .page-footer-nav a:hover { color: var(--text-primary); }
+  .page-footer-bottom {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .page-footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  .page-footer-copy {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="../index.html" class="site-header-logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Nicholas Jaime
+        </a>
+        <span class="site-header-label">Contact</span>
+      </div>
+    </header>
+
+    <section class="contact-section">
+      <div class="contact-inner">
+
+        <div class="section-header">
+          <span class="section-tag">Get In Touch</span>
+          <div class="section-title-row">
+            <h1 class="section-title">Contact</h1>
+            <div class="section-title-line"></div>
+          </div>
+        </div>
+
+        <div class="contact-text">
+          <!-- You can edit or remove this text -->
+          <p>Available for editorial commissions, commercial projects, and exhibition inquiries. I work selectively — reach out and let's talk about your vision.</p>
+        </div>
+
+        <div class="contact-buttons">
+          <!-- Replace href with your actual email -->
+          <a href="mailto:nicholas.e.jaime@gmail.com" class="btn-email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Email Me
+          </a>
+          <!-- Replace href with your actual LinkedIn -->
+          <a href="https://www.linkedin.com/in/nicholasjaime" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <div class="page-footer-inner">
+        <div class="page-footer-nav">
+          <a href="../index.html">← Back Home</a>
+          <a href="../gallery/index.html">Gallery →</a>
+        </div>
+        <div class="page-footer-bottom">
+          <span class="page-footer-name">Nicholas Jaime</span>
+          <span class="page-footer-copy">© 2026 — All Rights Reserved</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
