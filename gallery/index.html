@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Nicholas Jaime</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .page { min-height: 100vh; }
+
+  .gallery-section {
+    padding: 7rem 1.5rem;
+  }
+
+  .gallery-inner { max-width: 48rem; margin: 0 auto; }
+
+  .gallery-item {
+    margin-bottom: 6rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .gallery-item:last-child { margin-bottom: 0; }
+  .gallery-item.visible { opacity: 1; transform: translateY(0); }
+
+  .gallery-img-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-img-wrap img {
+    width: 100%;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+  .gallery-img-wrap:hover img { transform: scale(1.02); }
+  .gallery-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .gallery-img-wrap:hover .gallery-img-overlay { opacity: 1; }
+
+  .gallery-item-meta { margin-top: 1.5rem; max-width: 40rem; }
+
+  .gallery-item-number {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .gallery-item-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .gallery-item-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="../index.html" class="site-header-logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Nicholas Jaime
+        </a>
+        <span class="site-header-label">Gallery</span>
+      </div>
+    </header>
+
+    <section class="gallery-section">
+      <div class="gallery-inner">
+
+        <div class="section-header">
+          <span class="section-tag">Selected Work</span>
+          <div class="section-title-row">
+            <h1 class="section-title">Gallery</h1>
+            <div class="section-title-line"></div>
+          </div>
+        </div>
+
+        <div id="galleryList"></div>
+
+        <div class="footer-nav">
+          <a href="../index.html">← Back Home</a>
+          <a href="../contact/index.html">Contact →</a>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+<script>
+// ── ADD YOUR PHOTOS HERE ─────────────────────────────────
+// Replace src with your own image paths once you upload them
+const items = [
+  {
+    src: 'https://images.pexels.com/photos/1486222/pexels-photo-1486222.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Misty mountain range at dawn',
+    title: 'First Light',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  },
+  {
+    src: 'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Long exposure of ocean waves',
+    title: 'Undertow',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  },
+  {
+    src: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Urban street scene at golden hour',
+    title: 'The Hour Between',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  },
+  {
+    src: 'https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Dense forest with shafts of light',
+    title: 'Cathedral',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  },
+];
+// ─────────────────────────────────────────────────────────
+
+const list = document.getElementById('galleryList');
+items.forEach((item, i) => {
+  const el = document.createElement('div');
+  el.className = 'gallery-item';
+  el.style.transitionDelay = `${i * 0.05}s`;
+  el.innerHTML = `
+    <div class="gallery-img-wrap">
+      <img src="${item.src}" alt="${item.alt}" loading="lazy">
+      <div class="gallery-img-overlay"></div>
+    </div>
+    <div class="gallery-item-meta">
+      <span class="gallery-item-number">${String(i+1).padStart(2,'0')}</span>
+      <h3 class="gallery-item-title">${item.title}</h3>
+      <p class="gallery-item-desc">${item.description}</p>
+    </div>
+  `;
+  list.appendChild(el);
+});
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.gallery-item').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

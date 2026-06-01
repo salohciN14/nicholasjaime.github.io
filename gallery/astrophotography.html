@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrophotography — Nicholas Jaime</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  .viewer { flex: 1; display: flex; flex-direction: column; padding-top: 5rem; }
+  .photo-wrap { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .photo-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; transition: opacity 0.4s ease; }
+  .photo-wrap img.hidden { opacity: 0; }
+  .bottom-bar { padding: 1.5rem 2.5rem; display: flex; align-items: flex-start; gap: 2rem; border-top: 1px solid var(--border); }
+  .nav-arrows { display: flex; gap: 0.5rem; flex-shrink: 0; padding-top: 0.15rem; }
+  .photo-info { flex: 1; }
+  .photo-number { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.3rem; }
+  .photo-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; font-style: italic; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
+  .photo-desc { font-size: 0.75rem; line-height: 1.7; color: var(--muted); max-width: 520px; }
+  .back-link { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); align-self: center; flex-shrink: 0; transition: color 0.3s; }
+  .back-link:hover { color: var(--ink); }
+  @media (max-width: 600px) { .bottom-bar { flex-wrap: wrap; padding: 1.2rem 1.5rem; } .back-link { display: none; } }
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a href="../index.html" class="topnav-logo">Nicholas Jaime</a>
+    <a href="index.html" class="topnav-link active">Gallery</a>
+  </nav>
+
+  <div class="viewer">
+    <div class="photo-wrap"><img id="mainPhoto" src="" alt=""></div>
+    <div class="bottom-bar">
+      <div class="nav-arrows">
+        <button class="arrow-btn" id="prevBtn" onclick="changePhoto(-1)">←</button>
+        <button class="arrow-btn" id="nextBtn" onclick="changePhoto(1)">→</button>
+      </div>
+      <div class="photo-info">
+        <p class="photo-number" id="photoNumber"></p>
+        <p class="photo-title" id="photoTitle"></p>
+        <p class="photo-desc" id="photoDesc"></p>
+      </div>
+      <a href="index.html" class="back-link">← Gallery</a>
+    </div>
+  </div>
+
+<script>
+const photos = [
+  {
+    src: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1400&q=90",
+    title: "Milky Way",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=1400&q=90",
+    title: "Deep Sky",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+  },
+  {
+    src: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1400&q=90",
+    title: "Galaxy",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+  },
+];
+
+let current = 0;
+function render() {
+  const p = photos[current];
+  const img = document.getElementById('mainPhoto');
+  img.classList.add('hidden');
+  setTimeout(() => { img.src = p.src; img.onload = () => img.classList.remove('hidden'); }, 200);
+  document.getElementById('photoTitle').textContent = p.title;
+  document.getElementById('photoDesc').textContent = p.desc;
+  document.getElementById('photoNumber').textContent = `${String(current+1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === photos.length - 1;
+}
+function changePhoto(dir) {
+  current = Math.max(0, Math.min(photos.length - 1, current + dir));
+  render();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') changePhoto(-1);
+  if (e.key === 'ArrowRight') changePhoto(1);
+});
+render();
+</script>
+</body>
+</html>

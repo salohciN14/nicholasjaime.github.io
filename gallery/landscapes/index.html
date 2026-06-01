@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landscapes — Nicholas Jaime</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .page-wrap { position: relative; z-index: 2; min-height: 100vh; }
+  .page-header {
+    padding: 5rem 3rem 3rem;
+    border-bottom: 1px solid rgba(196,168,130,0.1);
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .back-link {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color 0.3s;
+    display: block;
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link::before { content: '← '; }
+  .page-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 5vw, 4rem);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+  }
+  .page-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .header-right {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: right;
+  }
+  @media (max-width: 768px) {
+    .page-header { padding: 4rem 1.5rem 2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor" class="cursor"></div>
+<div id="cursorRing" class="cursor-ring"></div>
+<div id="pageTransition" class="page-transition"></div>
+
+<nav class="side-nav">
+  <a href="/index.html" data-nav><span class="label">Home</span><span class="dot"></span></a>
+  <a href="/gallery/index.html" data-nav class="active"><span class="label">Gallery</span><span class="dot"></span></a>
+  <a href="/about/index.html" data-nav><span class="label">About</span><span class="dot"></span></a>
+  <a href="/contact/index.html" data-nav><span class="label">Contact</span><span class="dot"></span></a>
+</nav>
+
+<div class="page-wrap page-content">
+  <header class="page-header">
+    <div>
+      <a href="/gallery/index.html" class="back-link" data-nav>Back to Gallery</a>
+      <p class="page-tag">Collection II</p>
+      <h1 class="page-title">Landscapes</h1>
+    </div>
+    <div class="header-right">
+      Mountains &amp; valleys<br>Golden hour
+    </div>
+  </header>
+  <div class="masonry" id="gallery"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">Close</button>
+  <img id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+const photos = [
+  { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85", caption: "Mountain Peak" },
+  { src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=85", caption: "Morning Fog" },
+  { src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=85", caption: "Valley" },
+  { src: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=900&q=85", caption: "Golden Hour" },
+  { src: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1200&q=85", caption: "Still Water" },
+  { src: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=85", caption: "Coastal" },
+  { src: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1200&q=85", caption: "Dusk" },
+  { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=85", caption: "Ridge Line" },
+];
+
+const gallery = document.getElementById('gallery');
+photos.forEach((p, i) => {
+  const item = document.createElement('div');
+  item.className = 'masonry-item';
+  item.style.transitionDelay = `${(i % 3) * 0.08}s`;
+  item.innerHTML = `
+    <img src="${p.src}" alt="${p.caption}" loading="lazy">
+    <div class="masonry-overlay"><span class="masonry-title">${p.caption}</span></div>
+  `;
+  item.addEventListener('click', () => openLightbox(p.src, p.caption));
+  gallery.appendChild(item);
+});
+</script>
+</body>
+</html>
