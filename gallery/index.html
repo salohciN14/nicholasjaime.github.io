@@ -51,9 +51,9 @@
   .carousel {
     position: relative;
     background: #111;
-    overflow: visible; /* Changed from hidden to let text show below */
+    overflow: visible; 
     aspect-ratio: 3/2;
-    margin-bottom: 2.5rem; /* Increased space below so it doesn't crowd the dots */
+    margin-bottom: 2.5rem; 
   }
 
   .carousel-track {
@@ -67,6 +67,8 @@
     height: 100%;
     position: relative;
     cursor: zoom-in;
+    display: flex;
+    flex-direction: column;
   }
 
  .carousel-slide img {
@@ -139,14 +141,33 @@
   }
   .lightbox.open { opacity: 1; pointer-events: all; }
 
-  .lightbox img {
+  .lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     max-width: 90vw;
-    max-height: 88vh;
-    object-fit: contain;
+    max-height: 85vh;
     transform: scale(0.96);
     transition: transform 0.4s ease;
   }
-  .lightbox.open img { transform: scale(1); }
+  .lightbox.open .lightbox-content { transform: scale(1); }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  .lightbox-caption {
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+    width: 100%;
+    letter-spacing: 0.05em;
+  }
 
   .lightbox-close {
     position: absolute;
@@ -215,51 +236,53 @@
     </div>
   </header>
 
-  <!-- ── NATURE ──────────────────────────────── -->
   <div class="gallery-header">
     <h1>Nature</h1>
   </div>
 
-  <!-- Colorado -->
   <div class="section-wrap">
     <p class="section-title">Colorado</p>
     <div class="carousel" data-carousel>
-<div class="carousel-track">
-  <div class="carousel-slide">
-    <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
+          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
+          <div class="slide-caption">In-Flight Aerial | En Route to Colorado | Saturday, December 27, 2025</div>
+        </div>
+      </div>
+      <button class="carousel-btn prev">←</button>
+      <button class="carousel-btn next">→</button>
+    </div>
+    <div class="carousel-dots"></div>
   </div>
-  <div class="carousel-slide">
-    <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
-    <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-  </div>
-  <div class="carousel-slide">
-    <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
-    <div class="slide-caption">In-Flight Aerial | En Route to Colorado | Saturday, December 27, 2025</div>
-  </div>
-</div>
 
-  <!-- Puerto Rico -->
   <div class="section-wrap">
     <p class="section-title">Puerto Rico</p>
     <div class="carousel" data-carousel>
@@ -274,12 +297,10 @@
     <div class="carousel-dots"></div>
   </div>
 
-  <!-- ── SPACE ───────────────────────────────── -->
   <div class="gallery-header" style="padding-top: 4rem;">
     <h1>Space</h1>
   </div>
 
-  <!-- Moon 1 -->
   <div class="section-wrap">
     <p class="section-title">Moon 1</p>
     <div class="carousel" data-carousel>
@@ -294,7 +315,6 @@
     <div class="carousel-dots"></div>
   </div>
 
-  <!-- Moon 2 -->
   <div class="section-wrap">
     <p class="section-title">Moon 2</p>
     <div class="carousel" data-carousel>
@@ -309,7 +329,6 @@
     <div class="carousel-dots"></div>
   </div>
 
-  <!-- Moon 3 -->
   <div class="section-wrap">
     <p class="section-title">Moon 3</p>
     <div class="carousel" data-carousel>
@@ -324,7 +343,6 @@
     <div class="carousel-dots"></div>
   </div>
 
-  <!-- March 2025 Lunar Eclipse -->
   <div class="section-wrap">
     <p class="section-title">March 2025 Lunar Eclipse</p>
     <div class="carousel" data-carousel>
@@ -339,7 +357,6 @@
     <div class="carousel-dots"></div>
   </div>
 
-  <!-- Stars -->
   <div class="section-wrap">
     <p class="section-title">Stars</p>
     <div class="carousel" data-carousel>
@@ -360,7 +377,6 @@
   </div>
 </div>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lbClose">✕</button>
   <button class="lightbox-btn prev" id="lbPrev">←</button>
@@ -431,10 +447,14 @@ function openLightbox(imgs, index) {
 function renderLightbox() {
   lbImg.src = lbImages[lbIndex].src;
   
-  // This looks for the description block inside the active slide and copies the text over
+  // Safely check if a caption exists before trying to read it
   const slideContainer = lbImages[lbIndex].closest('.carousel-slide');
-  const captionText = slideContainer.querySelector('.slide-caption') ? slideContainer.querySelector('.slide-caption').textContent : '';
-  document.getElementById('lbCaption').textContent = captionText;
+  if (slideContainer) {
+    const captionElement = slideContainer.querySelector('.slide-caption');
+    document.getElementById('lbCaption').textContent = captionElement ? captionElement.textContent : '';
+  } else {
+    document.getElementById('lbCaption').textContent = '';
+  }
 
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
   document.getElementById('lbPrev').disabled = lbIndex === 0;
@@ -459,6 +479,3 @@ document.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
-HTMLEOF
-echo "Done"
-Output
