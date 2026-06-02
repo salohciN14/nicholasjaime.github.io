@@ -69,12 +69,25 @@
     cursor: zoom-in;
   }
 
-  .carousel-slide img {
+ .carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
     transition: filter 0.4s ease;
+  }
+
+  .slide-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    backdrop-filter: blur(4px);
   }
   .carousel-slide:hover img { filter: brightness(1.05); }
 
@@ -215,15 +228,39 @@
   <div class="section-wrap">
     <p class="section-title">Colorado</p>
     <div class="carousel" data-carousel>
-   <div class="carousel-track">
-        <div class="carousel-slide"><img src="../gog-1.jpg" alt="Gog 1" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog-2.jpg" alt="Gog 2" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog-3.jpg" alt="Gog 3" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog4.jpg" alt="Gog 4" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog-5.jpg" alt="Gog 5" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog-6.jpg" alt="Gog 6" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../gog-7.jpg" alt="Gog 7" loading="lazy"></div>
-        <div class="carousel-slide"><img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy"></div>
+ <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
+          <div class="slide-caption">Description 1 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
+          <div class="slide-caption">Description 2 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
+          <div class="slide-caption">Description 3 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
+          <div class="slide-caption">Description 4 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
+          <div class="slide-caption">Description 5 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
+          <div class="slide-caption">Description 6 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
+          <div class="slide-caption">Description 7 goes here</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
+          <div class="slide-caption">Description for the airplane goes here</div>
+        </div>
       </div>
       <button class="carousel-btn prev">←</button>
       <button class="carousel-btn next">→</button>
@@ -338,6 +375,7 @@
   <button class="lightbox-btn prev" id="lbPrev">←</button>
   <img id="lbImg" src="" alt="">
   <button class="lightbox-btn next" id="lbNext">→</button>
+  <p class="lightbox-caption" id="lbCaption" style="position: absolute; bottom: 3.5rem; color: #fff; font-size: 0.9rem; text-align: center; width: 100%;"></p>
   <p class="lightbox-counter" id="lbCounter"></p>
 </div>
 
@@ -397,6 +435,12 @@ function openLightbox(imgs, index) {
 
 function renderLightbox() {
   lbImg.src = lbImages[lbIndex].src;
+  
+  // This looks for the description block inside the active slide and copies the text over
+  const slideContainer = lbImages[lbIndex].closest('.carousel-slide');
+  const captionText = slideContainer.querySelector('.slide-caption') ? slideContainer.querySelector('.slide-caption').textContent : '';
+  document.getElementById('lbCaption').textContent = captionText;
+
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
   document.getElementById('lbPrev').disabled = lbIndex === 0;
   document.getElementById('lbNext').disabled = lbIndex === lbImages.length - 1;
