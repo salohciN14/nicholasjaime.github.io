@@ -47,13 +47,37 @@
     background: var(--border);
   }
 
-  /* Carousel box */
+  /* ── STACKED GRID LAYOUT (Colorado, Puerto Rico, Moon 3, Stars) ── */
+  .stacked-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem; /* Space between each image package */
+    margin-bottom: 3rem;
+  }
+  
+  .stacked-item {
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    aspect-ratio: 3/2;
+    cursor: zoom-in;
+  }
+  
+  .stacked-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: filter 0.4s ease;
+  }
+  .stacked-item:hover img { filter: brightness(1.05); }
+
+  /* ── CAROUSEL LAYOUT (Moon 1, Moon 2, Lunar Eclipse) ── */
   .carousel {
     position: relative;
     background: #111;
-    overflow: visible; 
+    overflow: hidden; /* Restored to hide peeking side images */
     aspect-ratio: 3/2;
-    margin-bottom: 2.5rem; 
   }
 
   .carousel-track {
@@ -67,19 +91,19 @@
     height: 100%;
     position: relative;
     cursor: zoom-in;
-    display: flex;
-    flex-direction: column;
   }
 
- .carousel-slide img {
+  .carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
     transition: filter 0.4s ease;
   }
+  .carousel-slide:hover img { filter: brightness(1.05); }
 
- .slide-caption {
+  /* Shared captions (always below frames) */
+  .slide-caption {
     background: #111;
     color: var(--text-secondary, #ccc);
     padding: 0.8rem 0;
@@ -87,7 +111,6 @@
     text-align: center;
     letter-spacing: 0.05em;
   }
-  .carousel-slide:hover img { filter: brightness(1.05); }
 
   /* Carousel arrows */
   .carousel-btn {
@@ -110,12 +133,15 @@
   .carousel-btn.next { right: 0.75rem; }
   .carousel-btn:disabled { opacity: 0.2; cursor: default; }
 
-  /* Dots */
+  /* Dots Layout Spacer */
+  .carousel-dots-container {
+    padding-bottom: 2rem;
+  }
   .carousel-dots {
     display: flex;
     justify-content: center;
     gap: 6px;
-    padding: 0.6rem 0 1.5rem;
+    padding: 0.6rem 0 0;
   }
   .dot {
     width: 5px; height: 5px;
@@ -126,7 +152,7 @@
   }
   .dot.active { background: var(--text-primary); transform: scale(1.3); }
 
-  /* Lightbox */
+  /* Lightbox Overlay */
   .lightbox {
     position: fixed;
     inset: 0;
@@ -242,59 +268,58 @@
 
   <div class="section-wrap">
     <p class="section-title">Colorado</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide">
-          <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
-          <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
-        </div>
-        <div class="carousel-slide">
-          <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
-          <div class="slide-caption">In-Flight Aerial | En Route to Colorado | Saturday, December 27, 2025</div>
-        </div>
+    <div class="stacked-grid" data-gallery-group>
+      <div class="stacked-item">
+        <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="stacked-item">
+        <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
+        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+      </div>
+      <div class="stacked-item">
+        <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
+        <div class="slide-caption">In-Flight Aerial | En Route to Colorado | Saturday, December 27, 2025</div>
+      </div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="section-wrap">
     <p class="section-title">Puerto Rico</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?w=1200" alt="Puerto Rico 1" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?w=1200" alt="Puerto Rico 2" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?w=1200" alt="Puerto Rico 3" loading="lazy"></div>
+    <div class="stacked-grid" data-gallery-group>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?w=1200" alt="Puerto Rico 1" loading="lazy">
+        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?w=1200" alt="Puerto Rico 2" loading="lazy">
+        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
+      </div>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?w=1200" alt="Puerto Rico 3" loading="lazy">
+        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
+      </div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="gallery-header" style="padding-top: 4rem;">
@@ -303,72 +328,113 @@
 
   <div class="section-wrap">
     <p class="section-title">Moon 1</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 1a" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 1b" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 1c" loading="lazy"></div>
+    <div class="carousel-dots-container">
+      <div class="carousel" data-carousel>
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 1a" loading="lazy">
+            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 1b" loading="lazy">
+            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 1c" loading="lazy">
+            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+          </div>
+        </div>
+        <button class="carousel-btn prev">←</button>
+        <button class="carousel-btn next">→</button>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="carousel-dots"></div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="section-wrap">
     <p class="section-title">Moon 2</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 2a" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 2b" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 2c" loading="lazy"></div>
+    <div class="carousel-dots-container">
+      <div class="carousel" data-carousel>
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 2a" loading="lazy">
+            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 2b" loading="lazy">
+            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 2c" loading="lazy">
+            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+          </div>
+        </div>
+        <button class="carousel-btn prev">←</button>
+        <button class="carousel-btn next">→</button>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="carousel-dots"></div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="section-wrap">
     <p class="section-title">Moon 3</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 3a" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 3b" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 3c" loading="lazy"></div>
+    <div class="stacked-grid" data-gallery-group>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 3a" loading="lazy">
+        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 3b" loading="lazy">
+        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
+      </div>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 3c" loading="lazy">
+        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
+      </div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="section-wrap">
     <p class="section-title">March 2025 Lunar Eclipse</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Eclipse 1" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Eclipse 2" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Eclipse 3" loading="lazy"></div>
+    <div class="carousel-dots-container">
+      <div class="carousel" data-carousel>
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Eclipse 1" loading="lazy">
+            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Eclipse 2" loading="lazy">
+            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Eclipse 3" loading="lazy">
+            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+          </div>
+        </div>
+        <button class="carousel-btn prev">←</button>
+        <button class="carousel-btn next">→</button>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="carousel-dots"></div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="section-wrap">
     <p class="section-title">Stars</p>
-    <div class="carousel" data-carousel>
-      <div class="carousel-track">
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1446776/pexels-photo-1446776.jpeg?w=1200" alt="Stars 1" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Stars 2" loading="lazy"></div>
-        <div class="carousel-slide"><img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Stars 3" loading="lazy"></div>
+    <div class="stacked-grid" data-gallery-group>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1446776/pexels-photo-1446776.jpeg?w=1200" alt="Stars 1" loading="lazy">
+        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
       </div>
-      <button class="carousel-btn prev">←</button>
-      <button class="carousel-btn next">→</button>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Stars 2" loading="lazy">
+        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
+      </div>
+      <div class="stacked-item">
+        <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Stars 3" loading="lazy">
+        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
+      </div>
     </div>
-    <div class="carousel-dots"></div>
   </div>
 
   <div class="footer-nav">
@@ -391,7 +457,7 @@
 </div>
 
 <script>
-// ── Carousel setup ────────────────────────────
+// ── Carousel Slider Systems ────────────────────────────
 document.querySelectorAll('[data-carousel]').forEach(carousel => {
   const track = carousel.querySelector('.carousel-track');
   const slides = carousel.querySelectorAll('.carousel-slide');
@@ -400,7 +466,6 @@ document.querySelectorAll('[data-carousel]').forEach(carousel => {
   const dotsWrap = carousel.nextElementSibling;
   let current = 0;
 
-  // Build dots
   slides.forEach((_, i) => {
     const dot = document.createElement('div');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -419,18 +484,29 @@ document.querySelectorAll('[data-carousel]').forEach(carousel => {
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
 
-  // Click to open lightbox
+  // Connect slider click events directly to the global Lightbox array
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => {
-      const imgs = [...slides].map(s => s.querySelector('img'));
-      openLightbox(imgs, i);
+      const parentTrackImgs = [...slides].map(s => s.querySelector('img'));
+      openLightbox(parentTrackImgs, i);
     });
   });
 
   goTo(0);
 });
 
-// ── Lightbox ──────────────────────────────────
+// ── Stacked Grid Interaction Connections ──────────────────
+document.querySelectorAll('[data-gallery-group]').forEach(group => {
+  const items = group.querySelectorAll('.stacked-item');
+  items.forEach((item, idx) => {
+    item.addEventListener('click', () => {
+      const groupImgs = [...items].map(i => i.querySelector('img'));
+      openLightbox(groupImgs, idx);
+    });
+  });
+});
+
+// ── Global Lightbox Operations ──────────────────────────────────
 const lightbox = document.getElementById('lightbox');
 const lbImg = document.getElementById('lbImg');
 const lbCounter = document.getElementById('lbCounter');
@@ -447,14 +523,20 @@ function openLightbox(imgs, index) {
 function renderLightbox() {
   lbImg.src = lbImages[lbIndex].src;
   
-  // Safely check if a caption exists before trying to read it
-  const slideContainer = lbImages[lbIndex].closest('.carousel-slide');
-  if (slideContainer) {
-    const captionElement = slideContainer.querySelector('.slide-caption');
-    document.getElementById('lbCaption').textContent = captionElement ? captionElement.textContent : '';
-  } else {
-    document.getElementById('lbCaption').textContent = '';
+  // Dynamically grab the correct description element regardless of container type
+  const targetImage = lbImages[lbIndex];
+  let captionText = "";
+  
+  const slideParent = targetImage.closest('.carousel-slide');
+  const gridParent = targetImage.closest('.stacked-item');
+  
+  if (slideParent && slideParent.querySelector('.slide-caption')) {
+    captionText = slideParent.querySelector('.slide-caption').textContent;
+  } else if (gridParent && gridParent.querySelector('.slide-caption')) {
+    captionText = gridParent.querySelector('.slide-caption').textContent;
   }
+  
+  document.getElementById('lbCaption').textContent = captionText;
 
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
   document.getElementById('lbPrev').disabled = lbIndex === 0;
