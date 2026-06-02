@@ -51,7 +51,7 @@
   .stacked-grid {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem; /* Space between each image package */
+    gap: 3.5rem; /* Increased space between items for stacked text */
     margin-bottom: 3rem;
   }
   
@@ -59,13 +59,14 @@
     display: flex;
     flex-direction: column;
     background: #111;
-    aspect-ratio: 3/2;
     cursor: zoom-in;
+    width: 100%;
   }
   
   .stacked-item img {
     width: 100%;
-    height: 100%;
+    height: auto; /* Removed aspect ratio lock so images can be much larger */
+    max-height: 75vh;
     object-fit: contain;
     display: block;
     transition: filter 0.4s ease;
@@ -76,7 +77,7 @@
   .carousel {
     position: relative;
     background: #111;
-    overflow: hidden; /* Restored to hide peeking side images */
+    overflow: hidden; 
     aspect-ratio: 3/2;
   }
 
@@ -102,14 +103,15 @@
   }
   .carousel-slide:hover img { filter: brightness(1.05); }
 
-  /* Shared captions (always below frames) */
+  /* Shared captions (always below frames, clean stack) */
   .slide-caption {
     background: #111;
     color: var(--text-secondary, #ccc);
-    padding: 0.8rem 0;
+    padding: 1rem 0;
     font-size: 0.8rem;
     text-align: center;
     letter-spacing: 0.05em;
+    line-height: 1.5; /* Adds nice spacing between your stacked specs */
   }
 
   /* Carousel arrows */
@@ -181,7 +183,7 @@
 
   .lightbox img {
     max-width: 100%;
-    max-height: 75vh;
+    max-height: 70vh; /* Scaled slightly down to avoid cutting off stacked lines */
     object-fit: contain;
     display: block;
   }
@@ -190,9 +192,10 @@
     color: #fff;
     font-size: 0.9rem;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     width: 100%;
     letter-spacing: 0.05em;
+    line-height: 1.5;
   }
 
   .lightbox-close {
@@ -271,35 +274,35 @@
     <div class="stacked-grid" data-gallery-group>
       <div class="stacked-item">
         <img src="../gog-1.jpg" alt="Gog 1" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog-2.jpg" alt="Gog 2" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog-3.jpg" alt="Gog 3" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog4.jpg" alt="Gog 4" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog-5.jpg" alt="Gog 5" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog-6.jpg" alt="Gog 6" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../gog-7.jpg" alt="Gog 7" loading="lazy">
-        <div class="slide-caption">Garden of the Gods | Colorado Springs, CO | Wednesday, December 31, 2025</div>
+        <div class="slide-caption">Garden of the Gods<br>Colorado Springs, CO<br>Wednesday, December 31, 2025</div>
       </div>
       <div class="stacked-item">
         <img src="../CO%20Plane.jpg" alt="CO Plane" loading="lazy">
-        <div class="slide-caption">In-Flight Aerial | En Route to Colorado | Saturday, December 27, 2025</div>
+        <div class="slide-caption">In-Flight Aerial<br>En Route to Colorado<br>Saturday, December 27, 2025</div>
       </div>
     </div>
   </div>
@@ -309,15 +312,15 @@
     <div class="stacked-grid" data-gallery-group>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?w=1200" alt="Puerto Rico 1" loading="lazy">
-        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
+        <div class="slide-caption">Puerto Rico Spec<br>Area Location<br>Date Info Here</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?w=1200" alt="Puerto Rico 2" loading="lazy">
-        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
+        <div class="slide-caption">Puerto Rico Spec<br>Area Location<br>Date Info Here</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?w=1200" alt="Puerto Rico 3" loading="lazy">
-        <div class="slide-caption">Puerto Rico Spec | Area Location | Date Info Here</div>
+        <div class="slide-caption">Puerto Rico Spec<br>Area Location<br>Date Info Here</div>
       </div>
     </div>
   </div>
@@ -333,15 +336,15 @@
         <div class="carousel-track">
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 1a" loading="lazy">
-            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 1<br>Lunar Spec Info<br>Date Details</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 1b" loading="lazy">
-            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 1<br>Lunar Spec Info<br>Date Details</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 1c" loading="lazy">
-            <div class="slide-caption">Moon Gallery 1 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 1<br>Lunar Spec Info<br>Date Details</div>
           </div>
         </div>
         <button class="carousel-btn prev">←</button>
@@ -358,15 +361,15 @@
         <div class="carousel-track">
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 2a" loading="lazy">
-            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 2<br>Lunar Spec Info<br>Date Details</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 2b" loading="lazy">
-            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 2<br>Lunar Spec Info<br>Date Details</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 2c" loading="lazy">
-            <div class="slide-caption">Moon Gallery 2 | Lunar Spec Info | Date Details</div>
+            <div class="slide-caption">Moon Gallery 2<br>Lunar Spec Info<br>Date Details</div>
           </div>
         </div>
         <button class="carousel-btn prev">←</button>
@@ -381,15 +384,15 @@
     <div class="stacked-grid" data-gallery-group>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Moon 3a" loading="lazy">
-        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
+        <div class="slide-caption">Moon Gallery 3<br>Astro Setup Specs<br>Date Detail</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Moon 3b" loading="lazy">
-        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
+        <div class="slide-caption">Moon Gallery 3<br>Astro Setup Specs<br>Date Detail</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Moon 3c" loading="lazy">
-        <div class="slide-caption">Moon Gallery 3 | Astro Setup Specs | Date Detail</div>
+        <div class="slide-caption">Moon Gallery 3<br>Astro Setup Specs<br>Date Detail</div>
       </div>
     </div>
   </div>
@@ -401,15 +404,15 @@
         <div class="carousel-track">
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/2191521/pexels-photo-2191521.jpeg?w=1200" alt="Eclipse 1" loading="lazy">
-            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+            <div class="slide-caption">Lunar Eclipse<br>Capture Info<br>March 2025 Astro Specs</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Eclipse 2" loading="lazy">
-            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+            <div class="slide-caption">Lunar Eclipse<br>Capture Info<br>March 2025 Astro Specs</div>
           </div>
           <div class="carousel-slide">
             <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Eclipse 3" loading="lazy">
-            <div class="slide-caption">Lunar Eclipse | Capture Info | March 2025 Astro Specs</div>
+            <div class="slide-caption">Lunar Eclipse<br>Capture Info<br>March 2025 Astro Specs</div>
           </div>
         </div>
         <button class="carousel-btn prev">←</button>
@@ -424,15 +427,15 @@
     <div class="stacked-grid" data-gallery-group>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1446776/pexels-photo-1446776.jpeg?w=1200" alt="Stars 1" loading="lazy">
-        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
+        <div class="slide-caption">Deep Sky Stars<br>Focal Length / Exposure Specs<br>Date Info</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?w=1200" alt="Stars 2" loading="lazy">
-        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
+        <div class="slide-caption">Deep Sky Stars<br>Focal Length / Exposure Specs<br>Date Info</div>
       </div>
       <div class="stacked-item">
         <img src="https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?w=1200" alt="Stars 3" loading="lazy">
-        <div class="slide-caption">Deep Sky Stars | Focal Length / Exposure Specs | Date Info</div>
+        <div class="slide-caption">Deep Sky Stars<br>Focal Length / Exposure Specs<br>Date Info</div>
       </div>
     </div>
   </div>
@@ -449,7 +452,7 @@
   
   <div class="lightbox-content">
     <img id="lbImg" src="" alt="">
-    <p class="lightbox-caption" id="lbCaption"></p>
+    <div class="lightbox-caption" id="lbCaption"></div>
   </div>
 
   <button class="lightbox-btn next" id="lbNext">→</button>
@@ -484,7 +487,6 @@ document.querySelectorAll('[data-carousel]').forEach(carousel => {
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
 
-  // Connect slider click events directly to the global Lightbox array
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => {
       const parentTrackImgs = [...slides].map(s => s.querySelector('img'));
@@ -523,20 +525,20 @@ function openLightbox(imgs, index) {
 function renderLightbox() {
   lbImg.src = lbImages[lbIndex].src;
   
-  // Dynamically grab the correct description element regardless of container type
   const targetImage = lbImages[lbIndex];
-  let captionText = "";
+  let captionHTML = "";
   
   const slideParent = targetImage.closest('.carousel-slide');
   const gridParent = targetImage.closest('.stacked-item');
   
   if (slideParent && slideParent.querySelector('.slide-caption')) {
-    captionText = slideParent.querySelector('.slide-caption').textContent;
+    captionHTML = slideParent.querySelector('.slide-caption').innerHTML;
   } else if (gridParent && gridParent.querySelector('.slide-caption')) {
-    captionText = gridParent.querySelector('.slide-caption').textContent;
+    captionHTML = gridParent.querySelector('.slide-caption').innerHTML;
   }
   
-  document.getElementById('lbCaption').textContent = captionText;
+  // Use innerHTML so the line breaks (<br>) transfer perfectly to full screen view
+  document.getElementById('lbCaption').innerHTML = captionHTML;
 
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
   document.getElementById('lbPrev').disabled = lbIndex === 0;
