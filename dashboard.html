@@ -3,90 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Command Station — Atmosphere</title>
+<title>Ambient Command Center</title>
 <style>
-  html, body {
+  body {
     background: #0a0a0a;
+    color: #e5e5e5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-  }
-
-  /* Full-bleed layout setup for Tomorrow.io frame grid */
-  .tomorrow {
-    width: 100% !important;
-    min-height: 100vh !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-    padding: 2rem !important;
   }
 
-  /* Discretely float your return button in the bottom corner so you aren't trapped */
+  .matrix-container {
+    width: 100%;
+    max-width: 75rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* ── TOP DECK: TIME & WEATHER SIDE-BY-SIDE ── */
+  .top-deck {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (max-width: 850px) {
+    .top-deck { grid-template-columns: 1fr; text-align: center; }
+  }
+
+  .clock-box {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #timeDisplay {
+    font-size: 5.5rem;
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  
+  #dateDisplay {
+    font-size: 0.9rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  .weather-wrapper {
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 180px;
+  }
+
+  /* ── BOTTOM DECK: MEDIA & AUX GRID ── */
+  .panel-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #111;
+    padding-bottom: 0.25rem;
+  }
+
+  .bottom-deck {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2.5rem;
+  }
+
+  @media (max-width: 850px) {
+    .bottom-deck { grid-template-columns: 1fr; }
+  }
+
+  .spotify-wrapper {
+    width: 100%;
+  }
+
+  .spotify-wrapper iframe {
+    width: 100%;
+    height: 352px;
+    border: none;
+  }
+
   .back-btn {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    align-self: center;
+    margin-top: 1rem;
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-decoration: none;
-    color: #333;
-    background: rgba(10, 10, 10, 0.8);
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #1c1c1c;
-    z-index: 999999;
-    transition: color 0.3s, border-color 0.3s;
+    color: #222;
+    transition: color 0.3s;
   }
-  .back-btn:hover { 
-    color: #666;
-    border-color: #333;
-  }
+  .back-btn:hover { color: #555; }
 </style>
 </head>
 <body>
 
-  <div class="tomorrow"
-     data-location-id=""
-     data-language="EN"
-     data-unit-system="IMPERIAL"
-     data-skin="dark"
-     data-widget-type="upcoming"
-     style="padding-bottom:22px;position:relative;"
-  >
-    <a
-      href="https://weather.tomorrow.io/"
-      rel="nofollow noopener noreferrer"
-      target="_blank"
-      style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
-    >
-      <img
-        alt="Powered by Tomorrow.io"
-        src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-        width="250"
-        height="18"
-      />
-    </a>
+<div class="matrix-container">
+  
+  <div class="top-deck">
+    <div class="clock-box">
+      <div id="timeDisplay">12:00:00</div>
+      <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+    </div>
+    
+    <div class="weather-wrapper">
+      <div class="tomorrow"
+         data-location-id=""
+         data-language="EN"
+         data-unit-system="IMPERIAL"
+         data-skin="dark"
+         data-widget-type="upcoming"
+         style="padding-bottom:22px;position:relative;"
+      >
+        <a
+          href="https://weather.tomorrow.io/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+        >
+          <img
+            alt="Powered by Tomorrow.io"
+            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+            width="250"
+            height="18"
+          />
+        </a>
+      </div>
+    </div>
   </div>
 
-  <a href="./" class="back-btn">← RETURN</a>
+  <div class="bottom-deck">
+    <div class="spotify-wrapper">
+      <div class="panel-title">Audio Matrix</div>
+      <iframe data-testid="embed-iframe" style="border-radius:12px" src="http://googleusercontent.com/spotify.com/3" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    
+    <div></div>
+  </div>
 
-  <script>
-  (function(d, s, id) {
-      if (d.getElementById(id)) {
-          if (window.__TOMORROW__) {
-              window.__TOMORROW__.renderWidget();
-          }
-          return;
-      }
-      const fjs = d.getElementsByTagName(s)[0];
-      const js = d.createElement(s);
-      js.id = id;
-      js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
 
-      fjs.parentNode.insertBefore(js, fjs);
-  })(document, 'script', 'tomorrow-sdk');
-  </script>
+</div>
+
+<script>
+(function(d, s, id) {
+    if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+            window.__TOMORROW__.renderWidget();
+        }
+        return;
+    }
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement(s);
+    js.id = id;
+    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+    fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'tomorrow-sdk');
+</script>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+
+    const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
+    document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
 
 </body>
 </html>
