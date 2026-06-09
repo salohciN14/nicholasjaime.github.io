@@ -11,23 +11,41 @@
 
   .contact-section {
     flex: 1;
-    padding: 7rem 1.5rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem 4rem;
   }
-  .contact-inner { max-width: 48rem; margin: 0 auto; }
+  
+  .contact-inner { 
+    max-width: 32rem; 
+    width: 100%;
+    text-align: center; 
+  }
+
+  /* Elegant Header matching the Gallery page style */
+  .gallery-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+  }
 
   .contact-text {
-    max-width: 32rem;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
   }
   .contact-text p {
     font-size: 0.85rem;
     font-weight: 300;
-    line-height: 1.9;
+    line-height: 1.8;
     color: var(--text-secondary);
   }
 
   .contact-buttons {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
   }
@@ -44,7 +62,8 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-weight: 500;
-    transition: background 0.3s, border-color 0.3s;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+    text-decoration: none;
   }
   .btn-email:hover {
     background: var(--navy);
@@ -65,6 +84,7 @@
     text-transform: uppercase;
     font-weight: 500;
     transition: border-color 0.3s, color 0.3s;
+    text-decoration: none;
   }
   .btn-linkedin:hover {
     border-color: var(--navy);
@@ -102,6 +122,7 @@
     font-weight: 500;
     color: var(--text-secondary);
     transition: color 0.3s;
+    text-decoration: none;
   }
   .page-footer-nav a:hover { color: var(--text-primary); }
   .page-footer-bottom {
@@ -109,6 +130,7 @@
     padding-top: 1.5rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
   }
@@ -142,21 +164,20 @@
     <section class="contact-section">
       <div class="contact-inner">
 
-        <div class="section-header">
-          <div class="section-title-row">
-            <h1 class="section-title">Contact me</h1>
-            <div class="section-title-line"></div>
-          </div>
+        <div class="gallery-header">
+          <h1>Contact me</h1>
+        </div>
+
+        <div class="contact-text">
+          <p>Thanks for visiting. This site is just a personal space to display my photography and projects. If you have any questions or just want to get in touch, feel free to reach out through email or LinkedIn.</p>
         </div>
 
         <div class="contact-buttons">
-          <!-- Replace href with your actual email -->
           <a href="https://mail.google.com/mail/?view=cm&to=nicholas.e.jaime@gmail.com" 
-   target="_blank" rel="noopener noreferrer" class="btn-email">
+             target="_blank" rel="noopener noreferrer" class="btn-email">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             Email Me
           </a>
-          <!-- Replace href with your actual LinkedIn -->
           <a href="https://www.linkedin.com/in/nicholas-jaime-aa7735404/" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
             LinkedIn
