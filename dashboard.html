@@ -25,9 +25,9 @@
     flex-direction: column;
     gap: 3rem;
     align-items: center;
+    box-sizing: border-box;
   }
 
-  /* ── SYSTEM HEADER ── */
   .station-header {
     text-align: center;
     width: 100%;
@@ -49,18 +49,45 @@
     color: #444;
   }
 
-  /* ── WEATHER WIDGET FRAME ── */
   .widget-wrapper {
     width: 100%;
+    min-height: 150px;
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
     padding: 4px;
-    overflow: hidden;
     box-sizing: border-box;
   }
 
   .back-btn {
     margin-top: 1rem;
     font-size: 0.8rem;
-    letter-spacing: 0.1
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: #222;
+    transition: color 0.3s;
+  }
+  .back-btn:hover { color: #555; }
+</style>
+</head>
+<body>
+
+<div class="station-container">
+  
+  <header class="station-header">
+    <div id="timeDisplay">00:00:00</div>
+    <div id="dateDisplay">LOADING RUNTIME...</div>
+  </header>
+
+  <div class="widget-wrapper">
+    <a class="weatherwidget-io" href="https://forecast7.com/en/39d64n84d29/miamisburg/?unit=us" data-label_1="MIAMISBURG" data-label_2="WEATHER" data-font="Arial Black" data-icons="Climacons Animated" data-theme="dark">MIAMISBURG WEATHER</a>
+  </div>
+
+  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
+
+</div>
+
+<script>
+  // ── LIVE RUNTIME CLOCK SYSTEM ───────────────────────────
+  function updateClock() {
+    const now
