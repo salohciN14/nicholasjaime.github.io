@@ -9,34 +9,57 @@
 <style>
   .page { min-height: 100vh; padding-bottom: 6rem; }
 
-  /* Section headers */
+  /* ── CENTERED GALLERY HEADER ── */
   .gallery-header {
     max-width: 48rem;
     margin: 0 auto;
-    padding: 5rem 1.5rem 1rem;
+    padding: 6rem 1.5rem 2rem;
+    text-align: center;
   }
   .gallery-header h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
     font-weight: 300;
     font-style: italic;
     color: var(--text-primary);
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .gallery-intro {
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 32rem;
+    margin: 0 auto;
+    padding-bottom: 2rem;
     border-bottom: 1px solid var(--border);
+  }
+
+  /* Category Headers (Nature, Space) - Smaller to not compete */
+  .category-title {
+    max-width: 48rem;
+    margin: 4rem auto 1rem;
+    padding: 0 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-primary);
   }
 
   .section-wrap {
     max-width: 48rem;
     margin: 0 auto;
-    padding: 3rem 1.5rem 0;
+    padding: 2rem 1.5rem 0;
   }
 
+  /* Sub-section names (Colorado, Puerto Rico, etc.) - Bumped up a tad bigger */
   .section-title {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.35em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -45,7 +68,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--border);
+    background: var(--border-subtle);
   }
 
   /* ── STACKED GRID LAYOUT ── */
@@ -250,6 +273,7 @@
     text-transform: uppercase;
     color: var(--text-secondary);
     transition: color 0.3s;
+    text-decoration: none;
   }
   .footer-nav a:hover { color: var(--text-primary); }
 </style>
@@ -267,8 +291,11 @@
     </header>
 
   <div class="gallery-header">
-    <h1>Nature</h1>
+    <h1>Gallery</h1>
+    <p class="gallery-intro">Here is a collection of my favorite photos I have taken over the last couple of years.</p>
   </div>
+
+  <h2 class="category-title">Nature</h2>
 
   <div class="section-wrap">
     <p class="section-title">Colorado</p>
@@ -386,9 +413,7 @@
     </div>
   </div>
 
-  <div class="gallery-header" style="padding-top: 4rem;">
-    <h1>Space</h1>
-  </div>
+  <h2 class="category-title">Space</h2>
 
   <div class="section-wrap">
     <p class="section-title">2025 March Lunar Eclipse</p>
@@ -524,7 +549,7 @@
       </div>
       <div class="stacked-item">
         <img src="../SS Florida.jpg" alt="Smiley Face Conjunction" loading="lazy">
-        <div class="slide-caption">Smiley Face Conjunction of the Moon, Venus, and Saturn<br>Destin, Florida<br>5:18 PM, Friday, April 25, 2025</div>
+        <div class="slide-caption">Smiley Face Conjunction of the Moon, Venus, and Saturn<br>Destin, Florida<br>5:18 AM, Friday, April 25, 2025</div>
       </div>
     </div>
   </div>
