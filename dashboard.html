@@ -52,7 +52,7 @@
   /* Sleek layout container for the native forecast window */
   .widget-wrapper {
     width: 100%;
-    height: 260px;
+    height: 220px;
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
@@ -82,12 +82,12 @@
 <div class="station-container">
   
   <header class="station-header">
-    <div id="timeDisplay">00:00:00</div>
+    <div id="timeDisplay">12:00:00</div>
     <div id="dateDisplay">LOADING RUNTIME...</div>
   </header>
 
   <div class="widget-wrapper">
-    <iframe class="widget-frame" src="https://forecast.windy.com/iframe/html/view.html?lat=39.643&lon=-84.287&label=Miamisburg&bgColor=dark&textColor=white&gridColor=rgba(255%2C255%2C255%2C0.1)&dayIcon=white&font=Ubuntu&units=f"></iframe>
+    <iframe class="widget-frame" src="https://embed.windy.com/embed.html?type=forecast&detailLat=39.643&detailLon=-84.287&detail=true&metricTemp=default&metricRain=default&metricWind=default"></iframe>
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
@@ -104,7 +104,7 @@
     
     // Convert to standard 12-hour format
     hours = hours % 12;
-    hours = hours ? hours : 12; // The hour '0' should be '12'
+    hours = hours ? hours : 12; 
     
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
