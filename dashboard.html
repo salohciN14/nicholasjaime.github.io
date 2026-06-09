@@ -49,14 +49,14 @@
     color: #444;
   }
 
-  /* Sleek layout frame holding your custom widget */
+  /* Container structure for Elfsight layout styling */
   .widget-wrapper {
     width: 100%;
     min-height: 150px;
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
-    padding: 4px;
+    padding: 12px;
     box-sizing: border-box;
   }
 
@@ -81,7 +81,8 @@
   </header>
 
   <div class="widget-wrapper">
-    <a class="weatherwidget-io" href="https://forecast7.com/en/39d64n84d29/miamisburg/?unit=us" data-label_1="MIAMISBURG" data-label_2="WEATHER" data-font="Arial Black" data-icons="Climacons Animated" data-theme="dark" >MIAMISBURG WEATHER</a>
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-a621e518-ea9b-4e1f-859e-da5fe2aad921" data-elfsight-app-lazy></div>
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
@@ -112,9 +113,6 @@
   // Start clock immediately
   updateClock();
   setInterval(updateClock, 1000);
-
-  // ── YOUR WIDGET SCRIPT ENGINE (Safely Loaded Last) ──────
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 </script>
 
 </body>
