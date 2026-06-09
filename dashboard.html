@@ -24,28 +24,17 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 3rem;
   }
 
-  /* ── TOP DECK: TIME & WEATHER SIDE-BY-SIDE ── */
-  .top-deck {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 2.5rem;
-    align-items: center;
-  }
-
-  @media (max-width: 850px) {
-    .top-deck { grid-template-columns: 1fr; text-align: center; }
-  }
-
+  /* ── TOP SECTION: CENTERED TIME & DATE ── */
   .clock-box {
-    display: flex;
-    flex-direction: column;
+    text-align: center;
+    width: 100%;
   }
   
   #timeDisplay {
-    font-size: 5.5rem;
+    font-size: 6rem;
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -54,41 +43,25 @@
   }
   
   #dateDisplay {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: #444;
   }
 
-  .weather-wrapper {
-    background: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 12px;
-    padding: 10px;
-    min-height: 180px;
-  }
-
-  /* ── BOTTOM DECK: MEDIA & AUX GRID ── */
-  .panel-title {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #333;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid #111;
-    padding-bottom: 0.25rem;
-  }
-
-  .bottom-deck {
+  /* ── MAIN DECK: SIDE-BY-SIDE SPLIT ── */
+  .main-deck {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
+    align-items: flex-start;
   }
 
   @media (max-width: 850px) {
-    .bottom-deck { grid-template-columns: 1fr; }
+    .main-deck { grid-template-columns: 1fr; }
   }
 
+  /* Left Side: Spotify Bracket */
   .spotify-wrapper {
     width: 100%;
   }
@@ -97,6 +70,28 @@
     width: 100%;
     height: 352px;
     border: none;
+    border-radius: 12px;
+    background: #111;
+  }
+
+  /* Right Side: Weather Bracket */
+  .weather-wrapper {
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 15px;
+    min-height: 320px;
+    box-sizing: border-box;
+  }
+
+  .panel-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #111;
+    padding-bottom: 0.25rem;
   }
 
   .back-btn {
@@ -115,13 +110,20 @@
 
 <div class="matrix-container">
   
-  <div class="top-deck">
-    <div class="clock-box">
-      <div id="timeDisplay">12:00:00</div>
-      <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+  <header class="clock-box">
+    <div id="timeDisplay">12:00:00</div>
+    <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+  </header>
+  
+  <div class="main-deck">
+    
+    <div class="spotify-wrapper">
+      <div class="panel-title">Audio Matrix</div>
+      <iframe src="https://open.spotify.com/embed/playlist/YOUR_SPOTIFY_PLAYLIST_ID_HERE?utm_source=generator&theme=0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
     
     <div class="weather-wrapper">
+      <div class="panel-title">Atmosphere Engine</div>
       <div class="tomorrow"
          data-location-id=""
          data-language="EN"
@@ -145,15 +147,7 @@
         </a>
       </div>
     </div>
-  </div>
 
-  <div class="bottom-deck">
-    <div class="spotify-wrapper">
-      <div class="panel-title">Audio Matrix</div>
-      <iframe data-testid="embed-iframe" style="border-radius:12px" src="http://googleusercontent.com/spotify.com/3" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-    
-    <div></div>
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
