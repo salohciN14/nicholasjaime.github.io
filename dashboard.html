@@ -23,7 +23,7 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 3rem;
     align-items: center;
     box-sizing: border-box;
   }
@@ -49,21 +49,15 @@
     color: #444;
   }
 
-  /* Sleek layout container for the native forecast window */
+  /* Sleek layout frame holding your custom widget */
   .widget-wrapper {
     width: 100%;
-    height: 220px;
+    min-height: 150px;
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
-    overflow: hidden;
+    padding: 4px;
     box-sizing: border-box;
-  }
-
-  .widget-frame {
-    width: 100%;
-    height: 100%;
-    border: none;
   }
 
   .back-btn {
@@ -87,7 +81,7 @@
   </header>
 
   <div class="widget-wrapper">
-    <iframe class="widget-frame" src="https://embed.windy.com/embed.html?type=forecast&detailLat=39.643&detailLon=-84.287&detail=true&metricTemp=default&metricRain=default&metricWind=default"></iframe>
+    <a class="weatherwidget-io" href="https://forecast7.com/en/39d64n84d29/miamisburg/?unit=us" data-label_1="MIAMISBURG" data-label_2="WEATHER" data-font="Arial Black" data-icons="Climacons Animated" data-theme="dark" >MIAMISBURG WEATHER</a>
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
@@ -115,9 +109,12 @@
     document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
   }
   
-  // Fire instantly, then trigger the 1-second update interval loop
+  // Start clock immediately
   updateClock();
   setInterval(updateClock, 1000);
+
+  // ── YOUR WIDGET SCRIPT ENGINE (Safely Loaded Last) ──────
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 </script>
 
 </body>
