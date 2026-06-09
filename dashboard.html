@@ -19,99 +19,112 @@
 
   .station-container {
     width: 100%;
-    max-width: 68rem;
-    padding: 2.5rem 1.5rem;
+    max-width: 60rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
-  /* ── HEADER CLOCK DISPLAY ── */
+  /* ── SYSTEM HEADER ── */
   .station-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 1px solid #222;
-    padding-bottom: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #161616;
+    padding-bottom: 1.5rem;
   }
   #timeDisplay {
-    font-size: 3.5rem;
+    font-size: 5rem;
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
+    margin-bottom: 0.5rem;
   }
   #dateDisplay {
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #555;
-  }
-  #currentCondition {
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: #aaa;
-    text-align: right;
-  }
-
-  /* ── LAYOUT SECTIONS MATRIX ── */
-  .weather-deck {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 2rem;
-  }
-
-  @media (max-width: 900px) {
-    .weather-deck { grid-template-columns: 1fr; }
-  }
-
-  .panel-title {
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: #444;
-    margin-bottom: 0.75rem;
   }
 
-  /* Live Interactive Radar Frame */
-  .radar-box iframe {
-    width: 100%;
-    height: 380px;
-    border: 1px solid #222;
-    border-radius: 4px;
+  /* ── TWO COLUMN GRID MATRIX ── */
+  .dashboard-deck {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-deck { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  .panel-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #111;
+    padding-bottom: 0.5rem;
+  }
+
+  /* ── SQUARE CARD BLOCKS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .weather-card {
     background: #111;
-  }
-
-  /* Forecast Tracks Data Lists */
-  .forecast-box {
+    border: 1px solid #1c1c1c;
+    border-radius: 6px;
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .forecast-row {
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0.6rem 0;
-    border-bottom: 1px dashed #1c1c1c;
-    font-size: 0.85rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    transition: border-color 0.3s, background 0.3s;
   }
 
-  .time-slot { font-weight: 500; color: #fff; width: 35%; }
-  .condition-slot { color: #888; width: 45%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-  .temp-slot { font-family: monospace; text-align: right; width: 20%; color: #aaa; }
+  .weather-card:hover {
+    border-color: #333;
+    background: #141414;
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  .card-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .card-temp {
+    font-family: monospace;
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: #fff;
+  }
 
   .back-btn {
     align-self: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     text-decoration: none;
-    color: #333;
+    color: #222;
     transition: color 0.3s;
   }
-  .back-btn:hover { color: #666; }
+  .back-btn:hover { color: #555; }
 </style>
 </head>
 <body>
@@ -119,33 +132,22 @@
 <div class="station-container">
   
   <header class="station-header">
-    <div>
-      <div id="timeDisplay">00:00:00</div>
-      <div id="dateDisplay">LOADING RUNTIME...</div>
-    </div>
-    <div id="currentCondition">FETCHING DATA...</div>
+    <div id="timeDisplay">00:00:00</div>
+    <div id="dateDisplay">LOADING RUNTIME...</div>
   </header>
 
-  <div class="weather-deck">
+  <div class="dashboard-deck">
     
-    <div class="radar-box">
-      <div class="panel-title">Live Reflectivity Mapping (ILN Node)</div>
-      <iframe src="https://radar.weather.gov/radar.php?rid=iln&product=N0R&loop=yes"></iframe>
+    <div>
+      <div class="panel-title">Hourly Track</div>
+      <div class="card-grid" id="hourlyGrid"></div>
     </div>
 
-    <div class="forecast-box">
-      
-      <div>
-        <div class="panel-title">Hourly Projection (Next 5 Hours)</div>
-        <div id="hourlyGrid"></div>
-      </div>
-
-      <div>
-        <div class="panel-title">Extended Outlook Grid</div>
-        <div id="dailyGrid"></div>
-      </div>
-
+    <div>
+      <div class="panel-title">Daily Track</div>
+      <div class="card-grid" id="dailyGrid"></div>
     </div>
+
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
@@ -172,61 +174,73 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  // ── WEATHER STATION ENGINE (NWS BROADCAST MATRIX) ───────
+  // ── MINIMALIST METEOROLOGICAL ICON TRANSLATOR ───────────
+  function getWeatherIcon(forecastText) {
+    const text = forecastText.toLowerCase();
+    if (text.includes('thunder') || text.includes('storm')) return '⚡';
+    if (text.includes('rain') || text.includes('shower') || text.includes('drizzle')) return '🌧️';
+    if (text.includes('snow') || text.includes('ice') || text.includes('flurry')) return '❄️';
+    if (text.includes('mostly cloudy') || text.includes('overcast')) return '☁️';
+    if (text.includes('partly') || text.includes('scattered')) return '⛅';
+    if (text.includes('clear') || text.includes('sunny')) return '☀️';
+    return '🌫️'; // Fallback fog/mist icon
+  }
+
+  // ── WEATHER STATION ENGINE (NWS SYNC) ───────────────────
   async function runWeatherStation() {
     try {
-      // 1. Fetch Hourly Pipeline Array
+      // 1. Hourly Forecast Connection
       const hourlyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast/hourly');
       if (hourlyRes.ok) {
         const hourlyData = await hourlyRes.json();
         const periods = hourlyData.properties.periods;
         
-        // Render current atmosphere text in the main top header
-        document.getElementById('currentCondition').innerHTML = `${periods[0].shortForecast.toUpperCase()}<br><span style="color:#fff; font-size:1.8rem; font-weight:200;">${periods[0].temperature}°F</span>`;
-        
-        // Loop and print the immediate next 5 hours cleanly
         let hourlyHTML = '';
-        for(let i = 1; i <= 5; i++) {
+        // Pull 4 consecutive clean hours into squares
+        for(let i = 0; i < 4; i++) {
           const slot = periods[i];
-          const timeText = new Date(slot.startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          const timeText = new Date(slot.startTime).toLocaleTimeString('en-US', { hour: 'numeric' });
+          const icon = getWeatherIcon(slot.shortForecast);
+          
           hourlyHTML += `
-            <div class="forecast-row">
-              <div class="time-slot">${timeText}</div>
-              <div class="condition-slot">${slot.shortForecast}</div>
-              <div class="temp-slot">${slot.temperature}°F</div>
+            <div class="weather-card">
+              <span class="card-label">${timeText}</span>
+              <span class="card-icon">${icon}</span>
+              <span class="card-temp">${slot.temperature}°</span>
             </div>`;
         }
         document.getElementById('hourlyGrid').innerHTML = hourlyHTML;
       }
 
-      // 2. Fetch Extended Multi-Day Outlook Pipeline
+      // 2. Daily Forecast Connection
       const dailyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast');
       if (dailyRes.ok) {
         const dailyData = await dailyRes.json();
         const dailyPeriods = dailyData.properties.periods;
         
-        // Loop and print out the multi-day track lines
         let dailyHTML = '';
-        // Skip index 0 if it's currently running, print the clear macro chunks
-        for(let i = 1; i < 7; i++) {
+        // Grabs next 4 main multi-day blocks
+        for(let i = 1; i < 5; i++) {
           const day = dailyPeriods[i];
+          const icon = getWeatherIcon(day.shortForecast);
+          
           dailyHTML += `
-            <div class="forecast-row">
-              <div class="time-slot">${day.name}</div>
-              <div class="condition-slot">${day.shortForecast}</div>
-              <div class="temp-slot">${day.temperature}°F</div>
+            <div class="weather-card">
+              <span class="card-label" style="font-size:0.65rem;">${day.name}</span>
+              <span class="card-icon">${icon}</span>
+              <span class="card-temp">${day.temperature}°</span>
             </div>`;
         }
         document.getElementById('dailyGrid').innerHTML = dailyHTML;
       }
 
     } catch (error) {
-      document.getElementById('currentCondition').textContent = "DATA LINK FAILURE";
+      console.log("Data sync error.");
     }
   }
 
   runWeatherStation();
-  setInterval(runWeatherStation, 900000); // System refresh pipeline sync every 15 mins
+  setInterval(runWeatherStation, 900000); // Sync every 15 mins
 </script>
 
 </body>
