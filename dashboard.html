@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambient Dashboard</title>
+<title>Dashboard</title>
 <style>
   body {
     background: #0a0a0a;
@@ -70,7 +70,7 @@
   
   <div id="weatherDisplay">FETCHING ATMOSPHERE...</div>
 
-  <a href="../" class="back-btn">← RETURN</a>
+  <a href="./" class="back-btn">← RETURN</a>
 </div>
 
 <script>
@@ -97,11 +97,16 @@
   // ── TEXT-BASED WEATHER SYSTEM ───────────────────────────
   async function fetchWeather() {
     try {
-      // This fetches a clean text line: "Sunny +72°F" based on your IP location
-      const response = await fetch('https://wttr.in/?format=%C+%t');
+      // Custom headers force wttr.in to send plain text instead of a full webpage
+      const response = await fetch('https://wttr.in/?format=%C+%t', {
+        headers: {
+          'Accept': 'text/plain',
+          'User-Agent': 'curl/7.64.1'
+        }
+      });
       if (response.ok) {
         const text = await response.text();
-        document.getElementById('weatherDisplay').textContent = text;
+        document.getElementById('weatherDisplay').textContent = text.trim().toUpperCase();
       } else {
         document.getElementById('weatherDisplay').textContent = "WEATHER ERROR";
       }
