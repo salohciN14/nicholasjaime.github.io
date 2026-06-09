@@ -19,19 +19,20 @@
 
   .station-container {
     width: 100%;
-    max-width: 60rem;
+    max-width: 50rem;
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 3rem;
+    align-items: center;
   }
 
   /* ── SYSTEM HEADER ── */
   .station-header {
     text-align: center;
-    border-bottom: 1px solid #161616;
-    padding-bottom: 1.5rem;
+    width: 100%;
   }
+  
   #timeDisplay {
     font-size: 5rem;
     font-weight: 200;
@@ -40,6 +41,7 @@
     color: #fff;
     margin-bottom: 0.5rem;
   }
+  
   #dateDisplay {
     font-size: 0.85rem;
     letter-spacing: 0.25em;
@@ -47,201 +49,18 @@
     color: #444;
   }
 
-  /* ── TWO COLUMN GRID MATRIX ── */
-  .dashboard-deck {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-
-  @media (max-width: 768px) {
-    .dashboard-deck { grid-template-columns: 1fr; gap: 2rem; }
-  }
-
-  .panel-title {
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #333;
-    margin-bottom: 1rem;
-    text-align: center;
-    border-bottom: 1px solid #111;
-    padding-bottom: 0.5rem;
-  }
-
-  /* ── SQUARE CARD BLOCKS ── */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .weather-card {
+  /* ── WEATHER WIDGET FRAME ── */
+  .widget-wrapper {
+    width: 100%;
     background: #111;
     border: 1px solid #1c1c1c;
-    border-radius: 6px;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    transition: border-color 0.3s, background 0.3s;
-  }
-
-  .weather-card:hover {
-    border-color: #333;
-    background: #141414;
-  }
-
-  .card-label {
-    font-size: 0.75rem;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 500;
-  }
-
-  .card-icon {
-    font-size: 1.75rem;
-    line-height: 1;
-  }
-
-  .card-temp {
-    font-family: monospace;
-    font-size: 1.15rem;
-    font-weight: 300;
-    color: #fff;
+    border-radius: 8px;
+    padding: 4px;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   .back-btn {
-    align-self: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
     font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    color: #222;
-    transition: color 0.3s;
-  }
-  .back-btn:hover { color: #555; }
-</style>
-</head>
-<body>
-
-<div class="station-container">
-  
-  <header class="station-header">
-    <div id="timeDisplay">00:00:00</div>
-    <div id="dateDisplay">LOADING RUNTIME...</div>
-  </header>
-
-  <div class="dashboard-deck">
-    
-    <div>
-      <div class="panel-title">Hourly Track</div>
-      <div class="card-grid" id="hourlyGrid"></div>
-    </div>
-
-    <div>
-      <div class="panel-title">Daily Track</div>
-      <div class="card-grid" id="dailyGrid"></div>
-    </div>
-
-  </div>
-
-  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
-
-</div>
-
-<script>
-  // ── LIVE RUNTIME CLOCK SYSTEM ───────────────────────────
-  function updateClock() {
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
-    
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    
-    document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
-
-    const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
-    document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', options);
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
-
-  // ── MINIMALIST METEOROLOGICAL ICON TRANSLATOR ───────────
-  function getWeatherIcon(forecastText) {
-    const text = forecastText.toLowerCase();
-    if (text.includes('thunder') || text.includes('storm')) return '⚡';
-    if (text.includes('rain') || text.includes('shower') || text.includes('drizzle')) return '🌧️';
-    if (text.includes('snow') || text.includes('ice') || text.includes('flurry')) return '❄️';
-    if (text.includes('mostly cloudy') || text.includes('overcast')) return '☁️';
-    if (text.includes('partly') || text.includes('scattered')) return '⛅';
-    if (text.includes('clear') || text.includes('sunny')) return '☀️';
-    return '🌫️'; // Fallback fog/mist icon
-  }
-
-  // ── WEATHER STATION ENGINE (NWS SYNC) ───────────────────
-  async function runWeatherStation() {
-    try {
-      // 1. Hourly Forecast Connection
-      const hourlyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast/hourly');
-      if (hourlyRes.ok) {
-        const hourlyData = await hourlyRes.json();
-        const periods = hourlyData.properties.periods;
-        
-        let hourlyHTML = '';
-        // Pull 4 consecutive clean hours into squares
-        for(let i = 0; i < 4; i++) {
-          const slot = periods[i];
-          const timeText = new Date(slot.startTime).toLocaleTimeString('en-US', { hour: 'numeric' });
-          const icon = getWeatherIcon(slot.shortForecast);
-          
-          hourlyHTML += `
-            <div class="weather-card">
-              <span class="card-label">${timeText}</span>
-              <span class="card-icon">${icon}</span>
-              <span class="card-temp">${slot.temperature}°</span>
-            </div>`;
-        }
-        document.getElementById('hourlyGrid').innerHTML = hourlyHTML;
-      }
-
-      // 2. Daily Forecast Connection
-      const dailyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast');
-      if (dailyRes.ok) {
-        const dailyData = await dailyRes.json();
-        const dailyPeriods = dailyData.properties.periods;
-        
-        let dailyHTML = '';
-        // Grabs next 4 main multi-day blocks
-        for(let i = 1; i < 5; i++) {
-          const day = dailyPeriods[i];
-          const icon = getWeatherIcon(day.shortForecast);
-          
-          dailyHTML += `
-            <div class="weather-card">
-              <span class="card-label" style="font-size:0.65rem;">${day.name}</span>
-              <span class="card-icon">${icon}</span>
-              <span class="card-temp">${day.temperature}°</span>
-            </div>`;
-        }
-        document.getElementById('dailyGrid').innerHTML = dailyHTML;
-      }
-
-    } catch (error) {
-      console.log("Data sync error.");
-    }
-  }
-
-  runWeatherStation();
-  setInterval(runWeatherStation, 900000); // Sync every 15 mins
-</script>
-
-</body>
-</html>
+    letter-spacing: 0.1
