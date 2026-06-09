@@ -41,20 +41,21 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Immersive dark frame for the weather feed */
-  .weather-frame {
-    border: none;
-    border-radius: 8px;
+  /* Style for the weather image card */
+  .weather-card {
     background: #111;
-    overflow: hidden;
-    width: 300px;
-    height: 70px;
-    opacity: 0.75;
-    transition: opacity 0.3s;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 10px;
+    max-width: 350px;
+    height: auto;
+    opacity: 0.8;
+    transition: opacity 0.3s, border-color 0.3s;
   }
   
-  .weather-frame:hover {
+  .weather-card:hover {
     opacity: 1;
+    border-color: #444;
   }
 
   .back-btn {
@@ -77,7 +78,7 @@
   <div id="timeDisplay">00:00:00</div>
   <div id="dateDisplay">LOADING...</div>
   
-  <iframe class="weather-frame" src="https://wttr.in/?format=3&style=dark"></iframe>
+  <img class="weather-card" src="https://wttr.in/_format=4.png" alt="Current Weather">
 
   <a href="./" class="back-btn">← RETURN</a>
 </div>
