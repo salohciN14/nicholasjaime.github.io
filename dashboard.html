@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambient Dashboard</title>
+<title>Command Station — Atmosphere</title>
 <style>
   body {
     background: #0a0a0a;
@@ -17,70 +17,145 @@
     align-items: center;
   }
 
-  .ambient-container {
-    text-align: center;
+  .station-container {
+    width: 100%;
+    max-width: 68rem;
+    padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
+  /* ── HEADER CLOCK DISPLAY ── */
+  .station-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1rem;
+  }
   #timeDisplay {
-    font-size: 5rem;
+    font-size: 3.5rem;
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
   }
-
   #dateDisplay {
-    font-size: 0.9rem;
-    letter-spacing: 0.25em;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #555;
-    margin-bottom: 0.5rem;
+  }
+  #currentCondition {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #aaa;
+    text-align: right;
   }
 
-  #weatherDisplay {
-    font-family: monospace;
-    font-size: 1rem;
-    letter-spacing: 0.05em;
-    color: #888;
-    text-transform: uppercase;
-    max-width: 400px;
-    line-height: 1.4;
+  /* ── LAYOUT SECTIONS MATRIX ── */
+  .weather-deck {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
   }
+
+  @media (max-width: 900px) {
+    .weather-deck { grid-template-columns: 1fr; }
+  }
+
+  .panel-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Live Interactive Radar Frame */
+  .radar-box iframe {
+    width: 100%;
+    height: 380px;
+    border: 1px solid #222;
+    border-radius: 4px;
+    background: #111;
+  }
+
+  /* Forecast Tracks Data Lists */
+  .forecast-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .forecast-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed #1c1c1c;
+    font-size: 0.85rem;
+  }
+
+  .time-slot { font-weight: 500; color: #fff; width: 35%; }
+  .condition-slot { color: #888; width: 45%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+  .temp-slot { font-family: monospace; text-align: right; width: 20%; color: #aaa; }
 
   .back-btn {
-    margin-top: 2.5rem;
+    align-self: center;
+    margin-top: 1rem;
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     text-decoration: none;
     color: #333;
     transition: color 0.3s;
   }
-  
-  .back-btn:hover {
-    color: #666;
-  }
+  .back-btn:hover { color: #666; }
 </style>
 </head>
 <body>
 
-<div class="ambient-container">
-  <div id="timeDisplay">00:00:00</div>
-  <div id="dateDisplay">LOADING...</div>
+<div class="station-container">
   
-  <div id="weatherDisplay">FETCHING ATMOSPHERE...</div>
+  <header class="station-header">
+    <div>
+      <div id="timeDisplay">00:00:00</div>
+      <div id="dateDisplay">LOADING RUNTIME...</div>
+    </div>
+    <div id="currentCondition">FETCHING DATA...</div>
+  </header>
 
-  <a href="./" class="back-btn">← RETURN</a>
+  <div class="weather-deck">
+    
+    <div class="radar-box">
+      <div class="panel-title">Live Reflectivity Mapping (ILN Node)</div>
+      <iframe src="https://radar.weather.gov/radar.php?rid=iln&product=N0R&loop=yes"></iframe>
+    </div>
+
+    <div class="forecast-box">
+      
+      <div>
+        <div class="panel-title">Hourly Projection (Next 5 Hours)</div>
+        <div id="hourlyGrid"></div>
+      </div>
+
+      <div>
+        <div class="panel-title">Extended Outlook Grid</div>
+        <div id="dailyGrid"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
+
 </div>
 
 <script>
-  // ── LIVE CLOCK SYSTEM ───────────────────────────────────
+  // ── LIVE RUNTIME CLOCK SYSTEM ───────────────────────────
   function updateClock() {
     const now = new Date();
-    
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let seconds = now.getSeconds();
@@ -97,30 +172,61 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  // ── NATIONAL WEATHER SERVICE SYSTEM (OHIO LOCAL) ────────
-  async function fetchWeather() {
+  // ── WEATHER STATION ENGINE (NWS BROADCAST MATRIX) ───────
+  async function runWeatherStation() {
     try {
-      // Fetching the official public weather station feed for the ILN zone (Southwest Ohio)
-      const response = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast/hourly');
-      if (response.ok) {
-        const data = await response.json();
-        // Grabs the absolute latest hourly update
-        const currentPeriod = data.properties.periods[0];
+      // 1. Fetch Hourly Pipeline Array
+      const hourlyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast/hourly');
+      if (hourlyRes.ok) {
+        const hourlyData = await hourlyRes.json();
+        const periods = hourlyData.properties.periods;
         
-        const temp = currentPeriod.temperature;
-        const condition = currentPeriod.shortForecast;
+        // Render current atmosphere text in the main top header
+        document.getElementById('currentCondition').innerHTML = `${periods[0].shortForecast.toUpperCase()}<br><span style="color:#fff; font-size:1.8rem; font-weight:200;">${periods[0].temperature}°F</span>`;
         
-        // Formats beautifully as: "PARTLY CLOUDY • 81°F"
-        document.getElementById('weatherDisplay').textContent = `${condition} • ${temp}°F`;
-      } else {
-        document.getElementById('weatherDisplay').textContent = "WEATHER UNAVAILABLE";
+        // Loop and print the immediate next 5 hours cleanly
+        let hourlyHTML = '';
+        for(let i = 1; i <= 5; i++) {
+          const slot = periods[i];
+          const timeText = new Date(slot.startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          hourlyHTML += `
+            <div class="forecast-row">
+              <div class="time-slot">${timeText}</div>
+              <div class="condition-slot">${slot.shortForecast}</div>
+              <div class="temp-slot">${slot.temperature}°F</div>
+            </div>`;
+        }
+        document.getElementById('hourlyGrid').innerHTML = hourlyHTML;
       }
+
+      // 2. Fetch Extended Multi-Day Outlook Pipeline
+      const dailyRes = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast');
+      if (dailyRes.ok) {
+        const dailyData = await dailyRes.json();
+        const dailyPeriods = dailyData.properties.periods;
+        
+        // Loop and print out the multi-day track lines
+        let dailyHTML = '';
+        // Skip index 0 if it's currently running, print the clear macro chunks
+        for(let i = 1; i < 7; i++) {
+          const day = dailyPeriods[i];
+          dailyHTML += `
+            <div class="forecast-row">
+              <div class="time-slot">${day.name}</div>
+              <div class="condition-slot">${day.shortForecast}</div>
+              <div class="temp-slot">${day.temperature}°F</div>
+            </div>`;
+        }
+        document.getElementById('dailyGrid').innerHTML = dailyHTML;
+      }
+
     } catch (error) {
-      document.getElementById('weatherDisplay').textContent = "OFFLINE";
+      document.getElementById('currentCondition').textContent = "DATA LINK FAILURE";
     }
   }
-  fetchWeather();
-  setInterval(fetchWeather, 900000); // Update every 15 minutes
+
+  runWeatherStation();
+  setInterval(runWeatherStation, 900000); // System refresh pipeline sync every 15 mins
 </script>
 
 </body>
