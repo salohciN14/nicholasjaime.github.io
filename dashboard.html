@@ -23,7 +23,7 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
     box-sizing: border-box;
   }
@@ -49,14 +49,21 @@
     color: #444;
   }
 
+  /* Sleek layout container for the native forecast window */
   .widget-wrapper {
     width: 100%;
-    min-height: 150px;
+    height: 260px;
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
-    padding: 4px;
+    overflow: hidden;
     box-sizing: border-box;
+  }
+
+  .widget-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
   }
 
   .back-btn {
@@ -64,10 +71,10 @@
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     text-decoration: none;
-    color: #222;
+    color: #333;
     transition: color 0.3s;
   }
-  .back-btn:hover { color: #555; }
+  .back-btn:hover { color: #666; }
 </style>
 </head>
 <body>
@@ -80,7 +87,7 @@
   </header>
 
   <div class="widget-wrapper">
-    <a class="weatherwidget-io" href="https://forecast7.com/en/39d64n84d29/miamisburg/?unit=us" data-label_1="MIAMISBURG" data-label_2="WEATHER" data-font="Arial Black" data-icons="Climacons Animated" data-theme="dark">MIAMISBURG WEATHER</a>
+    <iframe class="widget-frame" src="https://forecast.windy.com/iframe/html/view.html?lat=39.643&lon=-84.287&label=Miamisburg&bgColor=dark&textColor=white&gridColor=rgba(255%2C255%2C255%2C0.1)&dayIcon=white&font=Ubuntu&units=f"></iframe>
   </div>
 
   <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
@@ -90,4 +97,28 @@
 <script>
   // ── LIVE RUNTIME CLOCK SYSTEM ───────────────────────────
   function updateClock() {
-    const now
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    
+    // Convert to standard 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+    
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+
+    const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
+    document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
+  }
+  
+  // Fire instantly, then trigger the 1-second update interval loop
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
