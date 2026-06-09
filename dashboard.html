@@ -5,115 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Command Station — Atmosphere</title>
 <style>
-  body {
+  html, body {
     background: #0a0a0a;
-    color: #e5e5e5;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
   }
 
-  .station-container {
-    width: 100%;
-    max-width: 50rem;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-    align-items: center;
+  /* Full-bleed layout setup for Tomorrow.io frame grid */
+  .tomorrow {
+    width: 100% !important;
+    min-height: 100vh !important;
     box-sizing: border-box;
+    padding: 2rem !important;
   }
 
-  .station-header {
-    text-align: center;
-    width: 100%;
-  }
-  
-  #timeDisplay {
-    font-size: 5rem;
-    font-weight: 200;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-  
-  #dateDisplay {
-    font-size: 0.85rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #444;
-  }
-
-  /* Container structure for Elfsight layout styling */
-  .widget-wrapper {
-    width: 100%;
-    min-height: 150px;
-    background: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 8px;
-    padding: 12px;
-    box-sizing: border-box;
-  }
-
+  /* Discretely float your return button in the bottom corner so you aren't trapped */
   .back-btn {
-    margin-top: 1rem;
-    font-size: 0.8rem;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-decoration: none;
     color: #333;
-    transition: color 0.3s;
+    background: rgba(10, 10, 10, 0.8);
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #1c1c1c;
+    z-index: 999999;
+    transition: color 0.3s, border-color 0.3s;
   }
-  .back-btn:hover { color: #666; }
+  .back-btn:hover { 
+    color: #666;
+    border-color: #333;
+  }
 </style>
 </head>
 <body>
 
-<div class="station-container">
-  
-  <header class="station-header">
-    <div id="timeDisplay">12:00:00</div>
-    <div id="dateDisplay">LOADING RUNTIME...</div>
-  </header>
-
-  <div class="widget-wrapper">
-    <script src="https://elfsightcdn.com/platform.js" async></script>
-    <div class="elfsight-app-a621e518-ea9b-4e1f-859e-da5fe2aad921" data-elfsight-app-lazy></div>
+  <div class="tomorrow"
+     data-location-id=""
+     data-language="EN"
+     data-unit-system="IMPERIAL"
+     data-skin="dark"
+     data-widget-type="upcoming"
+     style="padding-bottom:22px;position:relative;"
+  >
+    <a
+      href="https://weather.tomorrow.io/"
+      rel="nofollow noopener noreferrer"
+      target="_blank"
+      style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+    >
+      <img
+        alt="Powered by Tomorrow.io"
+        src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+        width="250"
+        height="18"
+      />
+    </a>
   </div>
 
-  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
+  <a href="./" class="back-btn">← RETURN</a>
 
-</div>
+  <script>
+  (function(d, s, id) {
+      if (d.getElementById(id)) {
+          if (window.__TOMORROW__) {
+              window.__TOMORROW__.renderWidget();
+          }
+          return;
+      }
+      const fjs = d.getElementsByTagName(s)[0];
+      const js = d.createElement(s);
+      js.id = id;
+      js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
 
-<script>
-  // ── LIVE RUNTIME CLOCK SYSTEM ───────────────────────────
-  function updateClock() {
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
-    
-    // Convert to standard 12-hour format
-    hours = hours % 12;
-    hours = hours ? hours : 12; 
-    
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    
-    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
-
-    const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
-    document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
-  }
-  
-  // Start clock immediately
-  updateClock();
-  setInterval(updateClock, 1000);
-</script>
+      fjs.parentNode.insertBefore(js, fjs);
+  })(document, 'script', 'tomorrow-sdk');
+  </script>
 
 </body>
 </html>
