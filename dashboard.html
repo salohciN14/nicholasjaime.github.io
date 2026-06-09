@@ -41,21 +41,14 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Style for the weather image card */
-  .weather-card {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 6px;
-    padding: 10px;
-    max-width: 350px;
-    height: auto;
-    opacity: 0.8;
-    transition: opacity 0.3s, border-color 0.3s;
-  }
-  
-  .weather-card:hover {
-    opacity: 1;
-    border-color: #444;
+  #weatherDisplay {
+    font-family: monospace;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: #888;
+    text-transform: uppercase;
+    max-width: 400px;
+    line-height: 1.4;
   }
 
   .back-btn {
@@ -78,7 +71,7 @@
   <div id="timeDisplay">00:00:00</div>
   <div id="dateDisplay">LOADING...</div>
   
-  <img class="weather-card" src="https://wttr.in/_format=4.png" alt="Current Weather">
+  <div id="weatherDisplay">FETCHING ATMOSPHERE...</div>
 
   <a href="./" class="back-btn">← RETURN</a>
 </div>
@@ -103,6 +96,31 @@
   }
   setInterval(updateClock, 1000);
   updateClock();
+
+  // ── NATIONAL WEATHER SERVICE SYSTEM (OHIO LOCAL) ────────
+  async function fetchWeather() {
+    try {
+      // Fetching the official public weather station feed for the ILN zone (Southwest Ohio)
+      const response = await fetch('https://api.weather.gov/gridpoints/ILN/37,41/forecast/hourly');
+      if (response.ok) {
+        const data = await response.json();
+        // Grabs the absolute latest hourly update
+        const currentPeriod = data.properties.periods[0];
+        
+        const temp = currentPeriod.temperature;
+        const condition = currentPeriod.shortForecast;
+        
+        // Formats beautifully as: "PARTLY CLOUDY • 81°F"
+        document.getElementById('weatherDisplay').textContent = `${condition} • ${temp}°F`;
+      } else {
+        document.getElementById('weatherDisplay').textContent = "WEATHER UNAVAILABLE";
+      }
+    } catch (error) {
+      document.getElementById('weatherDisplay').textContent = "OFFLINE";
+    }
+  }
+  fetchWeather();
+  setInterval(fetchWeather, 900000); // Update every 15 minutes
 </script>
 
 </body>
