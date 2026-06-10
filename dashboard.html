@@ -54,57 +54,24 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   @media (max-width: 850px) {
     .main-deck { grid-template-columns: 1fr; }
   }
 
-  /* Left Side: Solid Control Link Hub */
+  /* Left Side: Spotify Bracket */
   .spotify-wrapper {
-    background: #111;
-    border: 1px solid #1c1c1c;
+    width: 100%;
+  }
+
+  .spotify-wrapper iframe {
+    width: 100%;
+    height: 352px;
+    border: none;
     border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    min-height: 320px;
-  }
-
-  .launch-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    background: #141414;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 2.5rem 1rem;
-    text-decoration: none;
-    color: #1DB954;
-    font-weight: bold;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    flex-grow: 1;
-    margin-top: 1rem;
-  }
-
-  .launch-btn:hover {
-    background: #1ed760;
-    color: #000;
-    border-color: #1ed760;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.15);
-  }
-
-  .launch-btn span {
-    font-size: 2.5rem;
+    background: #111;
   }
 
   /* Right Side: Weather Bracket */
@@ -115,12 +82,6 @@
     padding: 15px;
     min-height: 320px;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .weather-wrapper .tomorrow {
-    flex-grow: 1;
   }
 
   .panel-title {
@@ -158,10 +119,7 @@
     
     <div class="spotify-wrapper">
       <div class="panel-title">Audio Matrix</div>
-      <a href="https://open.spotify.com/playlist/2gG2yK0gLg7HwE1V6M7S0F" target="_blank" class="launch-btn">
-        <span>🎵</span>
-        Open Your Playlist
-      </a>
+      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/2gG2yK0gLg7HwE1V6M7S0F" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
     
     <div class="weather-wrapper">
@@ -229,4 +187,11 @@
     document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
 
     const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
-    document.getElementById("
+    document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
