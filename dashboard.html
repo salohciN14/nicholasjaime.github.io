@@ -77,16 +77,6 @@
     box-sizing: border-box;
   }
 
-  .panel-title {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #444;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #1a1a1a;
-    padding-bottom: 0.5rem;
-  }
-
   /* ── TOP DECK CONFIGURATION (3 EQUAL TILES) ── */
   .top-deck {
     display: grid;
@@ -97,8 +87,10 @@
   .digital-clock-tile {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     height: 220px;
+    text-align: center;
   }
 
   #timeDisplay {
@@ -107,7 +99,7 @@
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
-    margin-top: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   #dateDisplay {
@@ -120,7 +112,7 @@
   .analog-clock-tile {
     height: 220px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
   }
 
@@ -128,13 +120,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 140px;
+    height: 100%;
     width: 100%;
     overflow: hidden;
   }
 
   .analog-clock-frame iframe {
-    transform: scale(0.85); 
+    transform: scale(0.95); 
   }
 
   /* Completely Blank Reserved Tile Corner */
@@ -289,7 +281,9 @@
   }
 
   .weather-wrapper {
-    min-height: 614px; 
+    min-height: 602px; 
+    display: flex;
+    flex-direction: column;
   }
 
   .back-btn {
@@ -316,13 +310,11 @@
   
   <div class="top-deck">
     <div class="tile-card digital-clock-tile">
-      <div class="panel-title">Chronos Display</div>
       <div id="timeDisplay">12:00</div>
       <div id="dateDisplay">INITIALIZING...</div>
     </div>
 
     <div class="tile-card analog-clock-tile">
-      <div class="panel-title">Analog Engine</div>
       <div class="analog-clock-frame">
         <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
       </div>
@@ -340,7 +332,6 @@
     
     <div class="media-wrapper">
       <div class="tile-card">
-        <div class="panel-title">Audio Matrix</div>
         <div class="media-wrapper-container">
           <div id="yt-player"></div>
         </div>
@@ -361,14 +352,13 @@
     </div>
     
     <div class="tile-card weather-wrapper">
-      <div class="panel-title">Atmosphere Engine</div>
       <div class="tomorrow"
-         data-location-id=""
+         data-location-id="064504"
          data-language="EN"
          data-unit-system="IMPERIAL"
          data-skin="dark"
          data-widget-type="upcoming"
-         style="padding-bottom:22px;position:relative;"
+         style="padding-bottom:22px;position:relative;flex:1;"
       >
         <a
           href="https://weather.tomorrow.io/"
@@ -545,4 +535,21 @@
 </script>
 
 <script>
-(function(d
+(function(d, s, id) {
+    if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+            window.__TOMORROW__.renderWidget();
+        }
+        return;
+    }
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement(s);
+    js.id = id;
+    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+    fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'tomorrow-sdk');
+</script>
+
+</body>
+</html>
