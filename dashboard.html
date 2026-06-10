@@ -10,7 +10,7 @@
     color: #e5e5e5;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 4rem; /* Generous padding moves everything away from the screen edge */
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -18,20 +18,35 @@
     box-sizing: border-box;
     overflow-x: hidden;
     position: relative;
-    padding-bottom: 3rem;
+  }
+
+  /* ── AMBIENT AI GLOW BORDER EFFECT ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 100;
+    /* 4px crisp multi-tone gradient border resembling advanced AI interfaces */
+    border: 4px solid transparent;
+    border-image: linear-gradient(125deg, #4285f4, #9b51e0, #34a853, #fbbc05, #ea4335, #4285f4) 1;
+    /* Soft interior glow projecting into the screen */
+    box-shadow: inset 0 0 40px rgba(155, 81, 224, 0.15), inset 0 0 100px rgba(66, 133, 244, 0.1);
   }
 
   .matrix-container {
     width: 100%;
     max-width: 75rem;
-    padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
     z-index: 1;
   }
 
-  /* ── TOP ROW: CLEAN TWO-DIGIT CLOCKS & EMPTY SPACE ── */
+  /* ── TOP ROW: CLOCKS WITH EXTRA LEFT INSIDE LEAP ── */
   .top-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -43,6 +58,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding-left: 1rem; /* Shifting clock inward slightly more for flawless framing */
   }
 
   .clocks-wrapper {
@@ -113,8 +129,8 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    /* Set to 480 seconds to ensure a highly legible, relaxed cinematic drift */
-    animation: ticker-move 480s linear infinite;
+    /* Set to 960 seconds for an ultra-chill, cinematic reading experience */
+    animation: ticker-move 960s linear infinite;
     color: #e4e4e7;
     font-size: 0.85rem;
     font-weight: 500;
@@ -149,6 +165,7 @@
   }
 
   @media (max-width: 850px) {
+    body { padding: 1.5rem; }
     .top-row { grid-template-columns: 1fr; }
     .main-deck { grid-template-columns: 1fr; }
   }
