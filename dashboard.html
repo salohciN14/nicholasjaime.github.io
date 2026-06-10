@@ -20,119 +20,126 @@
     position: relative;
   }
 
-  /* ── STREAMLINED FIXED BORDER GLOW ENGINE ── */
+  /* ── FIXED PERIMETER BORDER GLOW ENGINE ── */
   body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
     z-index: 100;
-    
-    /* 5px clean border frame */
     border: 5px solid transparent;
-    
-    /* The rainbow gradient shifts horizontally ALONG the border path, never rotating */
     border-image: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4) 1;
     background-size: 200% auto;
-    
-    /* Layered, tight inside glows that swell out slightly by just a few pixels */
     box-shadow: 
-      inset 0 0 8px rgba(255, 255, 255, 0.4),  /* Subtle, crisp white edge presence */
-      inset 0 0 15px rgba(66, 133, 244, 0.2),  /* Soft color backing */
+      inset 0 0 8px rgba(255, 255, 255, 0.4),  
+      inset 0 0 15px rgba(66, 133, 244, 0.2),  
       inset 0 0 25px rgba(155, 81, 224, 0.15);
-      
     animation: border-flow 8s linear infinite, glow-intensity 4s ease-in-out infinite alternate;
   }
 
-  /* Moves the colors smoothly along the perimeter sequence */
   @keyframes border-flow {
-    0% {
-      border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4);
-    }
-    50% {
-      border-image-source: linear-gradient(to bottom, #fbbc05, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05);
-    }
-    100% {
-      border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4);
-    }
+    0% { border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4); }
+    50% { border-image-source: linear-gradient(to bottom, #fbbc05, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05); }
+    100% { border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4); }
   }
 
-  /* Gently alters the white intensity to make it push inward and recede by a few pixels */
   @keyframes glow-intensity {
     0% {
       box-shadow: 
-        inset 0 0 4px rgba(255, 255, 255, 0.2),   /* Dimer, thinner accent */
+        inset 0 0 4px rgba(255, 255, 255, 0.2),   
         inset 0 0 12px rgba(66, 133, 244, 0.15),
         inset 0 0 20px rgba(155, 81, 224, 0.1);
     }
     100% {
       box-shadow: 
-        inset 0 0 12px rgba(255, 255, 255, 0.55),  /* Slightly deeper, more intense white push */
+        inset 0 0 12px rgba(255, 255, 255, 0.55),  
         inset 0 0 18px rgba(66, 133, 244, 0.25),
         inset 0 0 30px rgba(155, 81, 224, 0.2);
     }
   }
 
+  /* ── MAIN MATRIX GRID STRUCTURE ── */
   .matrix-container {
     width: 100%;
     max-width: 75rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
     z-index: 1;
   }
 
-  /* ── TOP ROW: INSIDE SHIFTED TIME MODULE ── */
-  .top-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-    align-items: center;
+  /* Shared Universal Tile Blueprint */
+  .tile-card {
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
-  .time-cluster {
+  .panel-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #1a1a1a;
+    padding-bottom: 0.5rem;
+  }
+
+  /* ── TOP DECK CONFIGURATION (3 EQUAL TILES) ── */
+  .top-deck {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .digital-clock-tile {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding-left: 1.5rem; 
+    justify-content: space-between;
+    height: 220px;
   }
 
-  .clocks-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 0.5rem;
-  }
-  
   #timeDisplay {
-    font-size: 7.5rem;
+    font-size: 5.5rem;
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
+    margin-top: 1rem;
+  }
+
+  #dateDisplay {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  .analog-clock-tile {
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .analog-clock-frame {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-  }
-  
-  #dateDisplay {
-    font-size: 1rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #444;
-    padding-left: 0.25rem;
+    height: 140px;
+    width: 100%;
+    overflow: hidden;
   }
 
-  .empty-space {
-    width: 100%;
-    height: 100%;
+  .analog-clock-frame iframe {
+    transform: scale(0.85); 
+  }
+
+  /* Completely Blank Reserved Tile Corner */
+  .blank-tile {
+    height: 220px;
   }
 
   /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
@@ -174,9 +181,7 @@
     font-weight: 500;
   }
 
-  .ticker:hover {
-    animation-play-state: paused;
-  }
+  .ticker:hover { animation-play-state: paused; }
 
   .ticker-item {
     display: inline-block;
@@ -194,7 +199,7 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── BOTTOM ROW: MEDIA GRID LAYOUT ── */
+  /* ── MAIN LOWER DECK STRUCTURE ── */
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -202,24 +207,17 @@
     align-items: flex-start;
   }
 
-  @media (max-width: 850px) {
-    body { padding: 1.5rem; }
-    .top-row { grid-template-columns: 1fr; }
-    .main-deck { grid-template-columns: 1fr; }
-  }
-
   .media-wrapper {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.5rem;
   }
 
   .media-wrapper-container {
     width: 100%;
     height: 352px;
-    background: #111;
-    border-radius: 12px;
+    background: #0d0d0d;
+    border-radius: 6px;
     overflow: hidden;
   }
 
@@ -231,32 +229,20 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    width: 100%;
-    height: 200px;
-    background: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 12px;
+    height: 220px;
     display: flex;
     flex-direction: column;
+    padding: 0;
     overflow: hidden;
-    box-sizing: border-box;
   }
 
   .scratchpad-header {
-    padding: 10px 15px;
+    padding: 12px 20px;
     background: #161616;
     border-bottom: 1px solid #1c1c1c;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .scratchpad-title {
-    font-size: 0.65rem;
-    font-weight: bold;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #444;
   }
 
   .scratchpad-nav {
@@ -291,7 +277,7 @@
 
   .scratchpad-body {
     flex: 1;
-    padding: 15px;
+    padding: 20px;
     background: transparent;
     border: none;
     color: #e4e4e7;
@@ -302,24 +288,8 @@
     line-height: 1.5;
   }
 
-  /* Right Column Weather */
   .weather-wrapper {
-    background: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 12px;
-    padding: 15px;
-    min-height: 352px;
-    box-sizing: border-box;
-  }
-
-  .panel-title {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #333;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid #111;
-    padding-bottom: 0.25rem;
+    min-height: 614px; 
   }
 
   .back-btn {
@@ -332,23 +302,33 @@
     transition: color 0.3s;
   }
   .back-btn:hover { color: #555; }
+
+  @media (max-width: 950px) {
+    body { padding: 1.5rem; }
+    .top-deck { grid-template-columns: 1fr; }
+    .main-deck { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
 <div class="matrix-container">
   
-  <div class="top-row">
-    <div class="time-cluster">
-      <div class="clocks-wrapper">
-        <div id="timeDisplay">12:00</div>
-        <div class="analog-clock-frame">
-          <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
-        </div>
-      </div>
-      <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+  <div class="top-deck">
+    <div class="tile-card digital-clock-tile">
+      <div class="panel-title">Chronos Display</div>
+      <div id="timeDisplay">12:00</div>
+      <div id="dateDisplay">INITIALIZING...</div>
     </div>
-    <div class="empty-space"></div>
+
+    <div class="tile-card analog-clock-tile">
+      <div class="panel-title">Analog Engine</div>
+      <div class="analog-clock-frame">
+        <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
+      </div>
+    </div>
+
+    <div class="tile-card blank-tile"></div>
   </div>
 
   <div class="ticker-wrap">
@@ -359,16 +339,16 @@
   <div class="main-deck">
     
     <div class="media-wrapper">
-      <div>
+      <div class="tile-card">
         <div class="panel-title">Audio Matrix</div>
         <div class="media-wrapper-container">
           <div id="yt-player"></div>
         </div>
       </div>
 
-      <div class="scratchpad-box">
+      <div class="tile-card scratchpad-box">
         <div class="scratchpad-header">
-          <div class="scratchpad-title">System Notebook</div>
+          <div class="scratchpad-title" style="font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
           <div class="scratchpad-nav">
             <button class="nav-btn" id="prevPageBtn">←</button>
             <span class="page-indicator" id="pageIndicator">1 / 1</span>
@@ -380,7 +360,7 @@
       </div>
     </div>
     
-    <div class="weather-wrapper">
+    <div class="tile-card weather-wrapper">
       <div class="panel-title">Atmosphere Engine</div>
       <div class="tomorrow"
          data-location-id=""
@@ -565,21 +545,4 @@
 </script>
 
 <script>
-(function(d, s, id) {
-    if (d.getElementById(id)) {
-        if (window.__TOMORROW__) {
-            window.__TOMORROW__.renderWidget();
-        }
-        return;
-    }
-    const fjs = d.getElementsByTagName(s)[0];
-    const js = d.createElement(s);
-    js.id = id;
-    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
-
-    fjs.parentNode.insertBefore(js, fjs);
-})(document, 'script', 'tomorrow-sdk');
-</script>
-
-</body>
-</html>
+(function(d
