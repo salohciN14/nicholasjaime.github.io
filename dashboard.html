@@ -10,7 +10,7 @@
     color: #e5e5e5;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding: 5rem; /* Pushes content well clear of the shifting aura edges */
+    padding: 5rem; 
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -20,9 +20,8 @@
     position: relative;
   }
 
-  /* ── FLUID AI SCREEN EDGE GLOW (GEMINI / APPLE INTELLIGENCE STYLE) ── */
-  body::before {
-    content: '';
+  /* ── TRUE GEMINI INFINITY GLOW ENGINE ── */
+  .gemini-glow-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -30,46 +29,116 @@
     bottom: 0;
     pointer-events: none;
     z-index: 100;
-    
-    /* Layered composition using native blend overlay vectors */
-    border: 4px solid transparent;
-    box-shadow: 
-      inset 0 0 30px rgba(155, 81, 224, 0.2),
-      inset 0 0 60px rgba(66, 133, 244, 0.15),
-      inset 0 0 120px rgba(234, 67, 53, 0.1);
-      
-    /* Smooth multi-hued color sweep mapped directly to viewport frame */
-    border-image: linear-gradient(135deg, #4285f4, #9b51e0, #ea4335, #34a853, #fbbc05, #4285f4) 1;
-    background: transparent;
-    
-    /* Triggers continuous fluid color shifting */
-    animation: ai-aura-flow 16s ease-in-out infinite alternate;
+    overflow: hidden;
   }
 
-  /* Subtle background canvas pulse to help the light bleed naturally into the dark theme */
-  body::after {
+  /* Layer 1: The Perimeter Rainbow Loop
+     Spins continuously to move the color spectrum around the edges */
+  .gemini-glow-container::before {
     content: '';
-    position: fixed;
-    top: -10%; left: -10%; right: -10%; bottom: -10%;
-    pointer-events: none;
-    z-index: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(155, 81, 224, 0.05), transparent 60%),
-                radial-gradient(circle at 0% 100%, rgba(66, 133, 244, 0.04), transparent 50%);
-    filter: blur(80px);
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      #4285f4 0deg,
+      #9b51e0 60deg,
+      #ea4335 120deg,
+      #34a853 180deg,
+      #fbbc05 240deg,
+      #4285f4 300deg,
+      #9b51e0 360deg
+    );
+    animation: spin-around 14s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 5px; 
   }
 
-  @keyframes ai-aura-flow {
+  /* Layer 2: Varying Intensities & White Ambient Bleed
+     Handles the deep, soft light bleeding far into the website area */
+  .gemini-glow-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: 
+      inset 0 0 50px rgba(255, 255, 255, 0.15),
+      inset 30px -40px 100px rgba(66, 133, 244, 0.2),
+      inset -50px 20px 120px rgba(155, 81, 224, 0.15),
+      inset 20px 60px 110px rgba(234, 67, 53, 0.15);
+    animation: intensity-wave 10s ease-in-out infinite alternate;
+  }
+
+  /* Layer 3: High-Intensity Dynamic White Surges
+     Specifically targets those intense bursts of white that swell up, 
+     fade down, and travel independently around the perimeter */
+  .gemini-white-surges {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    background: conic-gradient(
+      from 180deg,
+      transparent 0deg,
+      rgba(255, 255, 255, 0) 100deg,
+      rgba(255, 255, 255, 0.8) 140deg, /* Hyper-intense white focal point */
+      rgba(255, 255, 255, 1) 150deg,
+      rgba(255, 255, 255, 0.8) 160deg,
+      transparent 200deg,
+      rgba(255, 255, 255, 0) 280deg,
+      rgba(255, 255, 255, 0.5) 320deg, /* Secondary medium white point */
+      transparent 360deg
+    );
+    /* Blurs the white light heavily so it bleeds away from the edge into the site */
+    filter: blur(40px); 
+    mix-blend-mode: screen;
+    animation: spin-around 8s linear infinite reverse, white-pulse 6s ease-in-out infinite alternate;
+    opacity: 0.6;
+  }
+
+  /* Spinning animation driving perimeter travel */
+  @keyframes spin-around {
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Controls the undulating, fluid swelling of the intense white beams */
+  @keyframes white-pulse {
     0% {
-      filter: hue-rotate(0deg) contrast(1);
-      opacity: 0.95;
+      opacity: 0.4;
+      transform: scale(0.95) rotate(0deg);
     }
     50% {
-      filter: hue-rotate(45deg) contrast(1.1);
-      opacity: 1;
+      opacity: 0.85;
+      transform: scale(1.05) rotate(180deg);
     }
     100% {
-      filter: hue-rotate(-35deg) contrast(0.95);
-      opacity: 0.85;
+      opacity: 0.5;
+      transform: scale(0.9) rotate(360deg);
+    }
+  }
+
+  /* Fluctuation wave for atmospheric background shadows */
+  @keyframes intensity-wave {
+    0% {
+      filter: blur(4px) contrast(1);
+      box-shadow: 
+        inset 0 0 80px rgba(255, 255, 255, 0.35), /* Massive white bleed */
+        inset -30px 50px 130px rgba(66, 133, 244, 0.25),
+        inset 60px -30px 90px rgba(155, 81, 224, 0.1),
+        inset -20px -50px 140px rgba(234, 67, 53, 0.2);
+    }
+    100% {
+      filter: blur(8px) contrast(1.1);
+      box-shadow: 
+        inset 0 0 40px rgba(255, 255, 255, 0.1),
+        inset 50px -20px 90px rgba(66, 133, 244, 0.15),
+        inset -40px 60px 140px rgba(155, 81, 224, 0.3),
+        inset 30px 40px 90px rgba(234, 67, 53, 0.05);
     }
   }
 
@@ -94,7 +163,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 1.5rem; /* Keeps layout cozy and well away from the left wall bounds */
+    padding-left: 1.5rem; 
   }
 
   .clocks-wrapper {
@@ -132,7 +201,7 @@
     height: 100%;
   }
 
-  /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
+  /* ── MIDDLE ROW: RE-ACCELERATED TICKER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
@@ -165,7 +234,6 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    /* Recalibrated to 320 seconds: clean legibility without feeling completely frozen */
     animation: ticker-move 320s linear infinite;
     color: #e4e4e7;
     font-size: 0.85rem;
@@ -333,6 +401,10 @@
 </style>
 </head>
 <body>
+
+<div class="gemini-glow-container">
+  <div class="gemini-white-surges"></div>
+</div>
 
 <div class="matrix-container">
   
