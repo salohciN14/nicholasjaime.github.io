@@ -18,7 +18,7 @@
     box-sizing: border-box;
     overflow-x: hidden;
     position: relative;
-    padding-bottom: 6rem;
+    padding-bottom: 3rem;
   }
 
   .matrix-container {
@@ -60,7 +60,6 @@
     color: #fff;
   }
 
-  /* Container alignment for the new external clock widget */
   .analog-clock-frame {
     display: flex;
     align-items: center;
@@ -114,7 +113,6 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    /* Slowed down down drastically from 45s to 85s for easier reading */
     animation: ticker-move 85s linear infinite;
     color: #a1a1aa;
     font-size: 0.85rem;
@@ -140,7 +138,7 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── BOTTOM ROW: MEDIA AND WEATHER ── */
+  /* ── BOTTOM ROW: MEDIA GRID LAYOUT ── */
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -157,6 +155,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 1.5rem; /* Pushes crisp breathing space between player and notebook */
   }
 
   .media-wrapper-container {
@@ -173,6 +172,80 @@
     border: none;
   }
 
+  /* ── FIXED MULTI-PAGE NOTEBOOK MODULE ── */
+  .scratchpad-box {
+    width: 100%;
+    height: 200px;
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .scratchpad-header {
+    padding: 10px 15px;
+    background: #161616;
+    border-bottom: 1px solid #1c1c1c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .scratchpad-title {
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  .scratchpad-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    user-select: none;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-btn:hover {
+    color: #fff;
+    background: #222;
+  }
+
+  .page-indicator {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #444;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scratchpad-body {
+    flex: 1;
+    padding: 15px;
+    background: transparent;
+    border: none;
+    color: #e4e4e7;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+  }
+
+  /* Right Column Weather */
   .weather-wrapper {
     background: #111;
     border: 1px solid #1c1c1c;
@@ -202,72 +275,9 @@
     transition: color 0.3s;
   }
   .back-btn:hover { color: #555; }
-
-  /* ── INTERACTIVE DRAGGABLE STICKY NOTE ── */
-  .sticky-note {
-    position: absolute;
-    top: 570px; 
-    left: 2rem;
-    width: 220px;
-    height: 220px;
-    background: #18181b;
-    border: 1px solid #27272a;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    transform-origin: top left;
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
-  }
-
-  .sticky-note.peeling {
-    transform: scale(1.03) rotate(-2deg);
-    box-shadow: -8px 15px 30px rgba(0,0,0,0.6);
-  }
-
-  .sticky-header {
-    padding: 8px 12px;
-    background: #27272a;
-    color: #a1a1aa;
-    font-size: 0.65rem;
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: grab;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .sticky-header:active { cursor: grabbing; }
-
-  .sticky-body {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    border: none;
-    color: #e4e4e7;
-    font-family: inherit;
-    font-size: 0.85rem;
-    resize: none;
-    outline: none;
-    line-height: 1.4;
-  }
 </style>
 </head>
 <body>
-
-<div class="sticky-note" id="scratchpad">
-  <div class="sticky-header" id="scratchpadHeader">
-    <span>Scratchpad</span>
-    <span style="font-size:10px; opacity:0.5;">::</span>
-  </div>
-  <textarea class="sticky-body" id="scratchpadText" placeholder="Double click to drop text reminders here..."></textarea>
-</div>
 
 <div class="matrix-container">
   
@@ -275,7 +285,6 @@
     <div class="time-cluster">
       <div class="clocks-wrapper">
         <div id="timeDisplay">12:00:00</div>
-        
         <div class="analog-clock-frame">
           <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
         </div>
@@ -293,9 +302,24 @@
   <div class="main-deck">
     
     <div class="media-wrapper">
-      <div class="panel-title">Audio Matrix</div>
-      <div class="media-wrapper-container">
-        <div id="yt-player"></div>
+      <div>
+        <div class="panel-title">Audio Matrix</div>
+        <div class="media-wrapper-container">
+          <div id="yt-player"></div>
+        </div>
+      </div>
+
+      <div class="scratchpad-box">
+        <div class="scratchpad-header">
+          <div class="scratchpad-title">System Notebook</div>
+          <div class="scratchpad-nav">
+            <button class="nav-btn" id="prevPageBtn">←</button>
+            <span class="page-indicator" id="pageIndicator">1 / 1</span>
+            <button class="nav-btn" id="nextPageBtn">→</button>
+            <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+          </div>
+        </div>
+        <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
       </div>
     </div>
     
@@ -379,54 +403,57 @@
 </script>
 
 <script>
-  const note = document.getElementById('scratchpad');
-  const header = document.getElementById('scratchpadHeader');
-  const textbox = document.getElementById('scratchpadText');
+  const txtArea = document.getElementById('scratchpadTextArea');
+  const indicator = document.getElementById('pageIndicator');
+  const prevBtn = document.getElementById('prevPageBtn');
+  const nextBtn = document.getElementById('nextPageBtn');
+  const addBtn = document.getElementById('addPageBtn');
 
-  if(localStorage.getItem('stickyText')) textbox.value = localStorage.getItem('stickyText');
-  if(localStorage.getItem('stickyTop')) note.style.top = localStorage.getItem('stickyTop');
-  if(localStorage.getItem('stickyLeft')) note.style.left = localStorage.getItem('stickyLeft');
+  // Load structural array data matrix or set fallback defaults
+  let notebookPages = JSON.parse(localStorage.getItem('centerNotebookPages')) || [""];
+  let activePageIdx = parseInt(localStorage.getItem('centerActivePageIdx')) || 0;
 
-  textbox.addEventListener('input', () => {
-    localStorage.setItem('stickyText', textbox.value);
+  // Safety checks to prevent data indexing bounds crashes
+  if (activePageIdx >= notebookPages.length) activePageIdx = notebookPages.length - 1;
+  if (activePageIdx < 0) activePageIdx = 0;
+
+  function renderPage() {
+    txtArea.value = notebookPages[activePageIdx];
+    indicator.textContent = `${activePageIdx + 1} / ${notebookPages.length}`;
+    localStorage.setItem('centerActivePageIdx', activePageIdx);
+  }
+
+  // Active key entry character listener arrays
+  txtArea.addEventListener('input', () => {
+    notebookPages[activePageIdx] = txtArea.value;
+    localStorage.setItem('centerNotebookPages', JSON.stringify(notebookPages));
   });
 
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  header.onmousedown = dragMouseDown;
+  // Dynamic initialization array push method
+  addBtn.addEventListener('click', () => {
+    notebookPages.push("");
+    activePageIdx = notebookPages.length - 1;
+    localStorage.setItem('centerNotebookPages', JSON.stringify(notebookPages));
+    renderPage();
+    txtArea.focus();
+  });
 
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    note.classList.add('peeling');
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
+  prevBtn.addEventListener('click', () => {
+    if (activePageIdx > 0) {
+      activePageIdx--;
+      renderPage();
+    }
+  });
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    
-    let targetTop = (note.offsetTop - pos2);
-    let targetLeft = (note.offsetLeft - pos1);
-    
-    note.style.top = targetTop + "px";
-    note.style.left = targetLeft + "px";
-    
-    localStorage.setItem('stickyTop', note.style.top);
-    localStorage.setItem('stickyLeft', note.style.left);
-  }
+  nextBtn.addEventListener('click', () => {
+    if (activePageIdx < notebookPages.length - 1) {
+      activePageIdx++;
+      renderPage();
+    }
+  });
 
-  function closeDragElement() {
-    note.classList.remove('peeling');
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
+  // Execute base render loop on load
+  renderPage();
 </script>
 
 <script>
