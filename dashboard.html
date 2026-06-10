@@ -10,7 +10,7 @@
     color: #e5e5e5;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding: 4rem; /* Generous padding moves everything away from the screen edge */
+    padding: 5rem; /* Pushes content well clear of the shifting aura edges */
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -20,7 +20,7 @@
     position: relative;
   }
 
-  /* ── AMBIENT AI GLOW BORDER EFFECT ── */
+  /* ── FLUID AI SCREEN EDGE GLOW (GEMINI / APPLE INTELLIGENCE STYLE) ── */
   body::before {
     content: '';
     position: fixed;
@@ -30,11 +30,47 @@
     bottom: 0;
     pointer-events: none;
     z-index: 100;
-    /* 4px crisp multi-tone gradient border resembling advanced AI interfaces */
+    
+    /* Layered composition using native blend overlay vectors */
     border: 4px solid transparent;
-    border-image: linear-gradient(125deg, #4285f4, #9b51e0, #34a853, #fbbc05, #ea4335, #4285f4) 1;
-    /* Soft interior glow projecting into the screen */
-    box-shadow: inset 0 0 40px rgba(155, 81, 224, 0.15), inset 0 0 100px rgba(66, 133, 244, 0.1);
+    box-shadow: 
+      inset 0 0 30px rgba(155, 81, 224, 0.2),
+      inset 0 0 60px rgba(66, 133, 244, 0.15),
+      inset 0 0 120px rgba(234, 67, 53, 0.1);
+      
+    /* Smooth multi-hued color sweep mapped directly to viewport frame */
+    border-image: linear-gradient(135deg, #4285f4, #9b51e0, #ea4335, #34a853, #fbbc05, #4285f4) 1;
+    background: transparent;
+    
+    /* Triggers continuous fluid color shifting */
+    animation: ai-aura-flow 16s ease-in-out infinite alternate;
+  }
+
+  /* Subtle background canvas pulse to help the light bleed naturally into the dark theme */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -10%; left: -10%; right: -10%; bottom: -10%;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(155, 81, 224, 0.05), transparent 60%),
+                radial-gradient(circle at 0% 100%, rgba(66, 133, 244, 0.04), transparent 50%);
+    filter: blur(80px);
+  }
+
+  @keyframes ai-aura-flow {
+    0% {
+      filter: hue-rotate(0deg) contrast(1);
+      opacity: 0.95;
+    }
+    50% {
+      filter: hue-rotate(45deg) contrast(1.1);
+      opacity: 1;
+    }
+    100% {
+      filter: hue-rotate(-35deg) contrast(0.95);
+      opacity: 0.85;
+    }
   }
 
   .matrix-container {
@@ -46,7 +82,7 @@
     z-index: 1;
   }
 
-  /* ── TOP ROW: CLOCKS WITH EXTRA LEFT INSIDE LEAP ── */
+  /* ── TOP ROW: INSIDE SHIFTED TIME MODULE ── */
   .top-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -58,7 +94,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 1rem; /* Shifting clock inward slightly more for flawless framing */
+    padding-left: 1.5rem; /* Keeps layout cozy and well away from the left wall bounds */
   }
 
   .clocks-wrapper {
@@ -96,7 +132,7 @@
     height: 100%;
   }
 
-  /* ── MIDDLE ROW: AUTHENTIC STIMULATION TICKER ── */
+  /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
@@ -129,8 +165,8 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    /* Set to 960 seconds for an ultra-chill, cinematic reading experience */
-    animation: ticker-move 960s linear infinite;
+    /* Recalibrated to 320 seconds: clean legibility without feeling completely frozen */
+    animation: ticker-move 320s linear infinite;
     color: #e4e4e7;
     font-size: 0.85rem;
     font-weight: 500;
@@ -191,7 +227,7 @@
     border: none;
   }
 
-  /* ── FIXED MULTI-PAGE NOTEBOOK MODULE ── */
+  /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
     width: 100%;
     height: 200px;
