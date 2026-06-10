@@ -113,8 +113,8 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    /* Extra-long custom ticker requires a bit more time to crawl flawlessly */
-    animation: ticker-move 140s linear infinite;
+    /* Slowed down considerably to 240 seconds for an easy, chill reading pace */
+    animation: ticker-move 240s linear infinite;
     color: #e4e4e7;
     font-size: 0.85rem;
     font-weight: 500;
@@ -297,7 +297,7 @@
   </div>
 
   <div class="ticker-wrap">
-    <div class="ticker-label">BREAKING</div>
+    <div class="ticker-label">BREAKING NEWS</div>
     <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
   </div>
   
@@ -455,7 +455,6 @@
   function loadRealClickerTicker() {
     const tickerContainer = document.getElementById('newsTicker');
     
-    // Exact text extractions from the official neal.fun application bundle script
     const realHeadlines = [
       "President moves to reverse The Louisiana Purchase, “It was just a bad deal”",
       "Diet Coke shown to cure just about everything",
@@ -504,7 +503,6 @@
       tickerHTML += `<span class="ticker-item">${line.toUpperCase()}</span>`;
     });
     
-    // Duplicated for an unbroken, smooth looping horizon crawl
     tickerContainer.innerHTML = tickerHTML + tickerHTML;
   }
   
