@@ -76,7 +76,6 @@
     overflow: hidden;
   }
 
-  /* The API targets a div instead of a raw iframe link */
   #yt-player {
     width: 100%;
     height: 100%;
@@ -170,12 +169,11 @@
 <script>
   let player;
   
-  // Called automatically when the YouTube API library finishes loading
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('yt-player', {
+      height: '100%',
+      width: '100%',
       playerVars: {
-        listType: 'playlist',
-        list: 'PL0stGdZbMNnVqzBLHv4_7_uGbj9lEtnP-',
         loop: 1
       },
       events: {
@@ -184,12 +182,17 @@
     });
   }
 
-  // Activates the instant shuffle function the millisecond the deck is ready
   function onPlayerReady(event) {
-    player.setShuffle(true);
-    // Forces the player to re-index the playlist into a random order immediately
-    player.playVideoAt(0); 
-    player.pauseVideo(); // Keeps it queued up but quiet until you hit play
+    // Stage the playlist files completely first
+    event.target.cuePlaylist({
+      listType: 'playlist',
+      list: 'PL0stGdZbMNnVqzBLHv4_7_uGbj9lEtnP-'
+    });
+
+    // Provide a small timeout pause to give the playlist data time to lock before sorting
+    setTimeout(function() {
+      event.target.setShuffle(true);
+    }, 1500);
   }
 </script>
 
