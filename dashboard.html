@@ -54,24 +54,57 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   @media (max-width: 850px) {
     .main-deck { grid-template-columns: 1fr; }
   }
 
-  /* Left Side: Spotify Bracket */
+  /* Left Side: Solid Control Link Hub */
   .spotify-wrapper {
-    width: 100%;
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-height: 320px;
   }
 
-  .spotify-wrapper iframe {
-    width: 100%;
-    height: 352px;
-    border: none;
-    border-radius: 12px;
-    background: #181818; /* Visual fallback color while loading */
+  .launch-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 2.5rem 1rem;
+    text-decoration: none;
+    color: #1DB954;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    flex-grow: 1;
+    margin-top: 1rem;
+  }
+
+  .launch-btn:hover {
+    background: #1ed760;
+    color: #000;
+    border-color: #1ed760;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.15);
+  }
+
+  .launch-btn span {
+    font-size: 2.5rem;
   }
 
   /* Right Side: Weather Bracket */
@@ -82,6 +115,12 @@
     padding: 15px;
     min-height: 320px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weather-wrapper .tomorrow {
+    flex-grow: 1;
   }
 
   .panel-title {
@@ -101,3 +140,93 @@
     letter-spacing: 0.1em;
     text-decoration: none;
     color: #222;
+    transition: color 0.3s;
+  }
+  .back-btn:hover { color: #555; }
+</style>
+</head>
+<body>
+
+<div class="matrix-container">
+  
+  <header class="clock-box">
+    <div id="timeDisplay">12:00:00</div>
+    <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+  </header>
+  
+  <div class="main-deck">
+    
+    <div class="spotify-wrapper">
+      <div class="panel-title">Audio Matrix</div>
+      <a href="https://open.spotify.com/playlist/2gG2yK0gLg7HwE1V6M7S0F" target="_blank" class="launch-btn">
+        <span>🎵</span>
+        Open Your Playlist
+      </a>
+    </div>
+    
+    <div class="weather-wrapper">
+      <div class="panel-title">Atmosphere Engine</div>
+      <div class="tomorrow"
+         data-location-id=""
+         data-language="EN"
+         data-unit-system="IMPERIAL"
+         data-skin="dark"
+         data-widget-type="upcoming"
+         style="padding-bottom:22px;position:relative;"
+      >
+        <a
+          href="https://weather.tomorrow.io/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+        >
+          <img
+            alt="Powered by Tomorrow.io"
+            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+            width="250"
+            height="18"
+          />
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
+
+</div>
+
+<script>
+(function(d, s, id) {
+    if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+            window.__TOMORROW__.renderWidget();
+        }
+        return;
+    }
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement(s);
+    js.id = id;
+    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+    fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'tomorrow-sdk');
+</script>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+
+    const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
+    document.getElementById("
