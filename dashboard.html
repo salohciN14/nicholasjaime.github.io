@@ -20,8 +20,9 @@
     position: relative;
   }
 
-  /* ── TRUE GEMINI INFINITY GLOW ENGINE ── */
-  .gemini-glow-container {
+  /* ── STREAMLINED FIXED BORDER GLOW ENGINE ── */
+  body::before {
+    content: '';
     position: fixed;
     top: 0;
     left: 0;
@@ -29,116 +30,49 @@
     bottom: 0;
     pointer-events: none;
     z-index: 100;
-    overflow: hidden;
-  }
-
-  /* Layer 1: The Perimeter Rainbow Loop
-     Spins continuously to move the color spectrum around the edges */
-  .gemini-glow-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-      from 0deg,
-      #4285f4 0deg,
-      #9b51e0 60deg,
-      #ea4335 120deg,
-      #34a853 180deg,
-      #fbbc05 240deg,
-      #4285f4 300deg,
-      #9b51e0 360deg
-    );
-    animation: spin-around 14s linear infinite;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    padding: 5px; 
-  }
-
-  /* Layer 2: Varying Intensities & White Ambient Bleed
-     Handles the deep, soft light bleeding far into the website area */
-  .gemini-glow-container::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    
+    /* 5px clean border frame */
+    border: 5px solid transparent;
+    
+    /* The rainbow gradient shifts horizontally ALONG the border path, never rotating */
+    border-image: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4) 1;
+    background-size: 200% auto;
+    
+    /* Layered, tight inside glows that swell out slightly by just a few pixels */
     box-shadow: 
-      inset 0 0 50px rgba(255, 255, 255, 0.15),
-      inset 30px -40px 100px rgba(66, 133, 244, 0.2),
-      inset -50px 20px 120px rgba(155, 81, 224, 0.15),
-      inset 20px 60px 110px rgba(234, 67, 53, 0.15);
-    animation: intensity-wave 10s ease-in-out infinite alternate;
+      inset 0 0 8px rgba(255, 255, 255, 0.4),  /* Subtle, crisp white edge presence */
+      inset 0 0 15px rgba(66, 133, 244, 0.2),  /* Soft color backing */
+      inset 0 0 25px rgba(155, 81, 224, 0.15);
+      
+    animation: border-flow 8s linear infinite, glow-intensity 4s ease-in-out infinite alternate;
   }
 
-  /* Layer 3: High-Intensity Dynamic White Surges
-     Specifically targets those intense bursts of white that swell up, 
-     fade down, and travel independently around the perimeter */
-  .gemini-white-surges {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    pointer-events: none;
-    background: conic-gradient(
-      from 180deg,
-      transparent 0deg,
-      rgba(255, 255, 255, 0) 100deg,
-      rgba(255, 255, 255, 0.8) 140deg, /* Hyper-intense white focal point */
-      rgba(255, 255, 255, 1) 150deg,
-      rgba(255, 255, 255, 0.8) 160deg,
-      transparent 200deg,
-      rgba(255, 255, 255, 0) 280deg,
-      rgba(255, 255, 255, 0.5) 320deg, /* Secondary medium white point */
-      transparent 360deg
-    );
-    /* Blurs the white light heavily so it bleeds away from the edge into the site */
-    filter: blur(40px); 
-    mix-blend-mode: screen;
-    animation: spin-around 8s linear infinite reverse, white-pulse 6s ease-in-out infinite alternate;
-    opacity: 0.6;
-  }
-
-  /* Spinning animation driving perimeter travel */
-  @keyframes spin-around {
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Controls the undulating, fluid swelling of the intense white beams */
-  @keyframes white-pulse {
+  /* Moves the colors smoothly along the perimeter sequence */
+  @keyframes border-flow {
     0% {
-      opacity: 0.4;
-      transform: scale(0.95) rotate(0deg);
+      border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4);
     }
     50% {
-      opacity: 0.85;
-      transform: scale(1.05) rotate(180deg);
+      border-image-source: linear-gradient(to bottom, #fbbc05, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05);
     }
     100% {
-      opacity: 0.5;
-      transform: scale(0.9) rotate(360deg);
+      border-image-source: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4);
     }
   }
 
-  /* Fluctuation wave for atmospheric background shadows */
-  @keyframes intensity-wave {
+  /* Gently alters the white intensity to make it push inward and recede by a few pixels */
+  @keyframes glow-intensity {
     0% {
-      filter: blur(4px) contrast(1);
       box-shadow: 
-        inset 0 0 80px rgba(255, 255, 255, 0.35), /* Massive white bleed */
-        inset -30px 50px 130px rgba(66, 133, 244, 0.25),
-        inset 60px -30px 90px rgba(155, 81, 224, 0.1),
-        inset -20px -50px 140px rgba(234, 67, 53, 0.2);
+        inset 0 0 4px rgba(255, 255, 255, 0.2),   /* Dimer, thinner accent */
+        inset 0 0 12px rgba(66, 133, 244, 0.15),
+        inset 0 0 20px rgba(155, 81, 224, 0.1);
     }
     100% {
-      filter: blur(8px) contrast(1.1);
       box-shadow: 
-        inset 0 0 40px rgba(255, 255, 255, 0.1),
-        inset 50px -20px 90px rgba(66, 133, 244, 0.15),
-        inset -40px 60px 140px rgba(155, 81, 224, 0.3),
-        inset 30px 40px 90px rgba(234, 67, 53, 0.05);
+        inset 0 0 12px rgba(255, 255, 255, 0.55),  /* Slightly deeper, more intense white push */
+        inset 0 0 18px rgba(66, 133, 244, 0.25),
+        inset 0 0 30px rgba(155, 81, 224, 0.2);
     }
   }
 
@@ -201,7 +135,7 @@
     height: 100%;
   }
 
-  /* ── MIDDLE ROW: RE-ACCELERATED TICKER ── */
+  /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
@@ -401,10 +335,6 @@
 </style>
 </head>
 <body>
-
-<div class="gemini-glow-container">
-  <div class="gemini-white-surges"></div>
-</div>
 
 <div class="matrix-container">
   
