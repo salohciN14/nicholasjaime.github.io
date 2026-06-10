@@ -16,6 +16,9 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: 40px; /* Makes room for the bottom ticker bar */
   }
 
   .matrix-container {
@@ -25,6 +28,7 @@
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    z-index: 1;
   }
 
   /* ── TOP SECTION: CENTERED TIME & DATE ── */
@@ -112,9 +116,133 @@
     transition: color 0.3s;
   }
   .back-btn:hover { color: #555; }
+
+  /* ── INTERACTIVE DRAGGABLE STICKY NOTE ── */
+  .sticky-note {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 220px;
+    height: 220px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    transform-origin: top left;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
+  }
+
+  /* Tactile Peel Lift Visual States */
+  .sticky-note.peeling {
+    transform: scale(1.03) rotate(-2deg);
+    box-shadow: -8px 15px 30px rgba(0,0,0,0.6);
+  }
+
+  .sticky-header {
+    padding: 8px 12px;
+    background: #27272a;
+    color: #a1a1aa;
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: grab;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sticky-header:active { cursor: grabbing; }
+
+  .sticky-body {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: #e4e4e7;
+    font-family: inherit;
+    font-size: 0.85rem;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+  }
+
+  /* ── LIVE ACCURATE NEWS TICKER ── */
+  .ticker-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    height: 34px;
+    background-color: #111;
+    border-top: 1px solid #1c1c1c;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .ticker-label {
+    background: #303f83;
+    color: #fff;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 1002;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+  }
+
+  .ticker {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 100%;
+    animation: ticker-move 45s linear infinite;
+    color: #a1a1aa;
+    font-size: 0.85rem;
+  }
+
+  .ticker:hover {
+    animation-play-state: paused;
+  }
+
+  .ticker-item {
+    display: inline-block;
+    padding: 0 2rem;
+  }
+  
+  .ticker-item::after {
+    content: "///";
+    margin-left: 2rem;
+    color: #303f83;
+  }
+
+  @keyframes ticker-move {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
 </style>
 </head>
 <body>
+
+<div class="sticky-note" id="scratchpad">
+  <div class="sticky-header" id="scratchpadHeader">
+    <span>Scratchpad</span>
+    <span style="font-size:10px; opacity:0.5;">::</span>
+  </div>
+  <textarea class="sticky-body" id="scratchpadText" placeholder="Double click to drop text reminders here..."></textarea>
+</div>
 
 <div class="matrix-container">
   
@@ -164,53 +292,36 @@
 
 </div>
 
+<div class="ticker-wrap">
+  <div class="ticker-label">Live Feed</div>
+  <div class="ticker" id="newsTicker">Loading global wire matrix headlines...</div>
+</div>
+
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
   let player;
   
+  // API Initialization setup
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('yt-player', {
       height: '100%',
       width: '100%',
-      playerVars: {
-        loop: 1
-      },
-      events: {
-        'onReady': onPlayerReady
-      }
+      playerVars: { loop: 1 },
+      events: { 'onReady': onPlayerReady }
     });
   }
 
   function onPlayerReady(event) {
-    // Stage the playlist files completely first
     event.target.cuePlaylist({
       listType: 'playlist',
       list: 'PL0stGdZbMNnVqzBLHv4_7_uGbj9lEtnP-'
     });
 
-    // Provide a small timeout pause to give the playlist data time to lock before sorting
     setTimeout(function() {
       event.target.setShuffle(true);
     }, 1500);
   }
-</script>
-
-<script>
-(function(d, s, id) {
-    if (d.getElementById(id)) {
-        if (window.__TOMORROW__) {
-            window.__TOMORROW__.renderWidget();
-        }
-        return;
-    }
-    const fjs = d.getElementsByTagName(s)[0];
-    const js = d.createElement(s);
-    js.id = id;
-    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
-
-    fjs.parentNode.insertBefore(js, fjs);
-})(document, 'script', 'tomorrow-sdk');
 </script>
 
 <script>
@@ -233,6 +344,103 @@
   }
   updateClock();
   setInterval(updateClock, 1000);
+</script>
+
+<script>
+  const note = document.getElementById('scratchpad');
+  const header = document.getElementById('scratchpadHeader');
+  const textbox = document.getElementById('scratchpadText');
+
+  if(localStorage.getItem('stickyText')) textbox.value = localStorage.getItem('stickyText');
+  if(localStorage.getItem('stickyTop')) note.style.top = localStorage.getItem('stickyTop');
+  if(localStorage.getItem('stickyLeft')) note.style.left = localStorage.getItem('stickyLeft');
+
+  textbox.addEventListener('input', () => {
+    localStorage.setItem('stickyText', textbox.value);
+  });
+
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  header.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    
+    // Trigger the peel lifting animations classes on click
+    note.classList.add('peeling');
+    
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    
+    let targetTop = (note.offsetTop - pos2);
+    let targetLeft = (note.offsetLeft - pos1);
+    
+    note.style.top = targetTop + "px";
+    note.style.left = targetLeft + "px";
+    
+    localStorage.setItem('stickyTop', note.style.top);
+    localStorage.setItem('stickyLeft', note.style.left);
+  }
+
+  function closeDragElement() {
+    // Remove peel styling state smoothly on drag release 
+    note.classList.remove('peeling');
+    
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+</script>
+
+<script>
+  async function fetchNews() {
+    const tickerContainer = document.getElementById('newsTicker');
+    try {
+      const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Frss.xml');
+      const data = await response.json();
+      
+      if(data.status === 'ok' && data.items.length > 0) {
+        let tickerHTML = '';
+        data.items.forEach(item => {
+          tickerHTML += `<span class="ticker-item">${item.title}</span>`;
+        });
+        tickerContainer.innerHTML = tickerHTML + tickerHTML;
+      } else {
+        tickerContainer.innerHTML = '<span class="ticker-item">Wire connection active. Awaiting fresh data updates...</span>';
+      }
+    } catch (error) {
+      tickerContainer.innerHTML = '<span class="ticker-item">Error reading wire matrix headlines. Retrying connection...</span>';
+    }
+  }
+  fetchNews();
+  setInterval(fetchNews, 600000); 
+</script>
+
+<script>
+(function(d, s, id) {
+    if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+            window.__TOMORROW__.renderWidget();
+        }
+        return;
+    }
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement(s);
+    js.id = id;
+    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+    fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'tomorrow-sdk');
 </script>
 
 </body>
