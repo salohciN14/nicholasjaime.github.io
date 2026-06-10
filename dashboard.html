@@ -31,7 +31,7 @@
     z-index: 1;
   }
 
-  /* ── TOP ROW: GIANT CLOCKS & EMPTY SPACE ── */
+  /* ── TOP ROW: CLEAN TWO-DIGIT CLOCKS & EMPTY SPACE ── */
   .top-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -80,7 +80,7 @@
     height: 100%;
   }
 
-  /* ── MIDDLE ROW: INLINE NEWS TICKER ── */
+  /* ── MIDDLE ROW: AUTHENTIC STIMULATION TICKER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
@@ -94,7 +94,7 @@
   }
 
   .ticker-label {
-    background: #303f83;
+    background: #ce2c2c; 
     color: #fff;
     padding: 0 15px;
     height: 100%;
@@ -113,9 +113,11 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    animation: ticker-move 85s linear infinite;
-    color: #a1a1aa;
+    /* Extra-long custom ticker requires a bit more time to crawl flawlessly */
+    animation: ticker-move 140s linear infinite;
+    color: #e4e4e7;
     font-size: 0.85rem;
+    font-weight: 500;
   }
 
   .ticker:hover {
@@ -130,7 +132,7 @@
   .ticker-item::after {
     content: "///";
     margin-left: 2rem;
-    color: #303f83;
+    color: #ce2c2c;
   }
 
   @keyframes ticker-move {
@@ -155,7 +157,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Pushes crisp breathing space between player and notebook */
+    gap: 1.5rem;
   }
 
   .media-wrapper-container {
@@ -284,7 +286,7 @@
   <div class="top-row">
     <div class="time-cluster">
       <div class="clocks-wrapper">
-        <div id="timeDisplay">12:00:00</div>
+        <div id="timeDisplay">12:00</div>
         <div class="analog-clock-frame">
           <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
         </div>
@@ -295,8 +297,8 @@
   </div>
 
   <div class="ticker-wrap">
-    <div class="ticker-label">Live Feed</div>
-    <div class="ticker" id="newsTicker">Loading global wire matrix headlines...</div>
+    <div class="ticker-label">BREAKING</div>
+    <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
   </div>
   
   <div class="main-deck">
@@ -384,16 +386,14 @@
 <script>
   function updateClock() {
     const now = new Date();
-    
     let hours = now.getHours();
     let minutes = now.getMinutes();
-    let seconds = now.getSeconds();
     
     let displayHours = hours % 12;
     displayHours = displayHours ? displayHours : 12; 
     let displayMinutes = minutes < 10 ? "0" + minutes : minutes;
-    let displaySeconds = seconds < 10 ? "0" + seconds : seconds;
-    document.getElementById("timeDisplay").textContent = `${displayHours}:${displayMinutes}:${displaySeconds}`;
+    
+    document.getElementById("timeDisplay").textContent = `${displayHours}:${displayMinutes}`;
 
     const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
     document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
@@ -409,11 +409,9 @@
   const nextBtn = document.getElementById('nextPageBtn');
   const addBtn = document.getElementById('addPageBtn');
 
-  // Load structural array data matrix or set fallback defaults
   let notebookPages = JSON.parse(localStorage.getItem('centerNotebookPages')) || [""];
   let activePageIdx = parseInt(localStorage.getItem('centerActivePageIdx')) || 0;
 
-  // Safety checks to prevent data indexing bounds crashes
   if (activePageIdx >= notebookPages.length) activePageIdx = notebookPages.length - 1;
   if (activePageIdx < 0) activePageIdx = 0;
 
@@ -423,13 +421,11 @@
     localStorage.setItem('centerActivePageIdx', activePageIdx);
   }
 
-  // Active key entry character listener arrays
   txtArea.addEventListener('input', () => {
     notebookPages[activePageIdx] = txtArea.value;
     localStorage.setItem('centerNotebookPages', JSON.stringify(notebookPages));
   });
 
-  // Dynamic initialization array push method
   addBtn.addEventListener('click', () => {
     notebookPages.push("");
     activePageIdx = notebookPages.length - 1;
@@ -452,32 +448,67 @@
     }
   });
 
-  // Execute base render loop on load
   renderPage();
 </script>
 
 <script>
-  async function fetchNews() {
+  function loadRealClickerTicker() {
     const tickerContainer = document.getElementById('newsTicker');
-    try {
-      const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Frss.xml');
-      const data = await response.json();
-      
-      if(data.status === 'ok' && data.items.length > 0) {
-        let tickerHTML = '';
-        data.items.forEach(item => {
-          tickerHTML += `<span class="ticker-item">${item.title}</span>`;
-        });
-        tickerContainer.innerHTML = tickerHTML + tickerHTML;
-      } else {
-        tickerContainer.innerHTML = '<span class="ticker-item">Wire connection active. Awaiting fresh data updates...</span>';
-      }
-    } catch (error) {
-      tickerContainer.innerHTML = '<span class="ticker-item">Error reading wire matrix headlines. Retrying connection...</span>';
-    }
+    
+    // Exact text extractions from the official neal.fun application bundle script
+    const realHeadlines = [
+      "President moves to reverse The Louisiana Purchase, “It was just a bad deal”",
+      "Diet Coke shown to cure just about everything",
+      "World's longest game of hide and seek turns into missing persons case",
+      "Mystery Meat Monday causes mass casualty",
+      "Hacker sets everyone's credit score to 7",
+      "Hero dog becomes world's worst DJ",
+      "Shrieking eldritch horror pulls ahead in mayoral race",
+      "Child star steals hearts, faces prison",
+      "Celebrity chef apologizes for asbestos incident",
+      "Father, 34, arrested for stealing son's nose",
+      "Scientists reveal something huge, probably",
+      "Rain expected worldwide today",
+      "Officials warn batteries still not edible",
+      "Winter fashion forecast: Jorts and junderwear",
+      "Orca capsizes hearts, wins Mystic Bay beauty pageant",
+      "Local grandma says you're too thin",
+      "Ketchup truck collision has drivers seeing red",
+      "Gymnastic medalist arrested in murder plot: “She's twisted”",
+      "Hot dog eating competition ends in tragedy",
+      "Scientists invent new form of anxiety",
+      "Local election ends in tie, candidates must kiss",
+      "Five dead in trolley problem",
+      "MPA unveils new rating system for prudes, dorks",
+      "Double trouble: Another Earth is heading our way",
+      "Beloved talk show host's last words revealed: “oof”",
+      "Nine out of ten doctors agree: The other doctor is a menace",
+      "Scientists discover house parties",
+      "Are news banners a thing of the past?",
+      "Frogs missing worldwide",
+      "Wall Street analyst says recession will happen, or maybe not, he's not really sure",
+      "The frogs are back",
+      "Are cold showers making you bald?",
+      "My tummy hurts :(",
+      "Lab rats unionize and demand fair compensation",
+      "Op-ed: I've always wanted to write an op-ed",
+      "Local man finally moving away",
+      "Study says that you're looking super cute today :3",
+      "Introverts United meetup deals with disappointing attendance",
+      "Peter Piper, 63, picked up in pickled pepper ponzi plot",
+      "News headline writers facing layoffs, wait does that include me? Please I need this"
+    ];
+
+    let tickerHTML = '';
+    realHeadlines.forEach(line => {
+      tickerHTML += `<span class="ticker-item">${line.toUpperCase()}</span>`;
+    });
+    
+    // Duplicated for an unbroken, smooth looping horizon crawl
+    tickerContainer.innerHTML = tickerHTML + tickerHTML;
   }
-  fetchNews();
-  setInterval(fetchNews, 600000); 
+  
+  loadRealClickerTicker();
 </script>
 
 <script>
