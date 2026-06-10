@@ -61,19 +61,17 @@
     .main-deck { grid-template-columns: 1fr; }
   }
 
-  /* Left Side: Media Bracket */
+  /* Left Side: Media Bracket Container */
   .media-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .media-wrapper iframe {
+  /* Raised height limit to 470px to make room for your 450px tall widget + text attribution link */
+  .media-wrapper-container {
+    min-height: 470px;
     width: 100%;
-    height: 352px;
-    border: none;
-    border-radius: 12px;
-    background: #111;
   }
 
   /* Right Side: Weather Bracket */
@@ -82,7 +80,7 @@
     border: 1px solid #1c1c1c;
     border-radius: 12px;
     padding: 15px;
-    min-height: 352px;
+    min-height: 470px; /* Matched height to align panels evenly */
     box-sizing: border-box;
   }
 
@@ -98,3 +96,104 @@
 
   .back-btn {
     align-self: center;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: #222;
+    transition: color 0.3s;
+  }
+  .back-btn:hover { color: #555; }
+</style>
+</head>
+<body>
+
+<div class="matrix-container">
+  
+  <header class="clock-box">
+    <div id="timeDisplay">12:00:00</div>
+    <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+  </header>
+  
+  <div class="main-deck">
+    
+    <div class="media-wrapper">
+      <div class="panel-title">Audio Matrix</div>
+      <div class="media-wrapper-container">
+        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/soundcloud%253Aplaylists%253A2229780176&color=%23303f83&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/nicholas-jaime-185717304" title="Nicholas Jaime" target="_blank" style="color: #cccccc; text-decoration: none;">Nicholas Jaime</a> · <a href="https://soundcloud.com/nicholas-jaime-185717304/sets/ride" title="Ride" target="_blank" style="color: #cccccc; text-decoration: none;">Ride</a></div>
+        </div>
+    </div>
+    
+    <div class="weather-wrapper">
+      <div class="panel-title">Atmosphere Engine</div>
+      <div class="tomorrow"
+         data-location-id=""
+         data-language="EN"
+         data-unit-system="IMPERIAL"
+         data-skin="dark"
+         data-widget-type="upcoming"
+         style="padding-bottom:22px;position:relative;"
+      >
+        <a
+          href="https://weather.tomorrow.io/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+        >
+          <img
+            alt="Powered by Tomorrow.io"
+            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+            width="250"
+            height="18"
+          />
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
+
+</div>
+
+<script>
+(function(d, s, id) {
+    if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+            window.__TOMORROW__.renderWidget();
+        }
+        return;
+    }
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement(s);
+    js.id = id;
+    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+    fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'tomorrow-sdk');
+</script>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+
+    const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
+    document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
