@@ -18,7 +18,6 @@
     box-sizing: border-box;
     overflow-x: hidden;
     position: relative;
-    padding-bottom: 40px; /* Makes room for the bottom ticker bar */
   }
 
   .matrix-container {
@@ -27,33 +26,166 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem;
     z-index: 1;
   }
 
-  /* ── TOP SECTION: CENTERED TIME & DATE ── */
-  .clock-box {
-    text-align: center;
-    width: 100%;
+  /* ── TOP ROW: CLOCKS, DATE, AND EMPTY SPACE ── */
+  .top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .time-cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .clocks-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0.25rem;
   }
   
   #timeDisplay {
-    font-size: 6rem;
+    font-size: 5rem;
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
-    margin-bottom: 0.5rem;
+  }
+
+  /* Analog Clock Styling */
+  .analog-clock {
+    width: 70px;
+    height: 70px;
+    border: 3px solid #333;
+    border-radius: 50%;
+    background: #111;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom;
+    border-radius: 10px;
+    z-index: 2;
+  }
+
+  .hour-hand {
+    width: 4px;
+    height: 20px;
+    background: #888;
+    margin-left: -2px;
+  }
+
+  .minute-hand {
+    width: 3px;
+    height: 28px;
+    background: #ccc;
+    margin-left: -1.5px;
+  }
+
+  .second-hand {
+    width: 2px;
+    height: 32px;
+    background: #303f83;
+    margin-left: -1px;
+    z-index: 3;
+  }
+
+  .center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
   }
   
   #dateDisplay {
     font-size: 0.95rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: #444;
+    color: #555;
+    padding-left: 0.25rem;
   }
 
-  /* ── MAIN DECK: SIDE-BY-SIDE SPLIT ── */
+  .empty-space {
+    /* Reserved right-side header block */
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── MIDDLE ROW: INLINE NEWS TICKER ── */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    height: 38px;
+    background-color: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .ticker-label {
+    background: #303f83;
+    color: #fff;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+  }
+
+  .ticker {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 100%;
+    animation: ticker-move 45s linear infinite;
+    color: #a1a1aa;
+    font-size: 0.85rem;
+  }
+
+  .ticker:hover {
+    animation-play-state: paused;
+  }
+
+  .ticker-item {
+    display: inline-block;
+    padding: 0 2rem;
+  }
+  
+  .ticker-item::after {
+    content: "///";
+    margin-left: 2rem;
+    color: #303f83;
+  }
+
+  @keyframes ticker-move {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+
+  /* ── BOTTOM ROW: MEDIA AND WEATHER ── */
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -62,6 +194,7 @@
   }
 
   @media (max-width: 850px) {
+    .top-row { grid-template-columns: 1fr; }
     .main-deck { grid-template-columns: 1fr; }
   }
 
@@ -135,7 +268,6 @@
     transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
   }
 
-  /* Tactile Peel Lift Visual States */
   .sticky-note.peeling {
     transform: scale(1.03) rotate(-2deg);
     box-shadow: -8px 15px 30px rgba(0,0,0,0.6);
@@ -172,66 +304,6 @@
     outline: none;
     line-height: 1.4;
   }
-
-  /* ── LIVE ACCURATE NEWS TICKER ── */
-  .ticker-wrap {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    height: 34px;
-    background-color: #111;
-    border-top: 1px solid #1c1c1c;
-    display: flex;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .ticker-label {
-    background: #303f83;
-    color: #fff;
-    padding: 0 15px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    font-size: 0.65rem;
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 1002;
-    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-  }
-
-  .ticker {
-    display: inline-block;
-    white-space: nowrap;
-    padding-right: 100%;
-    animation: ticker-move 45s linear infinite;
-    color: #a1a1aa;
-    font-size: 0.85rem;
-  }
-
-  .ticker:hover {
-    animation-play-state: paused;
-  }
-
-  .ticker-item {
-    display: inline-block;
-    padding: 0 2rem;
-  }
-  
-  .ticker-item::after {
-    content: "///";
-    margin-left: 2rem;
-    color: #303f83;
-  }
-
-  @keyframes ticker-move {
-    0% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-100%, 0, 0); }
-  }
 </style>
 </head>
 <body>
@@ -246,10 +318,26 @@
 
 <div class="matrix-container">
   
-  <header class="clock-box">
-    <div id="timeDisplay">12:00:00</div>
-    <div id="dateDisplay">INITIALIZING RUNTIME...</div>
-  </header>
+  <div class="top-row">
+    <div class="time-cluster">
+      <div class="clocks-wrapper">
+        <div id="timeDisplay">12:00:00</div>
+        <div class="analog-clock">
+          <div class="hand hour-hand" id="hourHand"></div>
+          <div class="hand minute-hand" id="minHand"></div>
+          <div class="hand second-hand" id="secHand"></div>
+          <div class="center-dot"></div>
+        </div>
+      </div>
+      <div id="dateDisplay">INITIALIZING RUNTIME...</div>
+    </div>
+    <div class="empty-space"></div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-label">Live Feed</div>
+    <div class="ticker" id="newsTicker">Loading global wire matrix headlines...</div>
+  </div>
   
   <div class="main-deck">
     
@@ -292,17 +380,11 @@
 
 </div>
 
-<div class="ticker-wrap">
-  <div class="ticker-label">Live Feed</div>
-  <div class="ticker" id="newsTicker">Loading global wire matrix headlines...</div>
-</div>
-
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
   let player;
   
-  // API Initialization setup
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('yt-player', {
       height: '100%',
@@ -327,18 +409,32 @@
 <script>
   function updateClock() {
     const now = new Date();
+    
+    // Digital Time Setup
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let seconds = now.getSeconds();
     
-    hours = hours % 12;
-    hours = hours ? hours : 12; 
-    
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    
-    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+    let displayHours = hours % 12;
+    displayHours = displayHours ? displayHours : 12; 
+    let displayMinutes = minutes < 10 ? "0" + minutes : minutes;
+    let displaySeconds = seconds < 10 ? "0" + seconds : seconds;
+    document.getElementById("timeDisplay").textContent = `${displayHours}:${displayMinutes}:${displaySeconds}`;
 
+    // Analog Clock Rotations
+    const hourHand = document.getElementById('hourHand');
+    const minHand = document.getElementById('minHand');
+    const secHand = document.getElementById('secHand');
+
+    const hourDeg = (hours % 12) * 30 + (minutes * 0.5); // 30deg per hour + shift based on minutes
+    const minDeg = minutes * 6; // 6deg per minute
+    const secDeg = seconds * 6; // 6deg per second
+
+    hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    minHand.style.transform = `rotate(${minDeg}deg)`;
+    secHand.style.transform = `rotate(${secDeg}deg)`;
+
+    // Date Setup
     const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
     document.getElementById("dateDisplay").textContent = now.toLocaleDateString("en-US", options).toUpperCase();
   }
@@ -365,10 +461,7 @@
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
-    
-    // Trigger the peel lifting animations classes on click
     note.classList.add('peeling');
-    
     pos3 = e.clientX;
     pos4 = e.clientY;
     document.onmouseup = closeDragElement;
@@ -394,9 +487,7 @@
   }
 
   function closeDragElement() {
-    // Remove peel styling state smoothly on drag release 
     note.classList.remove('peeling');
-    
     document.onmouseup = null;
     document.onmousemove = null;
   }
