@@ -83,7 +83,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start; /* Aligned left like your drawing */
+    align-items: flex-start; 
     text-align: left;
   }
 
@@ -132,7 +132,7 @@
     overflow: hidden;
     height: 36px; 
     background-color: transparent;
-    border-bottom: 1px solid #1a1a1a; /* Subtle separator line */
+    border-bottom: 1px solid #1a1a1a; 
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -185,7 +185,7 @@
   /* ── MAIN LOWER DECK STRUCTURE (3-COLUMN ACCURATE GRID) ── */
   .main-deck {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr; /* Exact layout distribution from your sketch */
+    grid-template-columns: 1.2fr 1fr 1fr; 
     gap: 1.5rem;
     align-items: start;
     height: 380px;
@@ -268,12 +268,19 @@
     line-height: 1.5;
   }
 
-  /* ── WEATHER CONTAINER ── */
+  /* ── WEATHER CONTAINER (SHRUNKEN ENGINE) ── */
   .weather-wrapper {
-    height: 100%;
+    height: auto; /* Drops strict 100% page stretching rule */
+    max-height: 310px; /* Limits vertical span */
     display: flex;
     flex-direction: column;
     overflow: hidden;
+  }
+
+  /* Scales down internal alignment inside third party iframe wrapper directly */
+  .tomorrow {
+    transform: scale(0.85); 
+    transform-origin: top center;
   }
 
   @media (max-width: 950px) {
