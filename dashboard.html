@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 2.5rem; /* Balanced outer buffer zone */
+    padding: 2.5rem; 
     position: relative;
   }
 
@@ -54,20 +54,19 @@
   /* ── MAIN GRID MATRIX CONTAINER ── */
   .matrix-container {
     width: 100%;
-    max-width: 72rem; 
+    max-width: 80rem; 
     display: flex;
     flex-direction: column;
-    gap: 1.2rem; /* Uniform structural spacing across all layout points */
+    gap: 1.5rem; 
     z-index: 1;
     box-sizing: border-box;
   }
 
-  /* Shared Universal Tile Blueprint */
+  /* Universal Transparent/Borderless Card Style */
   .tile-card {
-    background: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 12px;
-    padding: 1.25rem;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
     box-sizing: border-box;
   }
 
@@ -75,32 +74,33 @@
   .top-deck {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.2rem;
-    height: 155px; 
+    gap: 1.5rem;
+    height: 140px; 
+    align-items: center;
   }
 
   .digital-clock-tile {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start; /* Aligned left like your drawing */
+    text-align: left;
   }
 
   #timeDisplay {
-    font-size: 3.5rem; 
+    font-size: 4rem; 
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.4rem;
   }
 
   #dateDisplay {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #555;
+    color: #666;
   }
 
   .analog-clock-tile {
@@ -119,21 +119,20 @@
   }
 
   .analog-clock-frame iframe {
-    transform: scale(0.75); 
+    transform: scale(0.85); 
   }
 
   .blank-tile {
-    /* Kept intentionally completely blank */
+    /* Intentionally completely blank spacer element */
   }
 
-  /* ── MIDDLE ROW: FIXED TICKER SPACER ── */
+  /* ── MIDDLE ROW: TEXT TICKER BAR ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
-    height: 36px; /* Expanded and locked to ensure full headline visibility */
-    background-color: #111;
-    border: 1px solid #1c1c1c;
-    border-radius: 8px;
+    height: 36px; 
+    background-color: transparent;
+    border-bottom: 1px solid #1a1a1a; /* Subtle separator line */
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -142,8 +141,9 @@
   .ticker-label {
     background: #ce2c2c; 
     color: #fff;
-    padding: 0 14px;
-    height: 100%;
+    padding: 0 12px;
+    height: 24px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     font-size: 0.6rem;
@@ -152,7 +152,6 @@
     text-transform: uppercase;
     white-space: nowrap;
     z-index: 10;
-    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
   }
 
   .ticker {
@@ -160,7 +159,7 @@
     white-space: nowrap;
     padding-right: 100%;
     animation: ticker-move 320s linear infinite;
-    color: #e4e4e7;
+    color: #a1a1aa;
     font-size: 0.75rem;
     font-weight: 500;
   }
@@ -183,25 +182,20 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── MAIN LOWER DECK STRUCTURE ── */
+  /* ── MAIN LOWER DECK STRUCTURE (3-COLUMN ACCURATE GRID) ── */
   .main-deck {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
+    grid-template-columns: 1.2fr 1fr 1fr; /* Exact layout distribution from your sketch */
+    gap: 1.5rem;
     align-items: start;
-  }
-
-  .media-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
+    height: 380px;
   }
 
   .media-wrapper-container {
     width: 100%;
-    height: 220px; 
+    height: 100%; 
     background: #0d0d0d;
-    border-radius: 6px;
+    border-radius: 12px;
     overflow: hidden;
   }
 
@@ -213,15 +207,17 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    height: 155px; 
+    height: 100%; 
     display: flex;
     flex-direction: column;
     padding: 0;
     overflow: hidden;
+    background: #111;
+    border-radius: 12px;
   }
 
   .scratchpad-header {
-    padding: 10px 16px;
+    padding: 12px 16px;
     background: #161616;
     border-bottom: 1px solid #1c1c1c;
     display: flex;
@@ -261,7 +257,7 @@
 
   .scratchpad-body {
     flex: 1;
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: transparent;
     border: none;
     color: #e4e4e7;
@@ -269,11 +265,12 @@
     font-size: 0.85rem;
     resize: none;
     outline: none;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
+  /* ── WEATHER CONTAINER ── */
   .weather-wrapper {
-    height: 399px; /* Re-balanced to match the exact mathematical height of the media section + layout gap + notebook */
+    height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -284,8 +281,7 @@
     body { padding: 1rem; }
     .top-deck { grid-template-columns: 1fr; height: auto; }
     .main-deck { grid-template-columns: 1fr; height: auto; }
-    .digital-clock-tile, .analog-clock-tile, .blank-tile { height: 130px; }
-    #timeDisplay { font-size: 2.8rem; }
+    .digital-clock-tile { align-items: center; text-align: center; }
   }
 </style>
 </head>
@@ -315,25 +311,23 @@
   
   <div class="main-deck">
     
-    <div class="media-wrapper">
-      <div class="tile-card">
-        <div class="media-wrapper-container">
-          <div id="yt-player"></div>
-        </div>
+    <div class="tile-card">
+      <div class="media-wrapper-container">
+        <div id="yt-player"></div>
       </div>
+    </div>
 
-      <div class="tile-card scratchpad-box">
-        <div class="scratchpad-header">
-          <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
-          <div class="scratchpad-nav">
-            <button class="nav-btn" id="prevPageBtn">←</button>
-            <span class="page-indicator" id="pageIndicator">1 / 1</span>
-            <button class="nav-btn" id="nextPageBtn">→</button>
-            <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
-          </div>
+    <div class="scratchpad-box">
+      <div class="scratchpad-header">
+        <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; font-weight: bold;">System Notebook</div>
+        <div class="scratchpad-nav">
+          <button class="nav-btn" id="prevPageBtn">←</button>
+          <span class="page-indicator" id="pageIndicator">1 / 1</span>
+          <button class="nav-btn" id="nextPageBtn">→</button>
+          <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
         </div>
-        <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
       </div>
+      <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
     </div>
     
     <div class="tile-card weather-wrapper">
