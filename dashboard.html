@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 2rem; /* Clean, fixed margin from the screen edges */
+    padding: 2.5rem; /* Balanced outer buffer zone */
     position: relative;
   }
 
@@ -31,7 +31,7 @@
     top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
     z-index: 100;
-    border: 2px solid transparent; /* Shrunk from 5px to 2px for a much cleaner look */
+    border: 2px solid transparent; 
     border-image: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4) 1;
     background-size: 200% auto;
     box-shadow: 
@@ -54,12 +54,10 @@
   /* ── MAIN GRID MATRIX CONTAINER ── */
   .matrix-container {
     width: 100%;
-    max-width: 68rem; /* Keeps everything grouped up beautifully without stretching */
-    height: auto;
-    max-height: 90vh;
+    max-width: 72rem; 
     display: flex;
     flex-direction: column;
-    gap: 1.1rem; /* Tightened up the space between widgets so it feels connected */
+    gap: 1.2rem; /* Uniform structural spacing across all layout points */
     z-index: 1;
     box-sizing: border-box;
   }
@@ -77,8 +75,8 @@
   .top-deck {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.1rem;
-    height: 145px; 
+    gap: 1.2rem;
+    height: 155px; 
   }
 
   .digital-clock-tile {
@@ -90,7 +88,7 @@
   }
 
   #timeDisplay {
-    font-size: 3.2rem; 
+    font-size: 3.5rem; 
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -121,18 +119,18 @@
   }
 
   .analog-clock-frame iframe {
-    transform: scale(0.72); 
+    transform: scale(0.75); 
   }
 
   .blank-tile {
     /* Kept intentionally completely blank */
   }
 
-  /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
+  /* ── MIDDLE ROW: FIXED TICKER SPACER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
-    height: 32px; 
+    height: 36px; /* Expanded and locked to ensure full headline visibility */
     background-color: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
@@ -144,7 +142,7 @@
   .ticker-label {
     background: #ce2c2c; 
     color: #fff;
-    padding: 0 12px;
+    padding: 0 14px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -189,19 +187,19 @@
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.1rem;
+    gap: 1.2rem;
     align-items: start;
   }
 
   .media-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.1rem;
+    gap: 1.2rem;
   }
 
   .media-wrapper-container {
     width: 100%;
-    height: 215px; /* Sets a solid standard height for the player layout box */
+    height: 220px; 
     background: #0d0d0d;
     border-radius: 6px;
     overflow: hidden;
@@ -215,7 +213,7 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    height: 145px; 
+    height: 155px; 
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -275,7 +273,7 @@
   }
 
   .weather-wrapper {
-    height: 377px; /* Perfectly matches the combined height of the left media stack */
+    height: 399px; /* Re-balanced to match the exact mathematical height of the media section + layout gap + notebook */
     display: flex;
     flex-direction: column;
     overflow: hidden;
