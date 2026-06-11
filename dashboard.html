@@ -5,18 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ambient Command Center</title>
 <style>
-  body {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background: #0a0a0a;
     color: #e5e5e5;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0;
-    padding: 5rem; 
-    min-height: 100vh;
+    overflow: hidden; /* Prevents awkward scrollbars on laptop screens */
+  }
+
+  body {
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    overflow-x: hidden;
+    padding: 2.5vh 2.5vw; /* Scales spacing based on screen size */
     position: relative;
   }
 
@@ -58,14 +62,15 @@
     }
   }
 
-  /* ── MAIN MATRIX GRID STRUCTURE ── */
+  /* ── MAIN LAPTOP MATRIX GRID STRUCTURE ── */
   .matrix-container {
     width: 100%;
-    max-width: 75rem;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2.5vh;
     z-index: 1;
+    box-sizing: border-box;
   }
 
   /* Shared Universal Tile Blueprint */
@@ -73,7 +78,7 @@
     background: #111;
     border: 1px solid #1c1c1c;
     border-radius: 12px;
-    padding: 20px;
+    padding: 2vh;
     box-sizing: border-box;
   }
 
@@ -81,7 +86,8 @@
   .top-deck {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 2.5rem;
+    gap: 2.5vw;
+    height: 25vh; /* Takes up exactly a quarter of vertical screen space */
   }
 
   .digital-clock-tile {
@@ -89,28 +95,26 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 220px;
     text-align: center;
   }
 
   #timeDisplay {
-    font-size: 5.5rem;
+    font-size: 5vw; /* Scaled to screen width so it hits perfectly on laptop displays */
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
     color: #fff;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.5vh;
   }
 
   #dateDisplay {
-    font-size: 0.8rem;
+    font-size: 0.8vw;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #555;
   }
 
   .analog-clock-tile {
-    height: 220px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -129,16 +133,16 @@
     transform: scale(0.95); 
   }
 
-  /* Completely Blank Reserved Tile Corner */
   .blank-tile {
-    height: 220px;
+    /* Kept intentionally completely blank */
   }
 
   /* ── MIDDLE ROW: BALANCE PACED TICKER ── */
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
-    height: 38px;
+    height: 4vh; /* Responsive height */
+    min-height: 34px;
     background-color: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
@@ -150,7 +154,7 @@
   .ticker-label {
     background: #ce2c2c; 
     color: #fff;
-    padding: 0 15px;
+    padding: 0 1.5vw;
     height: 100%;
     display: flex;
     align-items: center;
@@ -177,12 +181,12 @@
 
   .ticker-item {
     display: inline-block;
-    padding: 0 2rem;
+    padding: 0 2vw;
   }
   
   .ticker-item::after {
     content: "///";
-    margin-left: 2rem;
+    margin-left: 2vw;
     color: #ce2c2c;
   }
 
@@ -195,19 +199,21 @@
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-    align-items: flex-start;
+    gap: 2.5vw;
+    height: 60vh; /* Takes up the remaining vertical room smoothly */
+    align-items: stretch;
   }
 
   .media-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2.5vh;
+    height: 100%;
   }
 
   .media-wrapper-container {
     width: 100%;
-    height: 352px;
+    flex: 1; /* Automatically scales based on remaining vertical room */
     background: #0d0d0d;
     border-radius: 6px;
     overflow: hidden;
@@ -221,7 +227,7 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    height: 220px;
+    height: 40%; /* Stays proportional to the media stack */
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -229,7 +235,7 @@
   }
 
   .scratchpad-header {
-    padding: 12px 20px;
+    padding: 1.5vh 20px;
     background: #161616;
     border-bottom: 1px solid #1c1c1c;
     display: flex;
@@ -269,7 +275,7 @@
 
   .scratchpad-body {
     flex: 1;
-    padding: 20px;
+    padding: 2vh;
     background: transparent;
     border: none;
     color: #e4e4e7;
@@ -281,26 +287,20 @@
   }
 
   .weather-wrapper {
-    min-height: 602px; 
+    height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
-
-  .back-btn {
-    align-self: center;
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    color: #222;
-    transition: color 0.3s;
-  }
-  .back-btn:hover { color: #555; }
 
   @media (max-width: 950px) {
+    html, body { overflow: auto; height: auto; }
     body { padding: 1.5rem; }
-    .top-deck { grid-template-columns: 1fr; }
-    .main-deck { grid-template-columns: 1fr; }
+    .top-deck { grid-template-columns: 1fr; height: auto; }
+    .main-deck { grid-template-columns: 1fr; height: auto; }
+    .digital-clock-tile, .analog-clock-tile, .blank-tile { height: 200px; }
+    #timeDisplay { font-size: 3.5rem; }
+    #dateDisplay { font-size: 0.8rem; }
   }
 </style>
 </head>
@@ -331,7 +331,7 @@
   <div class="main-deck">
     
     <div class="media-wrapper">
-      <div class="tile-card">
+      <div class="tile-card" style="display: flex; flex-direction: column; flex: 1;">
         <div class="media-wrapper-container">
           <div id="yt-player"></div>
         </div>
@@ -377,8 +377,6 @@
     </div>
 
   </div>
-
-  <a href="./" class="back-btn">← RETURN TO SYSTEM</a>
 
 </div>
 
