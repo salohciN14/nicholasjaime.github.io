@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 3vh 3vw; 
+    padding: 20px;
     position: relative;
   }
 
@@ -62,15 +62,26 @@
     }
   }
 
-  /* ── MAIN LAPTOP MATRIX GRID STRUCTURE ── */
+  /* ── SCALING WRAPPER ENGINE ── */
+  /* This wraps your entire UI and scales it down seamlessly to 78% size while maintaining full aspect ratios */
+  .scale-wrapper {
+    transform: scale(0.78);
+    transform-origin: center center;
+    width: 100%;
+    max-width: 75rem; 
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ── MAIN MATRIX GRID STRUCTURE ── */
   .matrix-container {
     width: 100%;
-    max-width: 72rem; /* Pulls the width inward slightly to breathe */
-    height: 86vh;     /* Shrinks the vertical footprint so it fits without feeling squished */
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    z-index: 1;
+    gap: 1.5rem; /* Generous space between cards to let them breath */
     box-sizing: border-box;
   }
 
@@ -87,8 +98,8 @@
   .top-deck {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.2rem;
-    height: 160px; /* Locked down to keep it slim */
+    gap: 1.5rem;
+    height: 160px; 
   }
 
   .digital-clock-tile {
@@ -100,7 +111,7 @@
   }
 
   #timeDisplay {
-    font-size: 3.5rem; /* Adjusted down to match the new container height */
+    font-size: 3.5rem; 
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -131,7 +142,7 @@
   }
 
   .analog-clock-frame iframe {
-    transform: scale(0.75); /* Shrunk slightly to avoid edge crowding */
+    transform: scale(0.75); 
   }
 
   .blank-tile {
@@ -142,7 +153,7 @@
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
-    height: 32px; 
+    height: 34px; 
     background-color: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
@@ -199,16 +210,16 @@
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-    flex: 1; /* Automatically uses remaining container space gracefully */
+    gap: 1.5rem;
+    flex: 1; 
     align-items: stretch;
-    min-height: 0; /* Important for dynamic flexing without clipping box models */
+    min-height: 0; 
   }
 
   .media-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.5rem;
     height: 100%;
   }
 
@@ -228,7 +239,7 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    height: 160px; /* Fixed profile height so it matches top deck panels */
+    height: 160px; 
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -297,6 +308,7 @@
   @media (max-width: 950px) {
     html, body { overflow: auto; height: auto; }
     body { padding: 1rem; }
+    .scale-wrapper { transform: scale(1); height: auto; }
     .matrix-container { height: auto; }
     .top-deck { grid-template-columns: 1fr; height: auto; }
     .main-deck { grid-template-columns: 1fr; height: auto; }
@@ -307,78 +319,80 @@
 </head>
 <body>
 
-<div class="matrix-container">
-  
-  <div class="top-deck">
-    <div class="tile-card digital-clock-tile">
-      <div id="timeDisplay">12:00</div>
-      <div id="dateDisplay">INITIALIZING...</div>
-    </div>
-
-    <div class="tile-card analog-clock-tile">
-      <div class="analog-clock-frame">
-        <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
-      </div>
-    </div>
-
-    <div class="tile-card blank-tile"></div>
-  </div>
-
-  <div class="ticker-wrap">
-    <div class="ticker-label">BREAKING NEWS</div>
-    <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
-  </div>
-  
-  <div class="main-deck">
+<div class="scale-wrapper">
+  <div class="matrix-container">
     
-    <div class="media-wrapper">
-      <div class="tile-card" style="display: flex; flex-direction: column; flex: 1;">
-        <div class="media-wrapper-container">
-          <div id="yt-player"></div>
+    <div class="top-deck">
+      <div class="tile-card digital-clock-tile">
+        <div id="timeDisplay">12:00</div>
+        <div id="dateDisplay">INITIALIZING...</div>
+      </div>
+
+      <div class="tile-card analog-clock-tile">
+        <div class="analog-clock-frame">
+          <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
         </div>
       </div>
 
-      <div class="tile-card scratchpad-box">
-        <div class="scratchpad-header">
-          <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
-          <div class="scratchpad-nav">
-            <button class="nav-btn" id="prevPageBtn">←</button>
-            <span class="page-indicator" id="pageIndicator">1 / 1</span>
-            <button class="nav-btn" id="nextPageBtn">→</button>
-            <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+      <div class="tile-card blank-tile"></div>
+    </div>
+
+    <div class="ticker-wrap">
+      <div class="ticker-label">BREAKING NEWS</div>
+      <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
+    </div>
+    
+    <div class="main-deck">
+      
+      <div class="media-wrapper">
+        <div class="tile-card" style="display: flex; flex-direction: column; flex: 1;">
+          <div class="media-wrapper-container">
+            <div id="yt-player"></div>
           </div>
         </div>
-        <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
+
+        <div class="tile-card scratchpad-box">
+          <div class="scratchpad-header">
+            <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
+            <div class="scratchpad-nav">
+              <button class="nav-btn" id="prevPageBtn">←</button>
+              <span class="page-indicator" id="pageIndicator">1 / 1</span>
+              <button class="nav-btn" id="nextPageBtn">→</button>
+              <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+            </div>
+          </div>
+          <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
+        </div>
       </div>
-    </div>
-    
-    <div class="tile-card weather-wrapper">
-      <div class="tomorrow"
-         data-location-id="064504"
-         data-language="EN"
-         data-unit-system="IMPERIAL"
-         data-skin="dark"
-         data-widget-type="upcoming"
-         style="padding-bottom:22px;position:relative;flex:1;"
-      >
-        <a
-          href="https://weather.tomorrow.io/"
-          rel="nofollow noopener noreferrer"
-          target="_blank"
-          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+      
+      <div class="tile-card weather-wrapper">
+        <div class="tomorrow"
+           data-location-id="064504"
+           data-language="EN"
+           data-unit-system="IMPERIAL"
+           data-skin="dark"
+           data-widget-type="upcoming"
+           style="padding-bottom:22px;position:relative;flex:1;"
         >
-          <img
-            alt="Powered by Tomorrow.io"
-            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-            width="250"
-            height="18"
-          />
-        </a>
+          <a
+            href="https://weather.tomorrow.io/"
+            rel="nofollow noopener noreferrer"
+            target="_blank"
+            style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+          >
+            <img
+              alt="Powered by Tomorrow.io"
+              src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+              width="250"
+              height="18"
+            />
+          </a>
+        </div>
       </div>
+
     </div>
 
   </div>
-
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
