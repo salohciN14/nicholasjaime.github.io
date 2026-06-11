@@ -36,7 +36,7 @@
     background-size: 200% auto;
     box-shadow: 
       inset 0 0 4px rgba(255, 255, 255, 0.3),  
-      inset 0 0 10px rgba(66, 133, 244, 0.15);
+      inset 0 0 10px rgba(66, 134, 244, 0.15);
     animation: border-flow 8s linear infinite, glow-intensity 4s ease-in-out infinite alternate;
   }
 
@@ -70,21 +70,21 @@
     box-sizing: border-box;
   }
 
-  /* ── TOP DECK CONFIGURATION (3-COLUMN WEIGHTED TO CENTER CLOCK ABOVE YT) ── */
+  /* ── TOP DECK CONFIGURATION (NATIVE HEIGHT ALLOWS CLOCKS TO SIT HIGHER) ── */
   .top-deck {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr; /* Proportions perfectly mirror lower columns */
+    grid-template-columns: 1.3fr 1fr 1fr; 
     gap: 2rem;
-    height: 120px; 
+    height: auto; 
+    align-items: center;
   }
 
   .digital-clock-tile {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically centered between window top and ticker */
-    align-items: center; /* Horizontally centered right over the video layout column */
+    justify-content: center; 
+    align-items: center; 
     text-align: center;
-    height: 100%;
   }
 
   #timeDisplay {
@@ -107,20 +107,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
   }
 
   .analog-clock-frame {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    width: 100%;
     overflow: hidden;
-  }
-
-  .analog-clock-frame iframe {
-    transform: scale(0.85); 
+    width: 110px;
+    height: 110px;
   }
 
   .blank-tile {
@@ -159,7 +154,7 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    animation: ticker-move 480s linear infinite; /* Slowed down from 320s to 480s for premium readability */
+    animation: ticker-move 480s linear infinite; 
     color: #a1a1aa;
     font-size: 0.75rem;
     font-weight: 500;
@@ -183,15 +178,15 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── LOWER DECK STRUCTURE ── */
+  /* ── LOWER DECK STRUCTURE (STRETCHES VERTICALLY TO ALIGN BASES) ── */
   .main-deck {
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr; 
     gap: 2rem;
-    align-items: start; /* Keeps columns isolated from forcing false heights onto weather layout */
+    align-items: stretch; /* Forces all containers to calculate matching heights */
   }
 
-  /* Dynamic Aspect-Ratio Container for YouTube Box */
+  /* Aspect-Ratio Controls Video sizing baseline */
   .media-wrapper-container {
     width: 100%;
     aspect-ratio: 16 / 10; 
@@ -206,10 +201,10 @@
     border: none;
   }
 
-  /* ── SYSTEM NOTEBOOK MODULE ── */
+  /* ── SYSTEM NOTEBOOK MODULE (FLAWLESS DYNAMIC VERTICAL STRETCH) ── */
   .scratchpad-container-link {
     width: 100%;
-    aspect-ratio: 16 / 10; /* Perfectly locks notebook's container height to match the dynamic video player block exactly */
+    display: flex;
   }
 
   .scratchpad-box {
@@ -219,8 +214,8 @@
     overflow: hidden;
     background: #111;
     border-radius: 12px;
-    height: 100%;
     width: 100%;
+    height: 100%; /* Spans exactly to match the video card base */
   }
 
   .scratchpad-header {
@@ -275,7 +270,7 @@
     line-height: 1.5;
   }
 
-  /* ── NATIVE WEATHER MODULE ── */
+  /* ── WEATHER MODULE ── */
   .weather-wrapper {
     display: flex;
     flex-direction: column;
@@ -292,7 +287,6 @@
     body { padding: 1rem; }
     .top-deck { grid-template-columns: 1fr; height: auto; gap: 1rem; }
     .main-deck { grid-template-columns: 1fr; }
-    .scratchpad-container-link { aspect-ratio: auto; height: 250px; }
   }
 </style>
 </head>
@@ -308,7 +302,7 @@
 
     <div class="tile-card analog-clock-tile">
       <div class="analog-clock-frame">
-        <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
+        <iframe src="https://free.timeanddate.com/clock/iageozww/n810/szw110/szh110/hoc444/hfc000/cf100/hnc333/hcc333/hcw2/fav0/fiv0/mqcfff/mqs4/mql14/mqw8/mqd100/mhcfff/mhs4/mhl15/mhw4/mhd100/mmv0/hwm2/hhcfc0/hhs2/hhr5/hmcfc0/hms2" frameborder="0" width="110" height="110"></iframe>
       </div>
     </div>
 
