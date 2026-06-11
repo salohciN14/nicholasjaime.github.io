@@ -20,24 +20,23 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 2rem; /* Clean, fixed margin from the screen edges */
     position: relative;
   }
 
-  /* ── FIXED PERIMETER BORDER GLOW ENGINE ── */
+  /* ── THINNER PERIMETER BORDER GLOW ENGINE ── */
   body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
     z-index: 100;
-    border: 5px solid transparent;
+    border: 2px solid transparent; /* Shrunk from 5px to 2px for a much cleaner look */
     border-image: linear-gradient(to right, #4285f4, #9b51e0, #ffffff, #ea4335, #34a853, #fbbc05, #4285f4) 1;
     background-size: 200% auto;
     box-shadow: 
-      inset 0 0 8px rgba(255, 255, 255, 0.4),  
-      inset 0 0 15px rgba(66, 133, 244, 0.2),  
-      inset 0 0 25px rgba(155, 81, 224, 0.15);
+      inset 0 0 4px rgba(255, 255, 255, 0.3),  
+      inset 0 0 10px rgba(66, 133, 244, 0.15);
     animation: border-flow 8s linear infinite, glow-intensity 4s ease-in-out infinite alternate;
   }
 
@@ -48,40 +47,20 @@
   }
 
   @keyframes glow-intensity {
-    0% {
-      box-shadow: 
-        inset 0 0 4px rgba(255, 255, 255, 0.2),   
-        inset 0 0 12px rgba(66, 133, 244, 0.15),
-        inset 0 0 20px rgba(155, 81, 224, 0.1);
-    }
-    100% {
-      box-shadow: 
-        inset 0 0 12px rgba(255, 255, 255, 0.55),  
-        inset 0 0 18px rgba(66, 133, 244, 0.25),
-        inset 0 0 30px rgba(155, 81, 224, 0.2);
-    }
+    0% { box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(66, 133, 244, 0.1); }
+    100% { box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.4), inset 0 0 15px rgba(66, 133, 244, 0.2); }
   }
 
-  /* ── SCALING WRAPPER ENGINE ── */
-  /* This wraps your entire UI and scales it down seamlessly to 78% size while maintaining full aspect ratios */
-  .scale-wrapper {
-    transform: scale(0.78);
-    transform-origin: center center;
-    width: 100%;
-    max-width: 75rem; 
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* ── MAIN MATRIX GRID STRUCTURE ── */
+  /* ── MAIN GRID MATRIX CONTAINER ── */
   .matrix-container {
     width: 100%;
-    height: 100%;
+    max-width: 68rem; /* Keeps everything grouped up beautifully without stretching */
+    height: auto;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Generous space between cards to let them breath */
+    gap: 1.1rem; /* Tightened up the space between widgets so it feels connected */
+    z-index: 1;
     box-sizing: border-box;
   }
 
@@ -98,8 +77,8 @@
   .top-deck {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
-    height: 160px; 
+    gap: 1.1rem;
+    height: 145px; 
   }
 
   .digital-clock-tile {
@@ -111,7 +90,7 @@
   }
 
   #timeDisplay {
-    font-size: 3.5rem; 
+    font-size: 3.2rem; 
     font-weight: 200;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -120,7 +99,7 @@
   }
 
   #dateDisplay {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: #555;
@@ -142,7 +121,7 @@
   }
 
   .analog-clock-frame iframe {
-    transform: scale(0.75); 
+    transform: scale(0.72); 
   }
 
   .blank-tile {
@@ -153,7 +132,7 @@
   .ticker-wrap {
     width: 100%;
     overflow: hidden;
-    height: 34px; 
+    height: 32px; 
     background-color: #111;
     border: 1px solid #1c1c1c;
     border-radius: 8px;
@@ -210,22 +189,19 @@
   .main-deck {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    flex: 1; 
-    align-items: stretch;
-    min-height: 0; 
+    gap: 1.1rem;
+    align-items: start;
   }
 
   .media-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    height: 100%;
+    gap: 1.1rem;
   }
 
   .media-wrapper-container {
     width: 100%;
-    flex: 1; 
+    height: 215px; /* Sets a solid standard height for the player layout box */
     background: #0d0d0d;
     border-radius: 6px;
     overflow: hidden;
@@ -239,7 +215,7 @@
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-box {
-    height: 160px; 
+    height: 145px; 
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -299,7 +275,7 @@
   }
 
   .weather-wrapper {
-    height: 100%;
+    height: 377px; /* Perfectly matches the combined height of the left media stack */
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -308,91 +284,87 @@
   @media (max-width: 950px) {
     html, body { overflow: auto; height: auto; }
     body { padding: 1rem; }
-    .scale-wrapper { transform: scale(1); height: auto; }
-    .matrix-container { height: auto; }
     .top-deck { grid-template-columns: 1fr; height: auto; }
     .main-deck { grid-template-columns: 1fr; height: auto; }
-    .digital-clock-tile, .analog-clock-tile, .blank-tile { height: 140px; }
-    #timeDisplay { font-size: 3rem; }
+    .digital-clock-tile, .analog-clock-tile, .blank-tile { height: 130px; }
+    #timeDisplay { font-size: 2.8rem; }
   }
 </style>
 </head>
 <body>
 
-<div class="scale-wrapper">
-  <div class="matrix-container">
-    
-    <div class="top-deck">
-      <div class="tile-card digital-clock-tile">
-        <div id="timeDisplay">12:00</div>
-        <div id="dateDisplay">INITIALIZING...</div>
-      </div>
-
-      <div class="tile-card analog-clock-tile">
-        <div class="analog-clock-frame">
-          <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
-        </div>
-      </div>
-
-      <div class="tile-card blank-tile"></div>
+<div class="matrix-container">
+  
+  <div class="top-deck">
+    <div class="tile-card digital-clock-tile">
+      <div id="timeDisplay">12:00</div>
+      <div id="dateDisplay">INITIALIZING...</div>
     </div>
 
-    <div class="ticker-wrap">
-      <div class="ticker-label">BREAKING NEWS</div>
-      <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
+    <div class="tile-card analog-clock-tile">
+      <div class="analog-clock-frame">
+        <iframe src="https://free.timeanddate.com/clock/iagc75b3/n810/szw160/szh160/hocfff/hbw2/hfc444/cf100/hnc444/hwc000/faceee/fdi74/mqc000/mql10/mqw4/mqd98/mhc000/mhl10/mhw4/mhd98/mmc000/mml10/mmw1/mmd98/hwm2" frameborder="0" width="160" height="160"></iframe>
+      </div>
     </div>
-    
-    <div class="main-deck">
-      
-      <div class="media-wrapper">
-        <div class="tile-card" style="display: flex; flex-direction: column; flex: 1;">
-          <div class="media-wrapper-container">
-            <div id="yt-player"></div>
-          </div>
-        </div>
 
-        <div class="tile-card scratchpad-box">
-          <div class="scratchpad-header">
-            <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
-            <div class="scratchpad-nav">
-              <button class="nav-btn" id="prevPageBtn">←</button>
-              <span class="page-indicator" id="pageIndicator">1 / 1</span>
-              <button class="nav-btn" id="nextPageBtn">→</button>
-              <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
-            </div>
-          </div>
-          <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
+    <div class="tile-card blank-tile"></div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-label">BREAKING NEWS</div>
+    <div class="ticker" id="newsTicker">Loading clicker subroutines...</div>
+  </div>
+  
+  <div class="main-deck">
+    
+    <div class="media-wrapper">
+      <div class="tile-card">
+        <div class="media-wrapper-container">
+          <div id="yt-player"></div>
         </div>
       </div>
-      
-      <div class="tile-card weather-wrapper">
-        <div class="tomorrow"
-           data-location-id="064504"
-           data-language="EN"
-           data-unit-system="IMPERIAL"
-           data-skin="dark"
-           data-widget-type="upcoming"
-           style="padding-bottom:22px;position:relative;flex:1;"
+
+      <div class="tile-card scratchpad-box">
+        <div class="scratchpad-header">
+          <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; font-weight: bold;">System Notebook</div>
+          <div class="scratchpad-nav">
+            <button class="nav-btn" id="prevPageBtn">←</button>
+            <span class="page-indicator" id="pageIndicator">1 / 1</span>
+            <button class="nav-btn" id="nextPageBtn">→</button>
+            <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+          </div>
+        </div>
+        <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
+      </div>
+    </div>
+    
+    <div class="tile-card weather-wrapper">
+      <div class="tomorrow"
+         data-location-id="064504"
+         data-language="EN"
+         data-unit-system="IMPERIAL"
+         data-skin="dark"
+         data-widget-type="upcoming"
+         style="padding-bottom:22px;position:relative;flex:1;"
+      >
+        <a
+          href="https://weather.tomorrow.io/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
         >
-          <a
-            href="https://weather.tomorrow.io/"
-            rel="nofollow noopener noreferrer"
-            target="_blank"
-            style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
-          >
-            <img
-              alt="Powered by Tomorrow.io"
-              src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-              width="250"
-              height="18"
-            />
-          </a>
-        </div>
+          <img
+            alt="Powered by Tomorrow.io"
+            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+            width="250"
+            height="18"
+          />
+        </a>
       </div>
-
     </div>
 
   </div>
+
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
