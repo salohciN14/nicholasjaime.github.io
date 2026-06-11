@@ -70,21 +70,21 @@
     box-sizing: border-box;
   }
 
-  /* ── TOP DECK CONFIGURATION (3 EQUAL TILES) ── */
+  /* ── TOP DECK CONFIGURATION (3-COLUMN WEIGHTED TO CENTER CLOCK ABOVE YT) ── */
   .top-deck {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1.3fr 1fr 1fr; /* Proportions perfectly mirror lower columns */
+    gap: 2rem;
     height: 120px; 
-    align-items: center;
   }
 
   .digital-clock-tile {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start; 
-    text-align: left;
+    justify-content: center; /* Vertically centered between window top and ticker */
+    align-items: center; /* Horizontally centered right over the video layout column */
+    text-align: center;
+    height: 100%;
   }
 
   #timeDisplay {
@@ -107,6 +107,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
 
   .analog-clock-frame {
@@ -123,7 +124,7 @@
   }
 
   .blank-tile {
-    /* Kept empty as requested */
+    /* Intentionally blank block */
   }
 
   /* ── MIDDLE ROW: TEXT TICKER BAR ── */
@@ -158,7 +159,7 @@
     display: inline-block;
     white-space: nowrap;
     padding-right: 100%;
-    animation: ticker-move 320s linear infinite;
+    animation: ticker-move 480s linear infinite; /* Slowed down from 320s to 480s for premium readability */
     color: #a1a1aa;
     font-size: 0.75rem;
     font-weight: 500;
@@ -182,18 +183,18 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── LOWER DECK STRUCTURE (3-COLUMN NATURALLY BALANCED CONTAINER) ── */
+  /* ── LOWER DECK STRUCTURE ── */
   .main-deck {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr; /* Gives YouTube more room layout-wise */
+    grid-template-columns: 1.3fr 1fr 1fr; 
     gap: 2rem;
-    align-items: stretch; /* Forces elements to extend evenly */
+    align-items: start; /* Keeps columns isolated from forcing false heights onto weather layout */
   }
 
   /* Dynamic Aspect-Ratio Container for YouTube Box */
   .media-wrapper-container {
     width: 100%;
-    aspect-ratio: 16 / 10; /* Clean, spacious cinematic frame size */
+    aspect-ratio: 16 / 10; 
     background: #0d0d0d;
     border-radius: 12px;
     overflow: hidden;
@@ -206,6 +207,11 @@
   }
 
   /* ── SYSTEM NOTEBOOK MODULE ── */
+  .scratchpad-container-link {
+    width: 100%;
+    aspect-ratio: 16 / 10; /* Perfectly locks notebook's container height to match the dynamic video player block exactly */
+  }
+
   .scratchpad-box {
     display: flex;
     flex-direction: column;
@@ -214,6 +220,7 @@
     background: #111;
     border-radius: 12px;
     height: 100%;
+    width: 100%;
   }
 
   .scratchpad-header {
@@ -268,13 +275,12 @@
     line-height: 1.5;
   }
 
-  /* ── NATIVE HEIGHT WEATHER EMBED WRAPPER ── */
+  /* ── NATIVE WEATHER MODULE ── */
   .weather-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: 100%;
-    overflow: visible; /* Prevents text clipping at the base */
+    overflow: visible; 
   }
 
   .tomorrow {
@@ -284,9 +290,9 @@
   @media (max-width: 950px) {
     html, body { overflow: auto; height: auto; }
     body { padding: 1rem; }
-    .top-deck { grid-template-columns: 1fr; height: auto; }
+    .top-deck { grid-template-columns: 1fr; height: auto; gap: 1rem; }
     .main-deck { grid-template-columns: 1fr; }
-    .digital-clock-tile { align-items: center; text-align: center; }
+    .scratchpad-container-link { aspect-ratio: auto; height: 250px; }
   }
 </style>
 </head>
@@ -322,17 +328,19 @@
       </div>
     </div>
 
-    <div class="scratchpad-box">
-      <div class="scratchpad-header">
-        <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; font-weight: bold;">System Notebook</div>
-        <div class="scratchpad-nav">
-          <button class="nav-btn" id="prevPageBtn">←</button>
-          <span class="page-indicator" id="pageIndicator">1 / 1</span>
-          <button class="nav-btn" id="nextPageBtn">→</button>
-          <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+    <div class="scratchpad-container-link">
+      <div class="scratchpad-box">
+        <div class="scratchpad-header">
+          <div class="scratchpad-title" style="font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; font-weight: bold;">System Notebook</div>
+          <div class="scratchpad-nav">
+            <button class="nav-btn" id="prevPageBtn">←</button>
+            <span class="page-indicator" id="pageIndicator">1 / 1</span>
+            <button class="nav-btn" id="nextPageBtn">→</button>
+            <button class="nav-btn" id="addPageBtn" style="font-weight:bold; color:#a1a1aa;">+</button>
+          </div>
         </div>
+        <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
       </div>
-      <textarea class="scratchpad-body" id="scratchpadTextArea" placeholder="Type quick logs, URLs, or reminders here..."></textarea>
     </div>
     
     <div class="tile-card weather-wrapper">
