@@ -249,6 +249,7 @@
   .lightbox-btn:hover { background: rgba(255,255,255,0.15); }
   .lightbox-btn.prev { left: 1rem; }
   .lightbox-btn.next { right: 1rem; }
+  .lightbox-btn:disabled { opacity: 0.2; cursor: default; }
 
   .lightbox-counter {
     position: absolute;
@@ -686,6 +687,10 @@ function renderLightbox() {
   
   document.getElementById('lbCaption').innerHTML = captionHTML;
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
+
+  // Re-enabled strict boundary tracking so arrows stay but turn off when at the edges
+  document.getElementById('lbPrev').disabled = lbIndex === 0;
+  document.getElementById('lbNext').disabled = lbIndex === lbImages.length - 1;
 }
 
 function closeLightbox() {
@@ -696,13 +701,17 @@ function closeLightbox() {
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 
 document.getElementById('lbPrev').addEventListener('click', () => { 
-  lbIndex = (lbIndex === 0) ? lbImages.length - 1 : lbIndex - 1; 
-  renderLightbox(); 
+  if (lbIndex > 0) {
+    lbIndex--; 
+    renderLightbox(); 
+  }
 });
 
 document.getElementById('lbNext').addEventListener('click', () => { 
-  lbIndex = (lbIndex === lbImages.length - 1) ? 0 : lbIndex + 1; 
-  renderLightbox(); 
+  if (lbIndex < lbImages.length - 1) {
+    lbIndex++; 
+    renderLightbox(); 
+  }
 });
 
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
@@ -710,12 +719,12 @@ lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightb
 document.addEventListener('keydown', e => {
   if (!lightbox.classList.contains('open')) return;
   if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') { 
-    lbIndex = (lbIndex === 0) ? lbImages.length - 1 : lbIndex - 1; 
+  if (e.key === 'ArrowLeft' && lbIndex > 0) { 
+    lbIndex--; 
     renderLightbox(); 
   }
-  if (e.key === 'ArrowRight') { 
-    lbIndex = (lbIndex === lbImages.length - 1) ? 0 : lbIndex + 1; 
+  if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) { 
+    lbIndex++; 
     renderLightbox(); 
   }
 });
