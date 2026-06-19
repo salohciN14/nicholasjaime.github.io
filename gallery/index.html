@@ -245,6 +245,7 @@
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; font-size: 1.2rem;
     transition: background 0.3s;
+    z-index: 1010; /* Ensures arrows hover over enlarged images */
   }
   .lightbox-btn:hover { background: rgba(255,255,255,0.15); }
   .lightbox-btn.prev { left: 1rem; }
@@ -688,7 +689,7 @@ function renderLightbox() {
   document.getElementById('lbCaption').innerHTML = captionHTML;
   lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
 
-  // Re-enabled strict boundary tracking so arrows stay but turn off when at the edges
+  // Strict boundary activation updates
   document.getElementById('lbPrev').disabled = lbIndex === 0;
   document.getElementById('lbNext').disabled = lbIndex === lbImages.length - 1;
 }
