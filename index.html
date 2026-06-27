@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nicholas Jaime</title>
   <link rel="icon" type="image/png" href="../Logo1.png?v=2">
-<meta name="description" content="Personal portfolio of Nicholas Jaime.">
+<meta name="description" content="The personal site of Nicholas Jaime.">
 <link rel="stylesheet" href="css/style.css">
 <style>
   html, body { height: 100%; overflow: hidden; }
@@ -56,15 +56,6 @@
   }
   .hero-content.loaded { opacity: 1; transform: translateY(0); }
 
-  .hero-eyebrow {
-    font-size: 0.6rem;
-    letter-spacing: 0.5em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-    font-weight: 300;
-  }
-
   .hero-name {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(4rem, 12vw, 9rem);
@@ -89,34 +80,6 @@
     background: var(--text-muted);
     opacity: 0.4;
   }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    opacity: 1;
-    transition: opacity 0.6s ease;
-  }
-  .scroll-hint.hidden { opacity: 0; }
-  .scroll-hint span {
-    font-size: 0.55rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .scroll-hint svg {
-    animation: bounce 2s infinite;
-    color: var(--text-muted);
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
-  }
 </style>
 </head>
 <body>
@@ -139,15 +102,13 @@
 <script>
   const bg = document.getElementById('heroBg');
   const content = document.getElementById('heroContent');
-  const hint = document.getElementById('scrollHint');
   const img = new Image();
-  img.src = bg.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '') || 'https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?auto=compress&cs=tinysrgb&w=1920';
-  img.onload = () => { bg.classList.add('loaded'); content.classList.add('loaded'); };
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) hint.classList.add('hidden');
-    else hint.classList.remove('hidden');
-  }, { passive: true });
+  
+  img.src = 'PR Sunset.jpg';
+  img.onload = () => { 
+    bg.classList.add('loaded'); 
+    content.classList.add('loaded'); 
+  };
 </script>
 </body>
 </html>
