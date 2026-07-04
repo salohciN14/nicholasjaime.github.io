@@ -70,7 +70,7 @@
     box-sizing: border-box;
   }
 
-  /* ── TOP DECK CONFIGURATION (NATIVE HEIGHT ALLOWS CLOCKS TO SIT HIGHER) ── */
+  /* ── TOP DECK CONFIGURATION ── */
   .top-deck {
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr; 
@@ -178,12 +178,12 @@
     100% { transform: translate3d(-100%, 0, 0); }
   }
 
-  /* ── LOWER DECK STRUCTURE (STRETCHES VERTICALLY TO ALIGN BASES) ── */
+  /* ── LOWER DECK STRUCTURE ── */
   .main-deck {
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr; 
     gap: 2rem;
-    align-items: stretch; /* Forces all containers to calculate matching heights */
+    align-items: stretch;
   }
 
   /* Aspect-Ratio Controls Video sizing baseline */
@@ -201,7 +201,7 @@
     border: none;
   }
 
-  /* ── SYSTEM NOTEBOOK MODULE (FLAWLESS DYNAMIC VERTICAL STRETCH) ── */
+  /* ── SYSTEM NOTEBOOK MODULE ── */
   .scratchpad-container-link {
     width: 100%;
     display: flex;
@@ -215,7 +215,7 @@
     background: #111;
     border-radius: 12px;
     width: 100%;
-    height: 100%; /* Spans exactly to match the video card base */
+    height: 100%;
   }
 
   .scratchpad-header {
@@ -275,11 +275,16 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    overflow: visible; 
+    overflow: hidden;
+    border-radius: 12px;
+    width: 100%;
   }
 
-  .tomorrow {
+  .aw-widget-container {
     width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
   }
 
   @media (max-width: 950px) {
@@ -338,27 +343,8 @@
     </div>
     
     <div class="tile-card weather-wrapper">
-      <div class="tomorrow"
-         data-location-id="064504"
-         data-language="EN"
-         data-unit-system="IMPERIAL"
-         data-skin="dark"
-         data-widget-type="upcoming"
-         style="padding-bottom:22px;position:relative;"
-      >
-        <a
-          href="https://weather.tomorrow.io/"
-          rel="nofollow noopener noreferrer"
-          target="_blank"
-          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
-        >
-          <img
-            alt="Powered by Tomorrow.io"
-            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-            width="250"
-            height="18"
-          />
-        </a>
+      <div class="aw-widget-container">
+        <a href="https://www.accuweather.com/en/us/miamisburg/45342/weather-radar/335013" class="aw-widget-block" data-type="radar" data-theme="dark" data-size="md" data-height="100%"></a>
       </div>
     </div>
 
@@ -512,21 +498,7 @@
   loadRealClickerTicker();
 </script>
 
-<script>
-(function(d, s, id) {
-    if (d.getElementById(id)) {
-        if (window.__TOMORROW__) {
-            window.__TOMORROW__.renderWidget();
-        }
-        return;
-    }
-    const fjs = d.getElementsByTagName(s)[0];
-    const js = d.createElement(s);
-    js.id = id;
-    js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
-    fjs.parentNode.insertBefore(js, fjs);
-})(document, 'script', 'tomorrow-sdk');
-</script>
+<script src="https://netweather.accuweather.com/js/accuweather.js"></script>
 
 </body>
 </html>
