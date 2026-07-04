@@ -278,13 +278,19 @@
     overflow: hidden;
     border-radius: 12px;
     width: 100%;
+    background: #111;
   }
 
   .aw-widget-container {
     width: 100%;
     height: 100%;
-    border: none;
     overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .aw-widget-current {
+    width: 100% !important;
   }
 
   @media (max-width: 950px) {
@@ -344,7 +350,7 @@
     
     <div class="tile-card weather-wrapper">
       <div class="aw-widget-container">
-        <a href="https://www.accuweather.com/en/us/miamisburg/45342/weather-radar/335013" class="aw-widget-block" data-type="radar" data-theme="dark" data-size="md" data-height="100%"></a>
+        <div id="awcc1439515565378" class="aw-widget-current" data-locationkey="335013" data-unit="f" data-language="en-us" data-useip="true" data-uid="awcc1439515565378"></div>
       </div>
     </div>
 
@@ -498,7 +504,7 @@
   loadRealClickerTicker();
 </script>
 
-<script src="https://netweather.accuweather.com/js/accuweather.js"></script>
+<script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
 
 </body>
 </html>
