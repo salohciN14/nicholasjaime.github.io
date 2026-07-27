@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Core Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-blue: #58a6ff;
+            --accent-green: #238636;
+            --accent-green-hover: #2ea043;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+            --danger-color: #f85149;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        /* Desktop Layout (2 Columns) */
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* Header Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        header h1 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green-hover);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green-hover);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Input & Controls */
+        textarea {
+            width: 100%;
+            height: 95px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            padding: 12px;
+            font-size: 1rem; /* Prevents auto-zoom on mobile Chrome */
+            resize: none;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        button.btn-submit {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 48px; /* Thumb touch target */
+            transition: background-color 0.2s;
+        }
+
+        button.btn-submit:active {
+            background-color: var(--accent-green-hover);
+        }
+
+        /* AI Immediate Response Box */
+        .ai-response {
+            background-color: rgba(88, 166, 255, 0.08);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            display: none; /* Hidden until submission */
+        }
+
+        /* Task & Item Lists */
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .item-sub {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+        }
+
+        .btn-done {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .btn-done:hover {
+            color: var(--accent-green-hover);
+            border-color: var(--accent-green-hover);
+        }
+
+        /* Gym & Tech Feed Highlights */
+        .stat-highlight {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .news-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="full-width">
+            <h1>System Dashboard</h1>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>Engine Active</span>
+            </div>
+        </header>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-title">End-of-Day Input</div>
+                <textarea id="dumpInput" placeholder="e.g. Bench 135x8. Math p.42 due tomorrow, History paper Friday..."></textarea>
+                <button class="btn-submit" onclick="handleDump()">Submit to AI Engine</button>
+                
+                <div id="aiResponseCard" class="ai-response">
+                    <strong>AI Status:</strong> <span id="aiResponseText">Processing...</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Pending Assignments</span>
+                    <span id="taskCount" style="color: var(--accent-blue);">2</span>
+                </div>
+                <div class="list-group" id="taskList">
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">Math Page 42</span>
+                            <span class="item-sub">Due: Tomorrow (Nagging Active)</span>
+                        </div>
+                        <button class="btn-done" onclick="completeTask(this)">Done</button>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">History Paper</span>
+                            <span class="item-sub">Due: Friday</span>
+                        </div>
+                        <button class="btn-done" onclick="completeTask(this)">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-title">Gym & Recovery Log</div>
+                <div class="stat-highlight" id="latestWorkout">
+                    <strong>Last Logged:</strong> Bench Press (135 lbs x 8)
+                </div>
+                <div class="news-item" id="workoutRec">
+                    💡 <strong>AI Recommendation:</strong> Target Back & Biceps (Pull Day) or take a rest day before Cross Country.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">GSMArena Radar</div>
+                <div class="news-item" id="techNewsFeed">
+                    📡 <em>No major flagship drops flagged today. Monitoring feed in background...</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleDump() {
+            const input = document.getElementById('dumpInput').value.trim();
+            if (!input) {
+                alert("Please type something into the box first!");
+                return;
+            }
+
+            // Reveal immediate response box
+            const responseCard = document.getElementById('aiResponseCard');
+            const responseText = document.getElementById('aiResponseText');
+            responseCard.style.display = 'block';
+            responseText.innerText = "Captured input! In Step 2, this sends straight to Vercel/Gemini API to parse and update your database.";
+
+            // Clear input box
+            document.getElementById('dumpInput').value = '';
+        }
+
+        function completeTask(btn) {
+            // Removes item visually for now
+            const row = btn.closest('.item-row');
+            row.style.opacity = '0.5';
+            btn.innerText = 'Cleared';
+            btn.disabled = true;
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Core Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-blue: #58a6ff;
+            --accent-green: #238636;
+            --accent-green-hover: #2ea043;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+            --danger-color: #f85149;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        /* Desktop Layout (2 Columns) */
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* Header Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        header h1 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green-hover);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green-hover);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Input & Controls */
+        textarea {
+            width: 100%;
+            height: 95px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            padding: 12px;
+            font-size: 1rem; /* Prevents auto-zoom on mobile Chrome */
+            resize: none;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        button.btn-submit {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 48px; /* Thumb touch target */
+            transition: background-color 0.2s;
+        }
+
+        button.btn-submit:active {
+            background-color: var(--accent-green-hover);
+        }
+
+        /* AI Immediate Response Box */
+        .ai-response {
+            background-color: rgba(88, 166, 255, 0.08);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            display: none; /* Hidden until submission */
+        }
+
+        /* Task & Item Lists */
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .item-sub {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+        }
+
+        .btn-done {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .btn-done:hover {
+            color: var(--accent-green-hover);
+            border-color: var(--accent-green-hover);
+        }
+
+        /* Gym & Tech Feed Highlights */
+        .stat-highlight {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .news-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="full-width">
+            <h1>System Dashboard</h1>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>Engine Active</span>
+            </div>
+        </header>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-title">End-of-Day Input</div>
+                <textarea id="dumpInput" placeholder="e.g. Bench 135x8. Math p.42 due tomorrow, History paper Friday..."></textarea>
+                <button class="btn-submit" onclick="handleDump()">Submit to AI Engine</button>
+                
+                <div id="aiResponseCard" class="ai-response">
+                    <strong>AI Status:</strong> <span id="aiResponseText">Processing...</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Pending Assignments</span>
+                    <span id="taskCount" style="color: var(--accent-blue);">2</span>
+                </div>
+                <div class="list-group" id="taskList">
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">Math Page 42</span>
+                            <span class="item-sub">Due: Tomorrow (Nagging Active)</span>
+                        </div>
+                        <button class="btn-done" onclick="completeTask(this)">Done</button>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">History Paper</span>
+                            <span class="item-sub">Due: Friday</span>
+                        </div>
+                        <button class="btn-done" onclick="completeTask(this)">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-title">Gym & Recovery Log</div>
+                <div class="stat-highlight" id="latestWorkout">
+                    <strong>Last Logged:</strong> Bench Press (135 lbs x 8)
+                </div>
+                <div class="news-item" id="workoutRec">
+                    💡 <strong>AI Recommendation:</strong> Target Back & Biceps (Pull Day) or take a rest day before Cross Country.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">GSMArena Radar</div>
+                <div class="news-item" id="techNewsFeed">
+                    📡 <em>No major flagship drops flagged today. Monitoring feed in background...</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleDump() {
+            const input = document.getElementById('dumpInput').value.trim();
+            if (!input) {
+                alert("Please type something into the box first!");
+                return;
+            }
+
+            // Reveal immediate response box
+            const responseCard = document.getElementById('aiResponseCard');
+            const responseText = document.getElementById('aiResponseText');
+            responseCard.style.display = 'block';
+            responseText.innerText = "Captured input! In Step 2, this sends straight to Vercel/Gemini API to parse and update your database.";
+
+            // Clear input box
+            document.getElementById('dumpInput').value = '';
+        }
+
+        function completeTask(btn) {
+            // Removes item visually for now
+            const row = btn.closest('.item-row');
+            row.style.opacity = '0.5';
+            btn.innerText = 'Cleared';
+            btn.disabled = true;
+        }
+    </script>
+</body>
+</html>
+
