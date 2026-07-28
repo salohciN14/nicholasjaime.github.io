@@ -173,20 +173,14 @@
     <script>
         const API_URL = 'https://nicholasjaime-github-io.vercel.app/api/parse';
 
-        // Trigger Popup Toast Message
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
             if (!toast) return;
-            
             toast.textContent = message;
             toast.classList.add('show');
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            setTimeout(() => toast.classList.remove('show'), 5000);
         }
 
-        // Check if Vercel Backend is active
         async function checkEngineStatus() {
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
@@ -205,7 +199,6 @@
             }
         }
 
-        // Process request
         async function submitData() {
             const input = document.getElementById('user-input').value;
             const summaryText = document.getElementById('summary-text');
@@ -213,7 +206,6 @@
             const workoutsText = document.getElementById('workouts-text');
 
             if (!input.trim()) return;
-
             if (summaryText) summaryText.textContent = 'Processing...';
 
             try {
@@ -223,8 +215,19 @@
                     body: JSON.stringify({ text: input })
                 });
 
-                // Since the backend now guarantees JSON, we can safely parse it
-                const result = await response.json();
+                // Grab raw text first so it doesn't crash on HTML
+                const rawText = await response.text();
+                
+                let result;
+                try {
+                    result = JSON.parse(rawText);
+                } catch (e) {
+                    // If Vercel throws an HTML timeout/crash page, show it cleanly
+                    if (summaryText) summaryText.textContent = 'Failed.';
+                    let errorSnippet = rawText.substring(0, 50).replace(/<[^>]*>?/gm, ''); // Strip HTML tags
+                    showToast(`Vercel Server Error: ${errorSnippet}... Check Vercel Logs.`);
+                    return;
+                }
 
                 if (result.success) {
                     const data = result.data;
@@ -245,14 +248,12 @@
                     if (workoutsText) workoutsText.textContent = data.workouts || 'None';
                     if (summaryText) summaryText.textContent = data.aiSummary || 'Done.';
                 } else {
-                    // Triggers bottom error toast with the exact reason it failed
-                    const errorMsg = result.error || 'Error processing request.';
                     if (summaryText) summaryText.textContent = 'Failed.';
-                    showToast(errorMsg);
+                    showToast(`AI Error: ${result.error}`);
                 }
             } catch (err) {
                 if (summaryText) summaryText.textContent = 'Failed to reach API server.';
-                showToast(`Error: ${err.message}`);
+                showToast(`Network Error: ${err.message}`);
             }
         }
 
