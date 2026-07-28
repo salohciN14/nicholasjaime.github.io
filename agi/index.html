@@ -223,12 +223,7 @@
                     body: JSON.stringify({ text: input })
                 });
 
-                // Safety Check: Make sure we got JSON back and not an HTML error page
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned invalid data format.');
-                }
-
+                // Since the backend now guarantees JSON, we can safely parse it
                 const result = await response.json();
 
                 if (result.success) {
@@ -250,13 +245,14 @@
                     if (workoutsText) workoutsText.textContent = data.workouts || 'None';
                     if (summaryText) summaryText.textContent = data.aiSummary || 'Done.';
                 } else {
+                    // Triggers bottom error toast with the exact reason it failed
                     const errorMsg = result.error || 'Error processing request.';
-                    if (summaryText) summaryText.textContent = 'Error processing request.';
-                    showToast(`Error: ${errorMsg}`);
+                    if (summaryText) summaryText.textContent = 'Failed.';
+                    showToast(errorMsg);
                 }
             } catch (err) {
                 if (summaryText) summaryText.textContent = 'Failed to reach API server.';
-                showToast(`Network Error: ${err.message}`);
+                showToast(`Error: ${err.message}`);
             }
         }
 
