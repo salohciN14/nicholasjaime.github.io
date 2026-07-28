@@ -1,15 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
 export default async function handler(req, res) {
   // CORS and JSON Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
   }
 
@@ -18,14 +16,21 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Check for API key safely inside the function
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(200).json({ success: false, error: 'Missing GEMINI_API_KEY in Vercel settings.' });
+    }
+
+    // 2. Initialize inside the try/catch so it can't crash the server
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
+
     const { text } = req.body || {};
     
     if (!text || !text.trim()) {
       return res.status(200).json({ success: false, error: 'Please enter text to parse.' });
     }
-
-    // Using the active, supported Flash model
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
 
     const prompt = `Analyze this input: "${text}"
       Return ONLY valid JSON (no markdown, no backticks) matching this exact structure:
@@ -38,14 +43,12 @@ export default async function handler(req, res) {
     const result = await model.generateContent(prompt);
     let responseText = await result.response.text();
 
-    // Clean up potential markdown blocks
     responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
 
     return res.status(200).json({ success: true, data: JSON.parse(responseText) });
 
   } catch (error) {
     console.error('Backend Error:', error);
-    // Force a 200 OK status but return the error inside the JSON so the frontend handles it cleanly
     return res.status(200).json({ 
       success: false, 
       error: 'API Error: ' + error.message 
