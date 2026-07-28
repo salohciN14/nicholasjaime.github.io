@@ -1,72 +1,70 @@
-module.exports = async (req, res) => {
-    // Enable CORS for external requests from nicholasjaime.com
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+// Initialize Google Generative AI with your secret API key from Vercel
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+export default async function handler(req, res) {
+  // 1. Handle CORS Preflight Requests
+  if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(200).end();
+  }
 
-    // Handle browser pre-flight check
-    if (req.method === 'OPTIONS') {
-        res.status(200).json({ status: 'ok' });
-        return;
+  // Set CORS header for standard POST requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Reject non-POST methods
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Method Not Allowed' });
+  }
+
+  try {
+    const { text } = req.body;
+
+    if (!text || !text.trim()) {
+      return res.status(400).json({ success: false, error: 'No text input provided.' });
     }
 
-    if (req.method !== 'POST') {
-        res.status(405).json({ error: 'Method Not Allowed' });
-        return;
-    }
+    // 2. Load the Flash Model
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-    try {
-        const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-        const text = body.text;
+    // 3. Prompt for strict JSON formatting
+    const prompt = `
+      You are an AI assistant parsing user notes into structured data.
+      Analyze the following input: "${text}"
 
-        if (!text) {
-            res.status(400).json({ error: 'No text provided' });
-            return;
-        }
+      Respond STRICTLY with a valid JSON object (no markdown, no backticks) using this exact structure:
+      {
+        "assignments": ["list of tasks or assignments found, or empty array if none"],
+        "workouts": "summary of workout/exercise notes, or 'None'",
+        "aiSummary": "brief summary of the user input"
+      }
+    `;
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-            res.status(500).json({ error: 'GEMINI_API_KEY environment variable not configured in Vercel.' });
-            return;
-        }
+    // 4. Generate content from Gemini
+    const result = await model.generateContent(prompt);
+    let responseText = await result.response.text();
 
-        const prompt = `You are a personal dashboard backend parser. 
-Analyze the input text and organize it into JSON matching this exact structure:
-{
-  "assignments": ["list of tasks or empty array if none mentioned"],
-  "workouts": "summary of workout/recovery mentioned or empty string if none",
-  "aiSummary": "1-2 sentence quick status response acknowledging input"
+    // Clean up any potential markdown formatting backticks from the AI string
+    responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // 5. Parse JSON and return to frontend
+    const data = JSON.parse(responseText);
+
+    return res.status(200).json({ 
+      success: true, 
+      data 
+    });
+
+  } catch (error) {
+    console.error('Gemini API Error:', error);
+
+    // Return exact error message so the toast banner on your frontend can display it
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Internal Server Error' 
+    });
+  }
 }
-
-Input Text: "${text}"
-
-Respond strictly with valid JSON only. Do not wrap in markdown code blocks.`;
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            res.status(500).json({ error: data.error?.message || 'Gemini API Error' });
-            return;
-        }
-
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-        const cleanedJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const parsedData = JSON.parse(cleanedJson);
-
-        res.status(200).json({ success: true, data: parsedData });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-};
