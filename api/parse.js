@@ -24,8 +24,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, error: 'Please enter text to parse.' });
     }
 
-    // 2. Load Gemini 3.5 Flash Model
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
+    // 2. Load Gemini 3.6 Flash Model
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
 
     const prompt = `
       Analyze this input: "${text}"
