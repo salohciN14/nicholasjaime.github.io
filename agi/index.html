@@ -5,18 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGI Dashboard</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --border-color: #334155;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #0d1117;
+            color: #c9d1d9;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
@@ -36,10 +27,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--card-bg);
+            background: #161b22;
             padding: 15px 20px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #30363d;
         }
 
         .status-container {
@@ -53,15 +44,15 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: var(--accent-red);
+            background-color: #ef4444;
             transition: background-color 0.3s ease;
         }
 
         .input-section {
-            background: var(--card-bg);
+            background: #161b22;
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #30363d;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -70,9 +61,9 @@
         textarea {
             width: 100%;
             height: 100px;
-            background: #0f172a;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+            background: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
             border-radius: 6px;
             padding: 10px;
             box-sizing: border-box;
@@ -80,7 +71,7 @@
         }
 
         button {
-            background: #2563eb;
+            background: #238636;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -91,7 +82,7 @@
         }
 
         button:hover {
-            background: #1d4ed8;
+            background: #2ea043;
         }
 
         .results {
@@ -101,16 +92,16 @@
         }
 
         .card {
-            background: var(--card-bg);
+            background: #161b22;
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #30363d;
         }
 
         .card h3 {
             margin-top: 0;
             font-size: 1rem;
-            color: #94a3b8;
+            color: #8b949e;
         }
 
         ul {
@@ -154,29 +145,26 @@
     <script>
         const API_URL = 'https://nicholasjaime-github-io.vercel.app/api/parse';
 
-        // Check if backend engine is alive on load
+        // Ping backend engine on load
         async function checkEngineStatus() {
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
 
             try {
-                const response = await fetch(API_URL, {
-                    method: 'OPTIONS'
-                });
-
+                const response = await fetch(API_URL, { method: 'OPTIONS' });
                 if (response.ok) {
-                    statusDot.style.backgroundColor = 'var(--accent-green)';
-                    statusText.textContent = 'Engine Active';
+                    if (statusDot) statusDot.style.backgroundColor = '#238636';
+                    if (statusText) statusText.textContent = 'Engine Active';
                 } else {
-                    throw new Error('Engine unreachable');
+                    throw new Error();
                 }
-            } catch (err) {
-                statusDot.style.backgroundColor = 'var(--accent-red)';
-                statusText.textContent = 'Offline';
+            } catch {
+                if (statusDot) statusDot.style.backgroundColor = '#ef4444';
+                if (statusText) statusText.textContent = 'Offline';
             }
         }
 
-        // Send input text to Vercel Gemini parser
+        // Send input text to Vercel parser
         async function submitData() {
             const input = document.getElementById('user-input').value;
             const summaryText = document.getElementById('summary-text');
@@ -185,7 +173,7 @@
 
             if (!input.trim()) return;
 
-            summaryText.textContent = 'Processing...';
+            if (summaryText) summaryText.textContent = 'Processing...';
 
             try {
                 const response = await fetch(API_URL, {
@@ -199,32 +187,30 @@
                 if (result.success) {
                     const data = result.data;
                     
-                    // Render Assignments
-                    assignmentsList.innerHTML = '';
-                    if (data.assignments && data.assignments.length > 0) {
-                        data.assignments.forEach(task => {
-                            const li = document.createElement('li');
-                            li.textContent = task;
-                            assignmentsList.appendChild(li);
-                        });
-                    } else {
-                        assignmentsList.innerHTML = '<li>None</li>';
+                    if (assignmentsList) {
+                        assignmentsList.innerHTML = '';
+                        if (data.assignments && data.assignments.length > 0) {
+                            data.assignments.forEach(task => {
+                                const li = document.createElement('li');
+                                li.textContent = task;
+                                assignmentsList.appendChild(li);
+                            });
+                        } else {
+                            assignmentsList.innerHTML = '<li>None</li>';
+                        }
                     }
 
-                    // Render Workouts
-                    workoutsText.textContent = data.workouts || 'None';
-
-                    // Render Summary
-                    summaryText.textContent = data.aiSummary || 'Done.';
+                    if (workoutsText) workoutsText.textContent = data.workouts || 'None';
+                    if (summaryText) summaryText.textContent = data.aiSummary || 'Done.';
                 } else {
-                    summaryText.textContent = 'Error processing request.';
+                    // Displays specific Vercel/Gemini error reason directly in the UI
+                    if (summaryText) summaryText.textContent = `Error: ${result.error || 'Failed to process request.'}`;
                 }
             } catch (err) {
-                summaryText.textContent = 'Failed to reach API server.';
+                if (summaryText) summaryText.textContent = `Network Error: ${err.message}`;
             }
         }
 
-        // Initialize status check
         checkEngineStatus();
     </script>
 </body>
