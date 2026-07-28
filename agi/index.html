@@ -223,6 +223,12 @@
                     body: JSON.stringify({ text: input })
                 });
 
+                // Safety Check: Make sure we got JSON back and not an HTML error page
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned invalid data format.');
+                }
+
                 const result = await response.json();
 
                 if (result.success) {
@@ -246,8 +252,6 @@
                 } else {
                     const errorMsg = result.error || 'Error processing request.';
                     if (summaryText) summaryText.textContent = 'Error processing request.';
-                    
-                    // Trigger bottom error toast
                     showToast(`Error: ${errorMsg}`);
                 }
             } catch (err) {
