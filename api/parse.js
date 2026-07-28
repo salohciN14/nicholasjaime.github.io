@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // Set CORS headers so index.html can communicate with Vercel
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -9,8 +8,7 @@ export default async function handler(req, res) {
     );
 
     if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+        return res.status(200).end();
     }
 
     if (req.method !== 'POST') {
