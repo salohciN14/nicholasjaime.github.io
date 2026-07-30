@@ -1,0 +1,6 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/agi", "destination": "/agi/index.html" }
+  ]
+}
