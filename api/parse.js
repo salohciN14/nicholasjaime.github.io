@@ -1,57 +1,48 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
-  // CORS and JSON Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Content-Type', 'application/json');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method Not Allowed' });
-  }
-
-  try {
-    // 1. Check for API key safely inside the function
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(200).json({ success: false, error: 'Missing GEMINI_API_KEY in Vercel settings.' });
+    if (req.method === 'OPTIONS' || req.method === 'GET') {
+        return res.status(200).json({ status: 'active' });
     }
 
-    // 2. Initialize inside the try/catch so it can't crash the server
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
-
-    const { text } = req.body || {};
-    
-    if (!text || !text.trim()) {
-      return res.status(200).json({ success: false, error: 'Please enter text to parse.' });
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const prompt = `Analyze this input: "${text}"
-      Return ONLY valid JSON (no markdown, no backticks) matching this exact structure:
-      {
-        "assignments": ["list of items, or empty array"],
-        "workouts": "summary of workout info or 'None'",
-        "aiSummary": "short summary"
-      }`;
+    try {
+        const { text, history } = req.body;
 
-    const result = await model.generateContent(prompt);
-    let responseText = await result.response.text();
+        const prompt = `
+You are an intelligent personal assistant dashboard engine.
+Respond to the user naturally in the first person (chat).
+Analyze the conversation and categorize any assignments or tasks mentioned.
 
-    responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+User Input: "${text}"
+Previous Context: ${JSON.stringify(history || [])}
 
-    return res.status(200).json({ success: true, data: JSON.parse(responseText) });
+Return STRICT JSON matching this exact structure:
+{
+  "reply": "Your natural, direct conversational reply to the user here.",
+  "urgentTasks": ["Tasks due today/tomorrow or marked high priority"],
+  "upcomingTasks": ["Tasks due later in the future"]
+}
+`;
 
-  } catch (error) {
-    console.error('Backend Error:', error);
-    return res.status(200).json({ 
-      success: false, 
-      error: 'API Error: ' + error.message 
-    });
-  }
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: { responseMimeType: 'application/json' }
+        });
+
+        const parsedData = JSON.parse(response.text);
+
+        return res.status(200).json({
+            success: true,
+            data: parsedData
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
 }
