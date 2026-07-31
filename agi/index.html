@@ -3,139 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGI Dashboard</title>
+    <title>AGI Control Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #3b82f6;
+            --border-color: #334155;
+            --urgent-color: #ef4444;
+            --upcoming-color: #f59e0b;
+        }
+
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
         }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
             gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
         }
 
-        /* Top Header & Stoplight */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        .panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #161b22;
-            padding: 15px 25px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .stoplight-container {
+        .status-container {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: #0d1117;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #30363d;
+            gap: 8px;
+            font-size: 0.9em;
         }
 
         .stoplight {
-            display: flex;
-            gap: 8px;
-        }
-
-        .light {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            opacity: 0.2;
-            transition: opacity 0.3s ease, box-shadow 0.3s ease;
+            background-color: #64748b;
         }
 
-        .light.red { background-color: #ef4444; }
-        .light.yellow { background-color: #eab308; }
-        .light.green { background-color: #22c55e; }
-
-        .light.red.active { opacity: 1; box-shadow: 0 0 10px #ef4444; }
-        .light.yellow.active { opacity: 1; box-shadow: 0 0 10px #eab308; }
-        .light.green.active { opacity: 1; box-shadow: 0 0 10px #22c55e; }
-
-        .status-text {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .stoplight.active {
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
         }
 
-        /* Two-Column Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .stoplight.offline {
+            background-color: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
         }
 
-        @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr; }
-        }
-
-        .panel {
-            background: #161b22;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            height: 550px;
-        }
-
-        .panel-title {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #f0f6fc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Left Column: Chat Feed */
-        .chat-box {
-            flex: 1;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 15px;
+        #chat-box {
+            flex-grow: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            padding-right: 5px;
+            margin-bottom: 15px;
         }
 
         .message {
             max-width: 80%;
             padding: 10px 14px;
             border-radius: 8px;
-            font-size: 0.95rem;
             line-height: 1.4;
         }
 
         .message.user {
             align-self: flex-end;
-            background-color: #1f6feb;
+            background-color: var(--accent-color);
             color: white;
         }
 
         .message.ai {
             align-self: flex-start;
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
+            background-color: var(--border-color);
+            color: var(--text-color);
         }
 
         .input-area {
@@ -143,57 +118,46 @@
             gap: 10px;
         }
 
-        textarea {
-            flex: 1;
-            height: 45px;
-            background: #0d1117;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
+        input[type="text"] {
+            flex-grow: 1;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px;
             border-radius: 6px;
-            padding: 10px;
-            resize: none;
-            font-family: inherit;
+            outline: none;
         }
 
-        button.send-btn {
-            background: #238636;
+        button {
+            background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 0 20px;
+            padding: 12px 20px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        button.send-btn:hover { background: #2ea043; }
-
-        /* Right Column: Pending Notifications / Tasks */
-        .task-list-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
+        button:hover {
+            opacity: 0.9;
         }
 
         .task-section {
-            background: #0d1117;
-            border-radius: 8px;
-            padding: 12px;
-            border: 1px solid #30363d;
+            margin-bottom: 20px;
         }
 
-        .task-section h4 {
-            margin: 0 0 10px 0;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .task-section h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .task-section.urgent h4 { color: #f87171; }
-        .task-section.upcoming h4 { color: #60a5fa; }
+        .task-section.urgent h3 { color: var(--urgent-color); }
+        .task-section.upcoming h3 { color: var(--upcoming-color); }
 
-        ul.task-list {
+        .task-list {
             list-style: none;
             padding: 0;
             margin: 0;
@@ -202,245 +166,206 @@
             gap: 8px;
         }
 
-        ul.task-list li {
-            background: #161b22;
-            padding: 8px 12px;
+        .task-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 10px;
             border-radius: 6px;
-            font-size: 0.9rem;
-            border: 1px solid #30363d;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .notif-btn {
-            background: #30363d;
-            color: #c9d1d9;
+        .task-item button {
+            background: transparent;
             border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            color: #64748b;
             cursor: pointer;
+            padding: 0 5px;
         }
 
-        .notif-btn:hover { background: #8b949e; color: #161b22; }
-
-        /* Toast Popup */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #ef4444;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 12px 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
-        }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 40px;
+        .task-item button:hover {
+            color: var(--urgent-color);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+<div class="dashboard">
+    <div class="panel">
         <div class="header">
-            <h2 style="margin: 0;">AGI Dashboard</h2>
-            <div class="stoplight-container">
-                <div class="stoplight">
-                    <div id="light-red" class="light red"></div>
-                    <div id="light-yellow" class="light yellow"></div>
-                    <div id="light-green" class="light green"></div>
-                </div>
-                <span id="status-text" class="status-text">Checking...</span>
+            <h2>AGI Core</h2>
+            <div class="status-container">
+                <div id="stoplight" class="stoplight"></div>
+                <span id="status-text">Connecting...</span>
             </div>
         </div>
-
-        <div class="main-grid">
-            <div class="panel">
-                <h3 class="panel-title">Assistant Chat</h3>
-                <div id="chat-box" class="chat-box">
-                    <div class="message ai">Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.</div>
-                </div>
-                <div class="input-area">
-                    <textarea id="user-input" placeholder="Type a message or state an assignment..."></textarea>
-                    <button class="send-btn" onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-title">
-                    <span>Pending Notifications</span>
-                    <button class="notif-btn" onclick="requestNotificationPermission()">Enable Alerts</button>
-                </div>
-                <div class="task-list-container">
-                    <div class="task-section urgent">
-                        <h4>Urgent Tasks (Random Alerts: 10–20m)</h4>
-                        <ul id="urgent-tasks" class="task-list">
-                            <li>None</li>
-                        </ul>
-                    </div>
-
-                    <div class="task-section upcoming">
-                        <h4>Upcoming Tasks</h4>
-                        <ul id="upcoming-tasks" class="task-list">
-                            <li>None</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div id="chat-box"></div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type or dictate tasks/messages..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <div id="toast-notification" class="toast"></div>
+    <div class="panel">
+        <div class="header">
+            <h2>Task Center</h2>
+        </div>
+        
+        <div class="task-section urgent">
+            <h3>🔴 Urgent / High Priority</h3>
+            <ul id="urgent-tasks" class="task-list"></ul>
+        </div>
 
-    <script>
-        const API_URL = '/api/parse';
-        let chatHistory = [];
+        <div class="task-section upcoming">
+            <h3>🟡 Upcoming</h3>
+            <ul id="upcoming-tasks" class="task-list"></ul>
+        </div>
+    </div>
+</div>
 
-        function setStoplight(state) {
-            const red = document.getElementById('light-red');
-            const yellow = document.getElementById('light-yellow');
-            const green = document.getElementById('light-green');
-            const text = document.getElementById('status-text');
+<script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            red.classList.remove('active');
-            yellow.classList.remove('active');
-            green.classList.remove('active');
+    const stoplight = document.getElementById('stoplight');
+    const statusText = document.getElementById('status-text');
+    const chatBox = document.getElementById('chat-box');
 
-            if (state === 'offline') {
-                red.classList.add('active');
-                text.textContent = 'Offline';
-            } else if (state === 'loading') {
-                yellow.classList.add('active');
-                text.textContent = 'Processing';
-            } else if (state === 'active') {
-                green.classList.add('active');
-                text.textContent = 'Engine Active';
-            }
-        }
+    // Startup & Health Check
+    window.addEventListener('DOMContentLoaded', async () => {
+        checkBackendHealth();
+        await loadSavedData();
+    });
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast-notification');
-            if (!toast) return;
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-        }
-
-        function requestNotificationPermission() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        showToast('Desktop notifications enabled!');
-                    } else {
-                        showToast('Notification permission denied.');
-                    }
-                });
+    async function checkBackendHealth() {
+        try {
+            const res = await fetch('/api/parse');
+            if (res.ok) {
+                stoplight.className = 'stoplight active';
+                statusText.innerText = 'Engine Active';
             } else {
-                showToast('Browser does not support notifications.');
+                throw new Error();
             }
+        } catch {
+            stoplight.className = 'stoplight offline';
+            statusText.innerText = 'Offline';
+        }
+    }
+
+    // Load persisted chat history and tasks from Supabase
+    async function loadSavedData() {
+        // Fetch Chat
+        const { data: messages } = await supabase
+            .from('chat_messages')
+            .select('*')
+            .order('created_at', { ascending: true });
+
+        chatBox.innerHTML = '';
+        if (messages && messages.length > 0) {
+            messages.forEach(msg => appendMessageUI(msg.sender, msg.content));
         }
 
-        async function checkEngineStatus() {
-            try {
-                const res = await fetch(API_URL, { method: 'OPTIONS' });
-                if (res.ok) {
-                    setStoplight('active');
-                } else {
-                    setStoplight('offline');
-                }
-            } catch {
-                setStoplight('offline');
-            }
-        }
+        // Fetch Tasks
+        refreshTasksUI();
+    }
 
-        function appendMessage(sender, text) {
-            const chatBox = document.getElementById('chat-box');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${sender}`;
-            msgDiv.textContent = text;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+    async function refreshTasksUI() {
+        const { data: urgent } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('category', 'urgent')
+            .eq('completed', false);
 
-        async function sendMessage() {
-            const inputEl = document.getElementById('user-input');
-            const text = inputEl.value.trim();
-            if (!text) return;
+        const { data: upcoming } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('category', 'upcoming')
+            .eq('completed', false);
 
-            appendMessage('user', text);
-            inputEl.value = '';
-            setStoplight('loading');
+        renderTaskList('urgent-tasks', urgent || []);
+        renderTaskList('upcoming-tasks', upcoming || []);
+    }
 
-            chatHistory.push({ role: 'user', content: text });
+    function renderTaskList(elementId, tasks) {
+        const ul = document.getElementById(elementId);
+        ul.innerHTML = '';
+        tasks.forEach(t => {
+            const li = document.createElement('li');
+            li.className = 'task-item';
+            li.innerHTML = `
+                <span>${t.task_text}</span>
+                <button onclick="completeTask(${t.id})">✓</button>
+            `;
+            ul.appendChild(li);
+        });
+    }
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text, history: chatHistory })
-                });
+    function appendMessageUI(sender, content) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerText = content;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-                const raw = await response.text();
-                let result;
-                try {
-                    result = JSON.parse(raw);
-                } catch {
-                    setStoplight('offline');
-                    showToast('Server returned non-JSON error.');
-                    return;
-                }
+    async function completeTask(id) {
+        await supabase.from('tasks').update({ completed: true }).eq('id', id);
+        refreshTasksUI();
+    }
 
-                setStoplight('active');
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const text = input.value.trim();
+        if (!text) return;
 
-                if (result.success) {
-                    const data = result.data;
-                    
-                    // Display AI response in chat
-                    if (data.reply) {
-                        appendMessage('ai', data.reply);
-                        chatHistory.push({ role: 'ai', content: data.reply });
+        input.value = '';
+        appendMessageUI('user', text);
+
+        // Save User Message to DB
+        await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
+
+        try {
+            const response = await fetch('/api/parse', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.data) {
+                const { reply, urgentTasks, upcomingTasks } = result.data;
+
+                // Render & Save AI Reply
+                appendMessageUI('ai', reply);
+                await supabase.from('chat_messages').insert([{ sender: 'ai', content: reply }]);
+
+                // Save Urgent Tasks
+                if (urgentTasks && urgentTasks.length > 0) {
+                    for (const task of urgentTasks) {
+                        await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
                     }
-
-                    // Update Right Column Task Lists
-                    if (data.urgentTasks) updateTaskList('urgent-tasks', data.urgentTasks);
-                    if (data.upcomingTasks) updateTaskList('upcoming-tasks', data.upcomingTasks);
-
-                } else {
-                    showToast(`Error: ${result.error}`);
                 }
-            } catch (err) {
-                setStoplight('offline');
-                showToast(`Network Error: ${err.message}`);
-            }
-        }
 
-        function updateTaskList(elementId, tasks) {
-            const listEl = document.getElementById(elementId);
-            listEl.innerHTML = '';
-            if (tasks && tasks.length > 0) {
-                tasks.forEach(task => {
-                    const li = document.createElement('li');
-                    li.textContent = task;
-                    listEl.appendChild(li);
-                });
+                // Save Upcoming Tasks
+                if (upcomingTasks && upcomingTasks.length > 0) {
+                    for (const task of upcomingTasks) {
+                        await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
+                    }
+                }
+
+                refreshTasksUI();
             } else {
-                listEl.innerHTML = '<li>None</li>';
+                appendMessageUI('ai', 'Error processing request.');
             }
+        } catch (err) {
+            console.error(err);
+            appendMessageUI('ai', 'Failed to connect to AGI engine.');
         }
-
-        checkEngineStatus();
-    </script>
+    }
+</script>
 </body>
 </html>
