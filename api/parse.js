@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
+    // 1. Health check for the Stoplight dot
     if (req.method === 'OPTIONS' || req.method === 'GET') {
         return res.status(200).json({ status: 'active' });
     }
@@ -36,13 +37,18 @@ Return STRICT JSON matching this exact structure:
             config: { responseMimeType: 'application/json' }
         });
 
-        const parsedData = JSON.parse(response.text);
+        // Clean out potential markdown wrapper tags (```json ... ```)
+        let cleanText = response.text || '{}';
+        cleanText = cleanText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        const parsedData = JSON.parse(cleanText);
 
         return res.status(200).json({
             success: true,
             data: parsedData
         });
     } catch (error) {
+        console.error("API Error:", error);
         return res.status(500).json({ success: false, error: error.message });
     }
 }
