@@ -6,401 +6,524 @@
     <title>AGI Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --panel-bg: #161b22;
-            --border-color: #30363d;
-            --text-color: #c9d1d9;
-            --input-bg: #0d1117;
-            --btn-green: #238636;
-            --urgent-title: #f85149;
-            --upcoming-title: #58a6ff;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
         }
 
-        .dashboard-container {
+        .container {
+            max-width: 1000px;
             width: 100%;
-            max-width: 1100px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .header-panel {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 20px;
+        /* Top Header & Stoplight */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #161b22;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
         }
 
-        .header-panel h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-
-        .status-badge {
+        .stoplight-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             background: #0d1117;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
-            border: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            font-weight: bold;
+            border: 1px solid #30363d;
+        }
+
+        .stoplight {
+            display: flex;
+            gap: 8px;
+        }
+
+        .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            opacity: 0.2;
+            transition: opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .light.red { background-color: #ef4444; }
+        .light.yellow { background-color: #eab308; }
+        .light.green { background-color: #22c55e; }
+
+        .light.red.active { opacity: 1; box-shadow: 0 0 10px #ef4444; }
+        .light.yellow.active { opacity: 1; box-shadow: 0 0 10px #eab308; }
+        .light.green.active { opacity: 1; box-shadow: 0 0 10px #22c55e; }
+
+        .status-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #8b949e;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .lights {
-            display: flex;
-            gap: 5px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #30363d;
-        }
-
-        .dot.active {
-            background-color: #2ea44f;
-            box-shadow: 0 0 6px #2ea44f;
-        }
-
-        .main-layout {
+        /* Two-Column Grid */
+        .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
         @media (max-width: 768px) {
-            .main-layout { grid-template-columns: 1fr; }
+            .main-grid { grid-template-columns: 1fr; }
         }
 
-        .card {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+        .panel {
+            background: #161b22;
+            border-radius: 10px;
+            border: 1px solid #30363d;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 520px;
+            gap: 15px;
+            height: 550px;
         }
 
-        .card-header {
+        .panel-title {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #f0f6fc;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
         }
 
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .chat-history {
-            flex-grow: 1;
-            overflow-y: auto;
+        /* Left Column: Chat Feed */
+        .chat-box {
+            flex: 1;
             background: #0d1117;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
         }
 
-        .msg {
-            max-width: 85%;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
             line-height: 1.4;
         }
 
-        .msg.user {
+        .message.user {
             align-self: flex-end;
             background-color: #1f6feb;
             color: white;
         }
 
-        .msg.ai {
+        .message.ai {
             align-self: flex-start;
             background-color: #21262d;
-            border: 1px solid var(--border-color);
+            color: #c9d1d9;
+            border: 1px solid #30363d;
         }
 
-        .input-row {
+        .input-area {
             display: flex;
             gap: 10px;
         }
 
-        .input-row input {
-            flex-grow: 1;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 10px 14px;
+        textarea {
+            flex: 1;
+            height: 45px;
+            background: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
             border-radius: 6px;
-            outline: none;
-            font-size: 0.9rem;
+            padding: 10px;
+            resize: none;
+            font-family: inherit;
         }
 
-        .btn-send {
-            background-color: var(--btn-green);
+        button.send-btn {
+            background: #238636;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 0 20px;
             border-radius: 6px;
-            font-weight: bold;
             cursor: pointer;
+            font-weight: 600;
         }
 
-        .btn-alerts {
-            background-color: #21262d;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 4px 10px;
+        button.send-btn:hover { background: #2ea043; }
+
+        /* Right Column: Pending Notifications / Tasks */
+        .task-list-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .task-section {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #30363d;
+        }
+
+        .task-section h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-section.urgent h4 { color: #f87171; }
+        .task-section.upcoming h4 { color: #60a5fa; }
+
+        ul.task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        ul.task-list li {
+            background: #161b22;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: 1px solid #30363d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-task-btn {
+            background: transparent;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-task-btn:hover {
+            color: #f87171;
+        }
+
+        .notif-btn {
+            background: #30363d;
+            color: #c9d1d9;
+            border: none;
+            padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             cursor: pointer;
         }
 
-        .task-box {
-            margin-bottom: 20px;
-        }
+        .notif-btn:hover { background: #8b949e; color: #161b22; }
 
-        .task-box label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .task-box.urgent label { color: var(--urgent-title); }
-        .task-box.upcoming label { color: var(--upcoming-title); }
-
-        .task-container {
-            background-color: #0d1117;
-            border: 1px solid var(--border-color);
+        /* Toast Popup */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #ef4444;
+            color: #fff;
+            text-align: center;
             border-radius: 6px;
-            padding: 10px;
-            min-height: 40px;
-            font-size: 0.85rem;
+            padding: 12px 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
         }
 
-        .task-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #21262d;
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 40px;
         }
-
-        .task-item:last-child { border-bottom: none; }
-
-        .task-item button {
-            background: none;
-            border: none;
-            color: #8b949e;
-            cursor: pointer;
-        }
-
-        .task-item button:hover { color: #f85149; }
     </style>
 </head>
 <body>
 
-<div class="dashboard-container">
-    <div class="header-panel">
-        <h1>AGI Dashboard</h1>
-        <div class="status-badge">
-            <div class="lights">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div id="status-dot" class="dot"></div>
+    <div class="container">
+        <div class="header">
+            <h2 style="margin: 0;">AGI Dashboard</h2>
+            <div class="stoplight-container">
+                <div class="stoplight">
+                    <div id="light-red" class="light red"></div>
+                    <div id="light-yellow" class="light yellow"></div>
+                    <div id="light-green" class="light green"></div>
+                </div>
+                <span id="status-text" class="status-text">Checking...</span>
             </div>
-            <span id="status-text">CONNECTING...</span>
+        </div>
+
+        <div class="main-grid">
+            <div class="panel">
+                <h3 class="panel-title">Assistant Chat</h3>
+                <div id="chat-box" class="chat-box"></div>
+                <div class="input-area">
+                    <textarea id="user-input" placeholder="Type a message or state an assignment..."></textarea>
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Pending Notifications</span>
+                    <button class="notif-btn" onclick="requestNotificationPermission()">Enable Alerts</button>
+                </div>
+                <div class="task-list-container">
+                    <div class="task-section urgent">
+                        <h4>Urgent Tasks (Random Alerts: 10–20m)</h4>
+                        <ul id="urgent-tasks" class="task-list">
+                            <li>None</li>
+                        </ul>
+                    </div>
+
+                    <div class="task-section upcoming">
+                        <h4>Upcoming Tasks</h4>
+                        <ul id="upcoming-tasks" class="task-list">
+                            <li>None</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="main-layout">
-        <div class="card">
-            <div class="card-header">
-                <h2>Assistant Chat</h2>
-            </div>
-            <div id="chat-history" class="chat-history">
-                <div class="msg ai">Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.</div>
-            </div>
-            <div class="input-row">
-                <input type="text" id="user-input" placeholder="Type a message or state an assignment..." onkeydown="if(event.key==='Enter') sendMessage()">
-                <button class="btn-send" onclick="sendMessage()">Send</button>
-            </div>
-        </div>
+    <div id="toast-notification" class="toast"></div>
 
-        <div class="card">
-            <div class="card-header">
-                <h2>Pending Notifications</h2>
-                <button class="btn-alerts" onclick="enableAlerts()">Enable Alerts</button>
-            </div>
+    <script>
+        const API_URL = '/api/parse';
+        let chatHistory = [];
 
-            <div class="task-box urgent">
-                <label>URGENT TASKS (RANDOM ALERTS: 10–20M)</label>
-                <div id="urgent-tasks" class="task-container">None</div>
-            </div>
+        // Supabase Client Initialization
+        const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            <div class="task-box upcoming">
-                <label>UPCOMING TASKS</label>
-                <div id="upcoming-tasks" class="task-container">None</div>
-            </div>
-        </div>
-    </div>
-</div>
+        function setStoplight(state) {
+            const red = document.getElementById('light-red');
+            const yellow = document.getElementById('light-yellow');
+            const green = document.getElementById('light-green');
+            const text = document.getElementById('status-text');
 
-<script>
-    const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            red.classList.remove('active');
+            yellow.classList.remove('active');
+            green.classList.remove('active');
 
-    const statusDot = document.getElementById('status-dot');
-    const statusText = document.getElementById('status-text');
-    const chatHistory = document.getElementById('chat-history');
+            if (state === 'offline') {
+                red.classList.add('active');
+                text.textContent = 'Offline';
+            } else if (state === 'loading') {
+                yellow.classList.add('active');
+                text.textContent = 'Processing';
+            } else if (state === 'active') {
+                green.classList.add('active');
+                text.textContent = 'Engine Active';
+            }
+        }
 
-    window.addEventListener('DOMContentLoaded', async () => {
-        checkBackendHealth();
-        await loadDataFromSupabase();
-    });
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
 
-    async function checkBackendHealth() {
-        try {
-            const res = await fetch('/api/parse');
-            if (res.ok) {
-                statusDot.className = 'dot active';
-                statusText.innerText = 'ENGINE ACTIVE';
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        showToast('Desktop notifications enabled!');
+                    } else {
+                        showToast('Notification permission denied.');
+                    }
+                });
             } else {
-                throw new Error();
+                showToast('Browser does not support notifications.');
             }
-        } catch {
-            statusDot.className = 'dot';
-            statusText.innerText = 'OFFLINE';
-        }
-    }
-
-    async function loadDataFromSupabase() {
-        // Chat History
-        const { data: messages } = await supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
-        if (messages && messages.length > 0) {
-            chatHistory.innerHTML = '';
-            messages.forEach(m => appendMsgUI(m.sender, m.content));
         }
 
-        // Tasks
-        refreshTasksUI();
-    }
-
-    async function refreshTasksUI() {
-        const { data: urgent } = await supabase.from('tasks').select('*').eq('category', 'urgent').eq('completed', false);
-        const { data: upcoming } = await supabase.from('tasks').select('*').eq('category', 'upcoming').eq('completed', false);
-
-        renderTasks('urgent-tasks', urgent || []);
-        renderTasks('upcoming-tasks', upcoming || []);
-    }
-
-    function renderTasks(elementId, tasks) {
-        const container = document.getElementById(elementId);
-        if (tasks.length === 0) {
-            container.innerText = 'None';
-            return;
+        async function checkEngineStatus() {
+            try {
+                const res = await fetch(API_URL, { method: 'OPTIONS' });
+                if (res.ok) {
+                    setStoplight('active');
+                } else {
+                    setStoplight('offline');
+                }
+            } catch {
+                setStoplight('offline');
+            }
         }
-        container.innerHTML = '';
-        tasks.forEach(t => {
-            const div = document.createElement('div');
-            div.className = 'task-item';
-            div.innerHTML = `
-                <span>${t.task_text}</span>
-                <button onclick="deleteTask(${t.id})">✕</button>
-            `;
-            container.appendChild(div);
+
+        function appendMessage(sender, text) {
+            const chatBox = document.getElementById('chat-box');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}`;
+            msgDiv.textContent = text;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Database Integration Functions
+        async function loadDataFromSupabase() {
+            // Load Messages
+            const { data: messages } = await supabase
+                .from('chat_messages')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = '';
+
+            if (messages && messages.length > 0) {
+                messages.forEach(msg => {
+                    appendMessage(msg.sender, msg.content);
+                    chatHistory.push({ role: msg.sender, content: msg.content });
+                });
+            } else {
+                appendMessage('ai', "Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.");
+            }
+
+            // Load Tasks
+            refreshTasksFromSupabase();
+        }
+
+        async function refreshTasksFromSupabase() {
+            const { data: urgent } = await supabase
+                .from('tasks')
+                .select('*')
+                .eq('category', 'urgent')
+                .eq('completed', false);
+
+            const { data: upcoming } = await supabase
+                .from('tasks')
+                .select('*')
+                .eq('category', 'upcoming')
+                .eq('completed', false);
+
+            renderTaskList('urgent-tasks', urgent || []);
+            renderTaskList('upcoming-tasks', upcoming || []);
+        }
+
+        function renderTaskList(elementId, tasks) {
+            const listEl = document.getElementById(elementId);
+            listEl.innerHTML = '';
+            if (tasks && tasks.length > 0) {
+                tasks.forEach(t => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${t.task_text}</span>
+                        <button class="delete-task-btn" onclick="deleteTask(${t.id})">✕</button>
+                    `;
+                    listEl.appendChild(li);
+                });
+            } else {
+                listEl.innerHTML = '<li>None</li>';
+            }
+        }
+
+        async function deleteTask(id) {
+            await supabase.from('tasks').update({ completed: true }).eq('id', id);
+            refreshTasksFromSupabase();
+        }
+
+        async function sendMessage() {
+            const inputEl = document.getElementById('user-input');
+            const text = inputEl.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            inputEl.value = '';
+            setStoplight('loading');
+
+            chatHistory.push({ role: 'user', content: text });
+
+            // Save user message to database
+            await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, history: chatHistory })
+                });
+
+                const raw = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(raw);
+                } catch {
+                    setStoplight('offline');
+                    showToast('Server returned non-JSON error.');
+                    return;
+                }
+
+                setStoplight('active');
+
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // Display AI response in chat & save to DB
+                    if (data.reply) {
+                        appendMessage('ai', data.reply);
+                        chatHistory.push({ role: 'ai', content: data.reply });
+                        await supabase.from('chat_messages').insert([{ sender: 'ai', content: data.reply }]);
+                    }
+
+                    // Update Tasks in DB & Refresh UI
+                    if (data.urgentTasks && data.urgentTasks.length > 0) {
+                        for (const task of data.urgentTasks) {
+                            await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
+                        }
+                    }
+                    if (data.upcomingTasks && data.upcomingTasks.length > 0) {
+                        for (const task of data.upcomingTasks) {
+                            await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
+                        }
+                    }
+
+                    refreshTasksFromSupabase();
+
+                } else {
+                    showToast(`Error: ${result.error}`);
+                }
+            } catch (err) {
+                setStoplight('offline');
+                showToast(`Network Error: ${err.message}`);
+            }
+        }
+
+        // On Page Load
+        window.addEventListener('DOMContentLoaded', async () => {
+            checkEngineStatus();
+            await loadDataFromSupabase();
         });
-    }
-
-    function appendMsgUI(sender, text) {
-        const div = document.createElement('div');
-        div.className = `msg ${sender}`;
-        div.innerText = text;
-        chatHistory.appendChild(div);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
-
-    async function deleteTask(id) {
-        await supabase.from('tasks').update({ completed: true }).eq('id', id);
-        refreshTasksUI();
-    }
-
-    function enableAlerts() {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') alert('Notifications Enabled!');
-            });
-        }
-    }
-
-    async function sendMessage() {
-        const input = document.getElementById('user-input');
-        const text = input.value.trim();
-        if (!text) return;
-
-        input.value = '';
-        appendMsgUI('user', text);
-        await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
-
-        try {
-            const res = await fetch('/api/parse', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text })
-            });
-
-            const json = await res.json();
-            if (json.success && json.data) {
-                const { reply, urgentTasks, upcomingTasks } = json.data;
-
-                appendMsgUI('ai', reply);
-                await supabase.from('chat_messages').insert([{ sender: 'ai', content: reply }]);
-
-                if (urgentTasks) {
-                    for (const task of urgentTasks) {
-                        await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
-                    }
-                }
-                if (upcomingTasks) {
-                    for (const task of upcomingTasks) {
-                        await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
-                    }
-                }
-                refreshTasksUI();
-            }
-        } catch (err) {
-            appendMsgUI('ai', 'Error reaching server.');
-        }
-    }
-</script>
+    </script>
 </body>
 </html>
