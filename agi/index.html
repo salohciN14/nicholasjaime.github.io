@@ -222,9 +222,7 @@
             font-size: 0.8rem;
         }
 
-        .delete-task-btn:hover {
-            color: #f87171;
-        }
+        .delete-task-btn:hover { color: #f87171; }
 
         .notif-btn {
             background: #30363d;
@@ -318,18 +316,11 @@
     <script>
         const API_URL = '/api/parse';
         let chatHistory = [];
-        let supabase = null;
 
-        // Safely Initialize Supabase
-        try {
-            const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
-            const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch (e) {
-            console.error("Supabase init error:", e);
-        }
+        // Initialize Supabase ONCE at top level
+        const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
+        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
         function setStoplight(state) {
             const red = document.getElementById('light-red');
@@ -537,8 +528,8 @@
                         }
                         refreshTasksFromSupabase();
                     } else {
-                        if (data.urgentTasks) updateTaskListUI('urgent-tasks', data.urgentTasks);
-                        if (data.upcomingTasks) updateTaskListUI('upcoming-tasks', data.upcomingTasks);
+                        if (data.urgentTasks) renderTaskList('urgent-tasks', data.urgentTasks.map(t => ({ task_text: t })));
+                        if (data.upcomingTasks) renderTaskList('upcoming-tasks', data.upcomingTasks.map(t => ({ task_text: t })));
                     }
 
                 } else {
@@ -547,21 +538,6 @@
             } catch (err) {
                 setStoplight('offline');
                 showToast(`Network Error: ${err.message}`);
-            }
-        }
-
-        function updateTaskListUI(elementId, tasks) {
-            const listEl = document.getElementById(elementId);
-            if (!listEl) return;
-            listEl.innerHTML = '';
-            if (tasks && tasks.length > 0) {
-                tasks.forEach(task => {
-                    const li = document.createElement('li');
-                    li.textContent = task;
-                    listEl.appendChild(li);
-                });
-            } else {
-                listEl.innerHTML = '<li>None</li>';
             }
         }
 
