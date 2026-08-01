@@ -284,7 +284,7 @@
                 <h3 class="panel-title">Assistant Chat</h3>
                 <div id="chat-box" class="chat-box"></div>
                 <div class="input-area">
-                    <textarea id="user-input" placeholder="Type a message or state an assignment..."></textarea>
+                    <textarea id="user-input" placeholder="Type a message or state an assignment..." onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
                     <button class="send-btn" onclick="sendMessage()">Send</button>
                 </div>
             </div>
@@ -318,17 +318,26 @@
     <script>
         const API_URL = '/api/parse';
         let chatHistory = [];
+        let supabase = null;
 
-        // Supabase Client Initialization
-        const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Safely Initialize Supabase
+        try {
+            const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error("Supabase init error:", e);
+        }
 
         function setStoplight(state) {
             const red = document.getElementById('light-red');
             const yellow = document.getElementById('light-yellow');
             const green = document.getElementById('light-green');
             const text = document.getElementById('status-text');
+
+            if (!red || !yellow || !green || !text) return;
 
             red.classList.remove('active');
             yellow.classList.remove('active');
@@ -369,6 +378,7 @@
         }
 
         async function checkEngineStatus() {
+            setStoplight('loading');
             try {
                 const res = await fetch(API_URL, { method: 'OPTIONS' });
                 if (res.ok) {
@@ -383,6 +393,7 @@
 
         function appendMessage(sender, text) {
             const chatBox = document.getElementById('chat-box');
+            if (!chatBox) return;
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${sender}`;
             msgDiv.textContent = text;
@@ -390,49 +401,62 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Database Integration Functions
         async function loadDataFromSupabase() {
-            // Load Messages
-            const { data: messages } = await supabase
-                .from('chat_messages')
-                .select('*')
-                .order('created_at', { ascending: true });
-
-            const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML = '';
-
-            if (messages && messages.length > 0) {
-                messages.forEach(msg => {
-                    appendMessage(msg.sender, msg.content);
-                    chatHistory.push({ role: msg.sender, content: msg.content });
-                });
-            } else {
+            if (!supabase) {
                 appendMessage('ai', "Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.");
+                return;
             }
 
-            // Load Tasks
-            refreshTasksFromSupabase();
+            try {
+                const { data: messages } = await supabase
+                    .from('chat_messages')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = '';
+
+                if (messages && messages.length > 0) {
+                    messages.forEach(msg => {
+                        appendMessage(msg.sender, msg.content);
+                        chatHistory.push({ role: msg.sender, content: msg.content });
+                    });
+                } else {
+                    appendMessage('ai', "Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.");
+                }
+
+                refreshTasksFromSupabase();
+            } catch (err) {
+                console.error("Error loading Supabase data:", err);
+            }
         }
 
         async function refreshTasksFromSupabase() {
-            const { data: urgent } = await supabase
-                .from('tasks')
-                .select('*')
-                .eq('category', 'urgent')
-                .eq('completed', false);
+            if (!supabase) return;
 
-            const { data: upcoming } = await supabase
-                .from('tasks')
-                .select('*')
-                .eq('category', 'upcoming')
-                .eq('completed', false);
+            try {
+                const { data: urgent } = await supabase
+                    .from('tasks')
+                    .select('*')
+                    .eq('category', 'urgent')
+                    .eq('completed', false);
 
-            renderTaskList('urgent-tasks', urgent || []);
-            renderTaskList('upcoming-tasks', upcoming || []);
+                const { data: upcoming } = await supabase
+                    .from('tasks')
+                    .select('*')
+                    .eq('category', 'upcoming')
+                    .eq('completed', false);
+
+                renderTaskList('urgent-tasks', urgent || []);
+                renderTaskList('upcoming-tasks', upcoming || []);
+            } catch (err) {
+                console.error("Error fetching tasks:", err);
+            }
         }
 
         function renderTaskList(elementId, tasks) {
             const listEl = document.getElementById(elementId);
+            if (!listEl) return;
             listEl.innerHTML = '';
             if (tasks && tasks.length > 0) {
                 tasks.forEach(t => {
@@ -449,8 +473,10 @@
         }
 
         async function deleteTask(id) {
-            await supabase.from('tasks').update({ completed: true }).eq('id', id);
-            refreshTasksFromSupabase();
+            if (supabase) {
+                await supabase.from('tasks').update({ completed: true }).eq('id', id);
+                refreshTasksFromSupabase();
+            }
         }
 
         async function sendMessage() {
@@ -464,8 +490,9 @@
 
             chatHistory.push({ role: 'user', content: text });
 
-            // Save user message to database
-            await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
+            if (supabase) {
+                await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
+            }
 
             try {
                 const response = await fetch(API_URL, {
@@ -489,26 +516,30 @@
                 if (result.success) {
                     const data = result.data;
                     
-                    // Display AI response in chat & save to DB
                     if (data.reply) {
                         appendMessage('ai', data.reply);
                         chatHistory.push({ role: 'ai', content: data.reply });
-                        await supabase.from('chat_messages').insert([{ sender: 'ai', content: data.reply }]);
-                    }
-
-                    // Update Tasks in DB & Refresh UI
-                    if (data.urgentTasks && data.urgentTasks.length > 0) {
-                        for (const task of data.urgentTasks) {
-                            await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
-                        }
-                    }
-                    if (data.upcomingTasks && data.upcomingTasks.length > 0) {
-                        for (const task of data.upcomingTasks) {
-                            await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
+                        if (supabase) {
+                            await supabase.from('chat_messages').insert([{ sender: 'ai', content: data.reply }]);
                         }
                     }
 
-                    refreshTasksFromSupabase();
+                    if (supabase) {
+                        if (data.urgentTasks && data.urgentTasks.length > 0) {
+                            for (const task of data.urgentTasks) {
+                                await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
+                            }
+                        }
+                        if (data.upcomingTasks && data.upcomingTasks.length > 0) {
+                            for (const task of data.upcomingTasks) {
+                                await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
+                            }
+                        }
+                        refreshTasksFromSupabase();
+                    } else {
+                        if (data.urgentTasks) updateTaskListUI('urgent-tasks', data.urgentTasks);
+                        if (data.upcomingTasks) updateTaskListUI('upcoming-tasks', data.upcomingTasks);
+                    }
 
                 } else {
                     showToast(`Error: ${result.error}`);
@@ -519,10 +550,24 @@
             }
         }
 
-        // On Page Load
-        window.addEventListener('DOMContentLoaded', async () => {
+        function updateTaskListUI(elementId, tasks) {
+            const listEl = document.getElementById(elementId);
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            if (tasks && tasks.length > 0) {
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.textContent = task;
+                    listEl.appendChild(li);
+                });
+            } else {
+                listEl.innerHTML = '<li>None</li>';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
             checkEngineStatus();
-            await loadDataFromSupabase();
+            loadDataFromSupabase();
         });
     </script>
 </body>
