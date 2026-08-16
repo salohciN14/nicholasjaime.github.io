@@ -1,326 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGI Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Top Header & Stoplight */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #161b22;
-            padding: 15px 25px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-        }
-
-        .stoplight-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #0d1117;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #30363d;
-        }
-
-        .stoplight {
-            display: flex;
-            gap: 8px;
-        }
-
-        .light {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            opacity: 0.2;
-            transition: opacity 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .light.red { background-color: #ef4444; }
-        .light.yellow { background-color: #eab308; }
-        .light.green { background-color: #22c55e; }
-
-        .light.red.active { opacity: 1; box-shadow: 0 0 10px #ef4444; }
-        .light.yellow.active { opacity: 1; box-shadow: 0 0 10px #eab308; }
-        .light.green.active { opacity: 1; box-shadow: 0 0 10px #22c55e; }
-
-        .status-text {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Two-Column Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr; }
-        }
-
-        .panel {
-            background: #161b22;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            height: 550px;
-        }
-
-        .panel-title {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #f0f6fc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Left Column: Chat Feed */
-        .chat-box {
-            flex: 1;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .message.user {
-            align-self: flex-end;
-            background-color: #1f6feb;
-            color: white;
-        }
-
-        .message.ai {
-            align-self: flex-start;
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-        }
-
-        .input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        textarea {
-            flex: 1;
-            height: 45px;
-            background: #0d1117;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            padding: 10px;
-            resize: none;
-            font-family: inherit;
-        }
-
-        button.send-btn {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button.send-btn:hover { background: #2ea043; }
-
-        /* Right Column: Pending Notifications / Tasks */
-        .task-list-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-        }
-
-        .task-section {
-            background: #0d1117;
-            border-radius: 8px;
-            padding: 12px;
-            border: 1px solid #30363d;
-        }
-
-        .task-section h4 {
-            margin: 0 0 10px 0;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .task-section.urgent h4 { color: #f87171; }
-        .task-section.upcoming h4 { color: #60a5fa; }
-
-        ul.task-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        ul.task-list li {
-            background: #161b22;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            border: 1px solid #30363d;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .delete-task-btn {
-            background: transparent;
-            border: none;
-            color: #8b949e;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .delete-task-btn:hover { color: #f87171; }
-
-        .notif-btn {
-            background: #30363d;
-            color: #c9d1d9;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-
-        .notif-btn:hover { background: #8b949e; color: #161b22; }
-
-        /* Toast Popup */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #ef4444;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 12px 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
-        }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 40px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div class="header">
-            <h2 style="margin: 0;">AGI Dashboard</h2>
-            <div class="stoplight-container">
-                <div class="stoplight">
-                    <div id="light-red" class="light red"></div>
-                    <div id="light-yellow" class="light yellow"></div>
-                    <div id="light-green" class="light green"></div>
-                </div>
-                <span id="status-text" class="status-text">Checking...</span>
-            </div>
-        </div>
-
-        <div class="main-grid">
-            <div class="panel">
-                <h3 class="panel-title">Assistant Chat</h3>
-                <div id="chat-box" class="chat-box"></div>
-                <div class="input-area">
-                    <textarea id="user-input" placeholder="Type a message or state an assignment..." onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
-                    <button class="send-btn" onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-title">
-                    <span>Pending Notifications</span>
-                    <button class="notif-btn" onclick="requestNotificationPermission()">Enable Alerts</button>
-                </div>
-                <div class="task-list-container">
-                    <div class="task-section urgent">
-                        <h4>Urgent Tasks (Random Alerts: 10–20m)</h4>
-                        <ul id="urgent-tasks" class="task-list">
-                            <li>None</li>
-                        </ul>
-                    </div>
-
-                    <div class="task-section upcoming">
-                        <h4>Upcoming Tasks</h4>
-                        <ul id="upcoming-tasks" class="task-list">
-                            <li>None</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast-notification" class="toast"></div>
-
-    <script>
+<script>
         const API_URL = '/api/parse';
         let chatHistory = [];
+        let supabaseClient = null; // Renamed to avoid name collisions
 
-        // Initialize Supabase ONCE at top level
-        const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
-        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        // Safely initialize Supabase without breaking execution
+        try {
+            const SUPABASE_URL = 'https://bjjzgjrbdulmnxfchwzr.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_6ZNTevqND_KK8rzNBY6IPA_5_MqTBnX';
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (err) {
+            console.warn("Supabase initialization error:", err);
+        }
 
         function setStoplight(state) {
             const red = document.getElementById('light-red');
@@ -393,16 +85,18 @@
         }
 
         async function loadDataFromSupabase() {
-            if (!supabase) {
+            if (!supabaseClient) {
                 appendMessage('ai', "Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.");
                 return;
             }
 
             try {
-                const { data: messages } = await supabase
+                const { data: messages, error } = await supabaseClient
                     .from('chat_messages')
                     .select('*')
                     .order('created_at', { ascending: true });
+
+                if (error) throw error;
 
                 const chatBox = document.getElementById('chat-box');
                 chatBox.innerHTML = '';
@@ -419,20 +113,21 @@
                 refreshTasksFromSupabase();
             } catch (err) {
                 console.error("Error loading Supabase data:", err);
+                appendMessage('ai', "Hello! Let me know what assignments or tasks you have, and I'll keep track of them for you.");
             }
         }
 
         async function refreshTasksFromSupabase() {
-            if (!supabase) return;
+            if (!supabaseClient) return;
 
             try {
-                const { data: urgent } = await supabase
+                const { data: urgent } = await supabaseClient
                     .from('tasks')
                     .select('*')
                     .eq('category', 'urgent')
                     .eq('completed', false);
 
-                const { data: upcoming } = await supabase
+                const { data: upcoming } = await supabaseClient
                     .from('tasks')
                     .select('*')
                     .eq('category', 'upcoming')
@@ -464,8 +159,8 @@
         }
 
         async function deleteTask(id) {
-            if (supabase) {
-                await supabase.from('tasks').update({ completed: true }).eq('id', id);
+            if (supabaseClient) {
+                await supabaseClient.from('tasks').update({ completed: true }).eq('id', id);
                 refreshTasksFromSupabase();
             }
         }
@@ -481,8 +176,8 @@
 
             chatHistory.push({ role: 'user', content: text });
 
-            if (supabase) {
-                await supabase.from('chat_messages').insert([{ sender: 'user', content: text }]);
+            if (supabaseClient) {
+                await supabaseClient.from('chat_messages').insert([{ sender: 'user', content: text }]);
             }
 
             try {
@@ -510,20 +205,20 @@
                     if (data.reply) {
                         appendMessage('ai', data.reply);
                         chatHistory.push({ role: 'ai', content: data.reply });
-                        if (supabase) {
-                            await supabase.from('chat_messages').insert([{ sender: 'ai', content: data.reply }]);
+                        if (supabaseClient) {
+                            await supabaseClient.from('chat_messages').insert([{ sender: 'ai', content: data.reply }]);
                         }
                     }
 
-                    if (supabase) {
+                    if (supabaseClient) {
                         if (data.urgentTasks && data.urgentTasks.length > 0) {
                             for (const task of data.urgentTasks) {
-                                await supabase.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
+                                await supabaseClient.from('tasks').insert([{ task_text: task, category: 'urgent' }]);
                             }
                         }
                         if (data.upcomingTasks && data.upcomingTasks.length > 0) {
                             for (const task of data.upcomingTasks) {
-                                await supabase.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
+                                await supabaseClient.from('tasks').insert([{ task_text: task, category: 'upcoming' }]);
                             }
                         }
                         refreshTasksFromSupabase();
@@ -541,10 +236,14 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        function startApp() {
             checkEngineStatus();
             loadDataFromSupabase();
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startApp);
+        } else {
+            startApp();
+        }
     </script>
-</body>
-</html>
