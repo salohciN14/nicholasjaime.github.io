@@ -3,6 +3,12 @@ import { GoogleGenAI } from '@google/genai';
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle OPTIONS preflight and GET health checks
     if (req.method === 'OPTIONS' || req.method === 'GET') {
         return res.status(200).json({ status: 'active' });
     }
@@ -12,7 +18,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { text, history } = req.body;
+        const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+        const { text = '', history = [] } = body;
 
         const prompt = `
 You are an intelligent personal assistant dashboard engine.
@@ -20,7 +27,7 @@ Respond to the user naturally in the first person (chat).
 Analyze the conversation and categorize any assignments or tasks mentioned.
 
 User Input: "${text}"
-Previous Context: ${JSON.stringify(history || [])}
+Previous Context: ${JSON.stringify(history)}
 
 Return STRICT JSON matching this exact structure:
 {
@@ -50,6 +57,3 @@ Return STRICT JSON matching this exact structure:
         return res.status(500).json({ success: false, error: error.message });
     }
 }
-
-
-
