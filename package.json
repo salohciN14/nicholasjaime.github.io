@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@google/genai": "*"
+    "@google/genai": "*",
+    "@vercel/analytics": "^2.0.1"
   }
 }
