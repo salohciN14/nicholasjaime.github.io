@@ -90,12 +90,13 @@
     opacity: 0.4;
   }
 
-  /* ── NAME COLLECTOR MODAL STYLES ── */
+  /* ── NAME COLLECTOR MODAL STYLES (BLURRED OVERLAY) ── */
   .name-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.4); /* Semi-transparent so background is visible */
+    backdrop-filter: blur(8px); /* Blurs the background content/sunset */
+    -webkit-backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -117,6 +118,7 @@
     text-align: center;
     color: #fff;
     border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   }
   .name-modal-box h3 {
     font-size: 1.5rem;
@@ -131,14 +133,14 @@
   }
   .disclaimer-text {
     font-size: 0.68rem !important;
-    color: #555 !important;
+    color: #777 !important;
     background: #161616;
-    padding: 0.5rem;
+    padding: 0.6rem;
     border-radius: 4px;
     margin-bottom: 1.2rem !important;
     border: 1px solid #222;
     text-align: left;
-    line-height: 1.3;
+    line-height: 1.4;
   }
   .name-modal-box input {
     width: 100%;
@@ -172,15 +174,6 @@
   .name-modal-box button:hover {
     background: #ccc;
   }
-  .skip-btn {
-    background: transparent !important;
-    color: #666 !important;
-    margin-top: 0.5rem;
-    letter-spacing: 0.1em !important;
-  }
-  .skip-btn:hover {
-    color: #fff !important;
-  }
 </style>
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -207,16 +200,15 @@
   <div class="name-modal" id="nameModal">
     <div class="name-modal-box">
       <h3>Welcome</h3>
-      <p>Before you look around, please enter your name.</p>
+      <p>Please enter your name to continue.</p>
       
       <div class="disclaimer-text">
-        Notice: Basic device metrics, rough location data, and your IP address will be logged upon submission.
+        The site is under construction and this feature is being tested right now.
       </div>
 
       <form id="nameForm">
         <input type="text" id="visitorName" placeholder="Your Name" required autocomplete="name">
         <button type="submit">Submit & Enter</button>
-        <button type="button" class="skip-btn" id="skipModal">Skip</button>
       </form>
     </div>
   </div>
@@ -241,7 +233,6 @@
 
   const modal = document.getElementById('nameModal');
   const form = document.getElementById('nameForm');
-  const skipBtn = document.getElementById('skipModal');
 
   if (!localStorage.getItem('visitor_logged')) {
     setTimeout(() => {
@@ -304,11 +295,6 @@
       console.log('Failed...', error);
       modal.classList.remove('active');
     });
-  });
-
-  skipBtn.addEventListener('click', () => {
-    localStorage.setItem('visitor_logged', 'skipped');
-    modal.classList.remove('active');
   });
 </script>
 </body>
