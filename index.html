@@ -72,11 +72,21 @@
     color: var(--text-primary);
     line-height: 1;
     letter-spacing: -0.01em;
+    margin-bottom: 1.25rem;
   }
   .hero-name em { font-style: italic; }
 
+  /* ── FEATURES IN TESTING STATUS SUBTEXT ── */
+  .hero-status {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-bottom: 2rem;
+  }
+
   .hero-nav {
-    margin-top: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,6 +187,7 @@
 
     <div class="hero-content" id="heroContent">
       <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
+      <p class="hero-status">Features in Testing</p>
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
         <div class="hero-nav-divider"></div>
@@ -220,6 +231,7 @@
 
   if (!localStorage.getItem('visitor_logged')) {
     setTimeout(() => {
+      modal.classList.0 = modal.classList.add('active'); // fallback safety
       modal.classList.add('active');
     }, 1000);
   }
@@ -243,7 +255,6 @@
     return `${os} / ${browser}`;
   }
 
-  // Helper to get location data (Tries browser GPS first, falls back to IP lookup)
   async function fetchLocationData() {
     return new Promise((resolve) => {
       if ("geolocation" in navigator) {
@@ -252,7 +263,6 @@
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             
-            // Reverse geocode coordinates to get a readable town name using a free public API
             try {
               const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
               const data = await res.json();
@@ -265,16 +275,13 @@
                 });
                 return;
               }
-            } catch (e) {
-              // fallback if reverse geocoding fails
-            }
+            } catch (e) {}
             resolve({
               location: `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)} (GPS Precise)`,
               ip: "Hidden/GPS Mode"
             });
           },
           async () => {
-            // User denied or GPS failed, fall back to standard IP lookup
             try {
               const res = await fetch('https://ipapi.co/json/');
               const data = await res.json();
@@ -289,7 +296,6 @@
           { timeout: 5000 }
         );
       } else {
-        // Geolocation not supported, fallback to IP
         fetch('https://ipapi.co/json/')
           .then(res => res.json())
           .then(data => {
@@ -310,10 +316,8 @@
     const time = new Date().toLocaleString();
     const page = window.location.href;
 
-    // Fetch the detailed location data
     const locData = await fetchLocationData();
 
-    // Send data via EmailJS
     emailjs.send("service_alh3acq", "template_y4veb4n", {
       visitor_name: name,
       visitor_ip: locData.ip,
