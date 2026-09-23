@@ -72,19 +72,11 @@
     color: var(--text-primary);
     line-height: 1;
     letter-spacing: -0.01em;
-    margin-bottom: 1.25rem;
+    margin-bottom: 2rem; /* Clean spacing down to the navigation links */
   }
   .hero-name em { font-style: italic; }
 
-  .hero-status {
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    opacity: 0.7;
-    margin-bottom: 2rem;
-  }
-
+  /* ── NAVIGATION LINKS ── */
   .hero-nav {
     display: flex;
     align-items: center;
@@ -99,12 +91,13 @@
     opacity: 0.4;
   }
 
+  /* ── NAME COLLECTOR MODAL STYLES (STRICT LOCK) ── */
   .name-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -126,12 +119,21 @@
     text-align: center;
     color: #fff;
     border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7);
   }
   .name-modal-box h3 {
     font-size: 1.5rem;
     font-weight: 400;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  /* Features in Testing Subtext relocated inside the lock modal */
+  .modal-status {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-bottom: 1.25rem;
   }
   .name-modal-box p {
     font-size: 0.85rem;
@@ -185,7 +187,6 @@
 
     <div class="hero-content" id="heroContent">
       <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
-      <p class="hero-status">Features in Testing</p>
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
         <div class="hero-nav-divider"></div>
@@ -194,11 +195,12 @@
     </div>
   </section>
 
-  <!-- Visitor Name Collector Modal -->
+  <!-- Visitor Name Collector Modal (Strictly locks site until name is entered) -->
   <div class="name-modal" id="nameModal">
     <div class="name-modal-box">
       <h3>Welcome</h3>
-      <p>Please enter your name to continue.</p>
+      <p class="modal-status">Features in Testing</p>
+      <p>Please enter your name to access the website.</p>
 
       <form id="nameForm">
         <input type="text" id="visitorName" placeholder="Your Name" required autocomplete="name">
@@ -227,10 +229,9 @@
   const modal = document.getElementById('nameModal');
   const form = document.getElementById('nameForm');
 
+  // Check if visitor has logged their name before; if not, force modal open immediately with no skip option
   if (!localStorage.getItem('visitor_logged')) {
-    setTimeout(() => {
-      modal.classList.add('active');
-    }, 1000);
+    modal.classList.add('active');
   }
 
   function getDeviceInfo() {
@@ -246,7 +247,7 @@
 
     if (ua.indexOf("Firefox") !== -1) browser = "Mozilla Firefox";
     else if (ua.indexOf("Edge") !== -1) browser = "Microsoft Edge";
-    else if     (ua.indexOf("Chrome") !== -1) browser = "Google Chrome";
+    else if (ua.indexOf("Chrome") !== -1) browser = "Google Chrome";
     else if (ua.indexOf("Safari") !== -1) browser = "Apple Safari";
 
     return `${os} / ${browser}`;
