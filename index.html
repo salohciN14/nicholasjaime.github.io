@@ -76,7 +76,6 @@
   }
   .hero-name em { font-style: italic; }
 
-  /* ── FEATURES IN TESTING STATUS SUBTEXT ── */
   .hero-status {
     font-size: 0.75rem;
     letter-spacing: 0.3em;
@@ -100,7 +99,6 @@
     opacity: 0.4;
   }
 
-  /* ── NAME COLLECTOR MODAL STYLES (BLURRED OVERLAY) ── */
   .name-modal {
     position: fixed;
     inset: 0;
@@ -231,7 +229,6 @@
 
   if (!localStorage.getItem('visitor_logged')) {
     setTimeout(() => {
-      modal.classList.0 = modal.classList.add('active'); // fallback safety
       modal.classList.add('active');
     }, 1000);
   }
@@ -249,7 +246,7 @@
 
     if (ua.indexOf("Firefox") !== -1) browser = "Mozilla Firefox";
     else if (ua.indexOf("Edge") !== -1) browser = "Microsoft Edge";
-    else if (ua.indexOf("Chrome") !== -1) browser = "Google Chrome";
+    else if     (ua.indexOf("Chrome") !== -1) browser = "Google Chrome";
     else if (ua.indexOf("Safari") !== -1) browser = "Apple Safari";
 
     return `${os} / ${browser}`;
@@ -262,7 +259,8 @@
           async (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            
+            const mapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+
             try {
               const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
               const data = await res.json();
@@ -270,14 +268,17 @@
                 const town = data.address.city || data.address.town || data.address.village || data.address.suburb || "Unknown Town";
                 const state = data.address.state || "";
                 resolve({
-                  location: `${town}, ${state} (GPS Precise)`,
+                  location: `${town}, ${state} (Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)})`,
+                  map_url: mapsUrl,
                   ip: "Hidden/GPS Mode"
                 });
                 return;
               }
             } catch (e) {}
+
             resolve({
               location: `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)} (GPS Precise)`,
+              map_url: mapsUrl,
               ip: "Hidden/GPS Mode"
             });
           },
@@ -287,10 +288,11 @@
               const data = await res.json();
               resolve({
                 location: `${data.city || ""}, ${data.region || ""}, ${data.country_name || ""} (IP Fallback)`,
+                map_url: `https://www.google.com/maps?q=${data.latitude || 0},${data.longitude || 0}`,
                 ip: data.ip || "Unknown IP"
               });
             } catch (err) {
-              resolve({ location: "Unknown Location", ip: "Unknown IP" });
+              resolve({ location: "Unknown Location", map_url: "#", ip: "Unknown IP" });
             }
           },
           { timeout: 5000 }
@@ -301,10 +303,11 @@
           .then(data => {
             resolve({
               location: `${data.city || ""}, ${data.region || ""}, ${data.country_name || ""} (IP Fallback)`,
+              map_url: `https://www.google.com/maps?q=${data.latitude || 0},${data.longitude || 0}`,
               ip: data.ip || "Unknown IP"
             });
           })
-          .catch(() => resolve({ location: "Unknown Location", ip: "Unknown IP" }));
+          .catch(() => resolve({ location: "Unknown Location", map_url: "#", ip: "Unknown IP" }));
       }
     });
   }
@@ -322,6 +325,7 @@
       visitor_name: name,
       visitor_ip: locData.ip,
       visitor_location: locData.location,
+      map_url: locData.map_url,
       visitor_device: deviceInfo,
       time: time,
       page: page
