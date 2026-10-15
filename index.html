@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +23,7 @@
     padding: 0;
     background-color: #0a0a0a;
     color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
   .site-layout {
@@ -38,7 +38,7 @@
     z-index: 20;
     background: #000;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.75rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -53,29 +53,30 @@
   }
 
   .top-bar-brand img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
   }
 
   .top-bar-brand span {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     font-weight: 500;
   }
 
-  /* ── MAIN HERO IMAGE SECTION ── */
+  /* ── BALANCED HERO IMAGE SECTION ── */
   .hero {
     position: relative;
-    flex: 1;
     width: 100%;
+    height: 55vh;
+    min-height: 360px;
+    max-height: 580px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    min-height: 60vh;
+    margin: 0 auto;
   }
 
   .hero-bg {
@@ -84,7 +85,7 @@
     background-image: url('PR Sunset.jpg');
     background-size: cover;
     background-position: center;
-    filter: brightness(0.38);
+    filter: brightness(0.42);
     opacity: 0;
     transition: opacity 1.2s ease;
   }
@@ -93,13 +94,13 @@
   .hero-gradient-tb {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent 40%, rgba(0,0,0,0.7));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 30%, transparent 70%, rgba(0,0,0,0.6));
     pointer-events: none;
   }
   .hero-gradient-lr {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.2), transparent, rgba(0,0,0,0.2));
+    background: linear-gradient(to right, rgba(0,0,0,0.25), transparent, rgba(0,0,0,0.25));
     pointer-events: none;
   }
 
@@ -107,19 +108,19 @@
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 2rem 1.5rem;
+    padding: 1.5rem;
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
     transition: opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s;
   }
   .hero-content.loaded { opacity: 1; transform: translateY(0); }
 
   .hero-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(4rem, 12vw, 9rem);
+    font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 300;
     color: var(--text-primary, #fff);
-    line-height: 1;
+    line-height: 1.05;
     letter-spacing: -0.01em;
     margin: 0;
   }
@@ -129,13 +130,15 @@
   .bottom-bar {
     position: relative;
     z-index: 20;
+    flex: 1;
     background: #000;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem 1.5rem 1rem;
+    padding: 2.5rem 1.5rem 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
+    justify-content: center;
+    gap: 1.5rem;
   }
 
   .hero-nav {
@@ -146,7 +149,7 @@
   }
 
   .hero-nav a {
-    color: var(--text-secondary, #ccc);
+    color: var(--text-secondary, #aaa);
     text-decoration: none;
     font-size: 0.75rem;
     letter-spacing: 0.25em;
@@ -271,7 +274,7 @@
       </a>
     </header>
 
-    <!-- Main Hero Image Section -->
+    <!-- Main Hero Image Banner Section -->
     <section class="hero">
       <div class="hero-bg" id="heroBg"></div>
       <div class="hero-gradient-tb"></div>
@@ -282,7 +285,7 @@
       </div>
     </section>
 
-    <!-- Bottom Black Navigation Bar & Footer -->
+    <!-- Bottom Section with Navigation and Copyright -->
     <footer class="bottom-bar">
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
