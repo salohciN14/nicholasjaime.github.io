@@ -17,67 +17,12 @@
   gtag('config', 'G-L64E765BSV');
 </script>
 <style>
-  html, body { 
-    height: 100%; 
-    margin: 0;
-    padding: 0;
-    background-color: #0a0a0a;
-    color: var(--text-primary, #fff);
-  }
+  html, body { height: 100%; overflow: hidden; }
 
-  .page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── TOP HEADER MATCHING CONTACT / GALLERY PAGES ── */
-  .site-header {
-    background: #0a0a0a;
-    border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-    padding: 1.25rem 1.5rem;
-  }
-
-  .site-header-inner {
-    max-width: 48rem;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .site-header-logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text-primary, #fff);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-style: italic;
-    font-weight: 300;
-  }
-
-  .site-header-logo img {
-    width: 28px;
-    height: 28px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 12px;
-  }
-
-  .site-header-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--text-secondary, #888);
-  }
-
-  /* ── SHORT, ZOOMED-IN HERO BANNER ── */
-  .hero-banner {
+  .hero {
     position: relative;
+    height: 100vh;
     width: 100%;
-    height: 220px; /* Short vertical height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,9 +33,8 @@
     position: absolute;
     inset: 0;
     background-image: url('PR Sunset.jpg');
-    background-size: 150%; /* Zooms in on the image to make it less tall */
-    background-position: center 45%; /* Centers the zoomed focus */
-    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     filter: brightness(0.38);
     opacity: 0;
     transition: opacity 1.2s ease;
@@ -123,82 +67,28 @@
 
   .hero-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-size: clamp(4rem, 12vw, 9rem);
     font-weight: 300;
-    color: var(--text-primary, #fff);
+    color: var(--text-primary);
     line-height: 1;
     letter-spacing: -0.01em;
-    margin: 0;
+    margin-bottom: 2rem; /* Clean spacing down to the navigation links */
   }
   .hero-name em { font-style: italic; }
 
-  /* ── BLACK LOWER AREA (ATTACHED DIRECTLY BELOW IMAGE) ── */
-  .main-lower {
-    flex: 1;
-    background: #0a0a0a;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 2rem; /* Tight spacing directly under bottom edge of photo */
-    padding-bottom: 2rem;
-  }
-
+  /* ── NAVIGATION LINKS ── */
   .hero-nav {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 2.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .hero-nav a {
-    color: var(--text-secondary, #aaa);
-    text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-
-  .hero-nav a:hover {
-    color: var(--text-primary, #fff);
   }
 
   .hero-nav-divider {
     width: 1px;
     height: 0.75rem;
-    background: var(--text-muted, #555);
+    background: var(--text-muted);
     opacity: 0.4;
-  }
-
-  .page-footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 48rem;
-    border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-    padding-top: 1.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    box-sizing: border-box;
-    margin-top: auto;
-  }
-
-  .page-footer-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--text-muted, #777);
-  }
-
-  .page-footer-copy {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted, #777);
   }
 
   /* ── NAME COLLECTOR MODAL STYLES (STRICT LOCK) ── */
@@ -236,11 +126,12 @@
     font-weight: 400;
     margin-bottom: 0.5rem;
   }
+  /* Features in Testing Subtext relocated inside the lock modal */
   .modal-status {
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--text-secondary, #aaa);
+    color: var(--text-secondary);
     opacity: 0.7;
     margin-bottom: 1.25rem;
   }
@@ -289,44 +180,20 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-gradient-tb"></div>
+    <div class="hero-gradient-lr"></div>
 
-  <div class="page">
-    <!-- Top Header matching Contact and Gallery pages -->
-    <header class="site-header">
-      <div class="site-header-inner">
-        <a href="../" class="site-header-logo">
-          <img src="../Logo1.png" alt="Home">
-          Nicholas Jaime
-        </a>
-        <span class="site-header-label">Home</span>
-      </div>
-    </header>
-
-    <!-- Zoomed-In Short Hero Sunset Banner -->
-    <section class="hero-banner">
-      <div class="hero-bg" id="heroBg"></div>
-      <div class="hero-gradient-tb"></div>
-      <div class="hero-gradient-lr"></div>
-
-      <div class="hero-content" id="heroContent">
-        <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
-      </div>
-    </section>
-
-    <!-- Lower Black Background Area (Immediately below the cropped image) -->
-    <div class="main-lower">
+    <div class="hero-content" id="heroContent">
+      <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
         <div class="hero-nav-divider"></div>
         <a href="contact/" class="nav-link">Contact</a>
       </nav>
-
-      <div class="page-footer-bottom">
-        <span class="page-footer-name">Nicholas Jaime</span>
-        <span class="page-footer-copy">© 2026 — All Rights Reserved</span>
-      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Visitor Name Collector Modal (Strictly locks site until name is entered) -->
   <div class="name-modal" id="nameModal">
