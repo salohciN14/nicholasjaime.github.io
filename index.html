@@ -73,26 +73,24 @@
     color: var(--text-secondary, #888);
   }
 
-  /* ── VERTICALLY CROPPED HERO BANNER ── */
+  /* ── SHORT, ZOOMED-IN HERO BANNER ── */
   .hero-banner {
     position: relative;
     width: 100%;
-    height: 38vh;
-    min-height: 280px;
-    max-height: 420px;
+    height: 220px; /* Short vertical height */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
   }
 
   .hero-bg {
     position: absolute;
     inset: 0;
     background-image: url('PR Sunset.jpg');
-    background-size: cover;
-    background-position: center;
+    background-size: 150%; /* Zooms in on the image to make it less tall */
+    background-position: center 45%; /* Centers the zoomed focus */
+    background-repeat: no-repeat;
     filter: brightness(0.38);
     opacity: 0;
     transition: opacity 1.2s ease;
@@ -125,7 +123,7 @@
 
   .hero-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3rem, 9vw, 6rem);
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
     font-weight: 300;
     color: var(--text-primary, #fff);
     line-height: 1;
@@ -134,15 +132,15 @@
   }
   .hero-name em { font-style: italic; }
 
-  /* ── LOWER SECTION WITH ORIGINAL NAV & FOOTER ── */
+  /* ── BLACK LOWER AREA (ATTACHED DIRECTLY BELOW IMAGE) ── */
   .main-lower {
     flex: 1;
     background: #0a0a0a;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 3rem 1.5rem;
+    padding-top: 2rem; /* Tight spacing directly under bottom edge of photo */
+    padding-bottom: 2rem;
   }
 
   .hero-nav {
@@ -150,7 +148,7 @@
     align-items: center;
     justify-content: center;
     gap: 2.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   .hero-nav a {
@@ -182,6 +180,10 @@
     max-width: 48rem;
     border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
     padding-top: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
+    margin-top: auto;
   }
 
   .page-footer-name {
@@ -300,7 +302,7 @@
       </div>
     </header>
 
-    <!-- Vertically Cropped Hero Sunset Banner -->
+    <!-- Zoomed-In Short Hero Sunset Banner -->
     <section class="hero-banner">
       <div class="hero-bg" id="heroBg"></div>
       <div class="hero-gradient-tb"></div>
@@ -311,7 +313,7 @@
       </div>
     </section>
 
-    <!-- Lower Section with Links on Black Background & Footer -->
+    <!-- Lower Black Background Area (Immediately below the cropped image) -->
     <div class="main-lower">
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
