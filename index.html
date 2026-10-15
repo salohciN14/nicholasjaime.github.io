@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +18,64 @@
   gtag('config', 'G-L64E765BSV');
 </script>
 <style>
-  html, body { height: 100%; overflow: hidden; }
+  html, body { 
+    height: 100%; 
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a0a;
+    color: #fff;
+  }
 
+  .site-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOP HEADER BAR ── */
+  .top-bar {
+    position: relative;
+    z-index: 20;
+    background: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .top-bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-primary, #fff);
+  }
+
+  .top-bar-brand img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .top-bar-brand span {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── MAIN HERO IMAGE SECTION ── */
   .hero {
     position: relative;
-    height: 100vh;
+    flex: 1;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    min-height: 60vh;
   }
 
   .hero-bg {
@@ -58,7 +107,7 @@
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 0 1.5rem;
+    padding: 2rem 1.5rem;
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s;
@@ -69,14 +118,26 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(4rem, 12vw, 9rem);
     font-weight: 300;
-    color: var(--text-primary);
+    color: var(--text-primary, #fff);
     line-height: 1;
     letter-spacing: -0.01em;
-    margin-bottom: 2rem; /* Clean spacing down to the navigation links */
+    margin: 0;
   }
   .hero-name em { font-style: italic; }
 
-  /* ── NAVIGATION LINKS ── */
+  /* ── BOTTOM NAV BAR & FOOTER ── */
+  .bottom-bar {
+    position: relative;
+    z-index: 20;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
   .hero-nav {
     display: flex;
     align-items: center;
@@ -84,11 +145,32 @@
     gap: 2.5rem;
   }
 
+  .hero-nav a {
+    color: var(--text-secondary, #ccc);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .hero-nav a:hover {
+    color: #fff;
+  }
+
   .hero-nav-divider {
     width: 1px;
     height: 0.75rem;
-    background: var(--text-muted);
+    background: var(--text-muted, #555);
     opacity: 0.4;
+  }
+
+  .site-footer-copy {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #666;
+    margin: 0;
   }
 
   /* ── NAME COLLECTOR MODAL STYLES (STRICT LOCK) ── */
@@ -126,12 +208,11 @@
     font-weight: 400;
     margin-bottom: 0.5rem;
   }
-  /* Features in Testing Subtext relocated inside the lock modal */
   .modal-status {
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--text-secondary);
+    color: var(--text-secondary, #aaa);
     opacity: 0.7;
     margin-bottom: 1.25rem;
   }
@@ -180,20 +261,37 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <section class="hero">
-    <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-gradient-tb"></div>
-    <div class="hero-gradient-lr"></div>
 
-    <div class="hero-content" id="heroContent">
-      <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
+  <div class="site-layout">
+    <!-- Top Black Header Bar -->
+    <header class="top-bar">
+      <a href="../" class="top-bar-brand">
+        <img src="../Logo1.png" alt="Logo">
+        <span>Nicholas Jaime</span>
+      </a>
+    </header>
+
+    <!-- Main Hero Image Section -->
+    <section class="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-gradient-tb"></div>
+      <div class="hero-gradient-lr"></div>
+
+      <div class="hero-content" id="heroContent">
+        <h1 class="hero-name">Nicholas<br><em>Jaime</em></h1>
+      </div>
+    </section>
+
+    <!-- Bottom Black Navigation Bar & Footer -->
+    <footer class="bottom-bar">
       <nav class="hero-nav">
         <a href="gallery/" class="nav-link">Gallery</a>
         <div class="hero-nav-divider"></div>
         <a href="contact/" class="nav-link">Contact</a>
       </nav>
-    </div>
-  </section>
+      <p class="site-footer-copy">© 2026 Nicholas Jaime — All Rights Reserved</p>
+    </footer>
+  </div>
 
   <!-- Visitor Name Collector Modal (Strictly locks site until name is entered) -->
   <div class="name-modal" id="nameModal">
